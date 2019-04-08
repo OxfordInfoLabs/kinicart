@@ -1,0 +1,20 @@
+{
+  "name": "oxil/kinicart",
+  "version": "0.1",
+  "description": "Kinicart - database driven PHP cart built upon Kinikit with REST API support",
+  "keywords": [
+    "PHP",
+    "application",
+    "cart"
+  ],
+  "homepage": "https://kinicart.com",
+  "type": "library",
+  "require": {
+    "oxil/kinikit": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Kinicart\\": "src/"
+    }
+  }
+}
