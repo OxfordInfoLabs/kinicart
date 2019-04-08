@@ -10,6 +10,7 @@
   "homepage": "https://kinicart.com",
   "type": "library",
   "require": {
+    "oxil/kinikit-core": "dev-master",
     "oxil/kinikit-mvc": "dev-master",
     "oxil/kinikit-persistence": "dev-master"
   },
