@@ -10,7 +10,7 @@
   "homepage": "https://kinicart.com",
   "type": "library",
   "require": {
-    "oxil/kinikit": "*"
+    "oxil/kinikit": "dev-master"
   },
   "autoload": {
     "psr-4": {
