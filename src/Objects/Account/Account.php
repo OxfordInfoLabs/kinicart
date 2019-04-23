@@ -30,7 +30,7 @@ class Account extends ActiveRecord {
 
 
     /**
-     * Boolean as to whether or not
+     * Boolean indicating whether or not this account can create sub accounts.
      *
      * @var boolean
      */
