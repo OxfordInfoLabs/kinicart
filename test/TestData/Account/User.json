@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "emailAddress": "admin@kinicart.com",
+    "name": "Administrator",
+    "hashedPassword": "5f4dcc3b5aa765d61d8327deb882cf99",
+    "status": "ACTIVE"
+  },
+  {
+    "id": 2,
+    "emailAddress": "sam@samdavisdesign.co.uk",
+    "name": "Sam Davis",
+    "hashedPassword": "5f4dcc3b5aa765d61d8327deb882cf99",
+    "mobileNumber": "07891 147676",
+    "backupEmailAddress": "samdavis@gmail.com",
+    "status": "ACTIVE"
+  },
+  {
+    "id": 3,
+    "emailAddress": "simon@peterjonescarwash.com",
+    "hashedPassword": "5f4dcc3b5aa765d61d8327deb882cf99",
+    "status": "ACTIVE"
+  },
+  {
+    "id": 4,
+    "emailAddress": "james@smartcoasting.org",
+    "hashedPassword": "5f4dcc3b5aa765d61d8327deb882cf99",
+    "activeAccountId": 3,
+    "status": "ACTIVE"
+  },
+  {
+    "id": 5,
+    "emailAddress": "suspended@suspendeduser.com",
+    "hashedPassword": "5f4dcc3b5aa765d61d8327deb882cf99",
+    "status": "SUSPENDED"
+  },
+  {
+    "id": 6,
+    "emailAddress": "john@shoppingonline.com",
+    "hashedPassword": "5f4dcc3b5aa765d61d8327deb882cf99",
+    "status": "ACTIVE"
+  },
+  {
+    "id": 7,
+    "emailAddress": "mary@shoppingonline.com",
+    "hashedPassword": "5f4dcc3b5aa765d61d8327deb882cf99",
+    "activeAccountId": 4,
+    "status": "ACTIVE"
+  },
+  {
+    "id": 8,
+    "emailAddress": "pending@myfactoryoutlet.com",
+    "hashedPassword": "5f4dcc3b5aa765d61d8327deb882cf99",
+    "activeAccountId": 2,
+    "status": "PENDING"
+  }
+]

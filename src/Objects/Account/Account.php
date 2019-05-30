@@ -3,30 +3,15 @@
 namespace Kinicart\Objects\Account;
 
 
-use Kinikit\Persistence\UPF\Object\ActiveRecord;
-
 /**
  * Main account business object.  Users can belong to one or more accounts.
  *
  * Class Account
+ *
+ * @ormTable kc_account
+ *
  */
-class Account extends ActiveRecord {
-
-
-    /**
-     * Auto increment id.
-     *
-     * @var integer
-     */
-    protected $id;
-
-
-    /**
-     * The account name - optional
-     *
-     * @var string
-     */
-    private $name;
+class Account extends AccountSummary {
 
 
     /**
@@ -44,20 +29,6 @@ class Account extends ActiveRecord {
      */
     private $parentAccountId;
 
-
-    /**
-     * @return int
-     */
-    public function getId() {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName() {
-        return $this->name;
-    }
 
     /**
      * @param string $name
@@ -92,6 +63,13 @@ class Account extends ActiveRecord {
      */
     public function setParentAccountId($parentAccountId) {
         $this->parentAccountId = $parentAccountId;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus($status) {
+        $this->status = $status;
     }
 
 

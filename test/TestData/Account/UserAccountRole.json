@@ -1,0 +1,33 @@
+[
+  {
+    "userId": 1
+  },
+  {
+    "userId": 2,
+    "accountId": 1
+  },
+  {
+    "userId": 3,
+    "accountId": 2
+  },
+  {
+    "userId": 4,
+    "accountId": 2
+  },
+  {
+    "userId": 4,
+    "accountId": 3
+  },
+  {
+    "userId": 6,
+    "accountId": 4
+  },
+  {
+    "userId": 7,
+    "accountId": 4
+  },
+  {
+    "userId": 7,
+    "accountId": 2
+  }
+]

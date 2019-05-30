@@ -10,6 +10,8 @@ use Kinikit\Persistence\UPF\Object\ActiveRecord;
 /**
  * Encodes a role for a user on an account.
  *
+ * @ormTable kc_user_account_role
+ *
  */
 class UserAccountRole extends ActiveRecord {
 
@@ -33,7 +35,7 @@ class UserAccountRole extends ActiveRecord {
 
 
     /**
-     * The role id to be attached to a user and account.
+     * The role id to be attached to a user and account - if left blank this is assumed to mean all roles.
      *
      * @var integer
      * @primaryKey
@@ -42,14 +44,30 @@ class UserAccountRole extends ActiveRecord {
 
 
     /**
+     * The role object which this user account role represents.
+     *
      * @var \Kinicart\Objects\Account\Role
      *
      * @relationship
-     * @relatedClassName Kinicart\Objects\Account\Role
+     * @relatedClassName Kinicart\Objects\Security\Role
      * @relatedFields roleId=>id
      * @readOnly
      */
     protected $role;
+
+
+    /**
+     * The account summary object which this user account role is attached to.
+     *
+     * @var \Kinicart\Objects\Account\AccountSummary
+     *
+     * @relationship
+     * @relatedClassName Kinicart\Objects\Account\AccountSummary
+     * @relatedFields accountId=>id
+     * @readOnly
+     */
+    protected $accountSummary;
+
 
     /**
      * @return int
@@ -77,6 +95,13 @@ class UserAccountRole extends ActiveRecord {
      */
     public function getRole() {
         return $this->role;
+    }
+
+    /**
+     * @return AccountSummary
+     */
+    public function getAccountSummary() {
+        return $this->accountSummary;
     }
 
 

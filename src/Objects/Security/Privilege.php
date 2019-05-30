@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Kinicart\Objects\Account;
+namespace Kinicart\Objects\Security;
 
 use Kinikit\Core\Object\SerialisableObject;
 

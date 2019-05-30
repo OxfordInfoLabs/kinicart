@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Kinicart\Objects\Account;
+namespace Kinicart\Objects\Security;
 
 
 use Kinikit\Persistence\UPF\Object\ActiveRecord;
@@ -10,6 +10,7 @@ use Kinikit\Persistence\UPF\Object\ActiveRecord;
 /**
  * Role class.  A role may contain an array of Privilege objects or may be a standalone role.
  *
+ * @ormTable kc_role
  */
 class Role extends ActiveRecord {
 
