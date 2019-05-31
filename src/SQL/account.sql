@@ -6,6 +6,8 @@ CREATE TABLE kc_account (
     name VARCHAR(255),
     sub_accounts_enabled  BOOLEAN,
     parent_account_id INTEGER DEFAULT 0,
+    api_key VARCHAR(50),
+    api_secret VARCHAR(50),
     status  VARCHAR(20)
 );
 

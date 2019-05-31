@@ -5,6 +5,7 @@ namespace Kinicart\Objects\Application;
 
 
 use Kinicart\Exception\Application\AccountSuspendedException;
+use Kinicart\Exception\Application\InvalidAPICredentialsException;
 use Kinicart\Exception\Application\InvalidLoginException;
 use Kinicart\Exception\Application\UserSuspendedException;
 use Kinicart\Objects\Account\Account;
@@ -84,6 +85,27 @@ class Authenticator {
 
 
     /**
+     * Authenticate an account by key and secret
+     *
+     * @param $apiKey
+     * @param $apiSecret
+     */
+    public function apiAuthenticate($apiKey, $apiSecret) {
+
+        $matchingAccounts = Account::query("WHERE apiKey = ? AND apiSecret = ?", $apiKey, $apiSecret);
+
+        // If there is a matching user, return it now.
+        if (sizeof($matchingAccounts) > 0) {
+            $this->setLoggedInDetails(null, $matchingAccounts[0]);
+        } else {
+            throw new InvalidAPICredentialsException();
+        }
+
+
+    }
+
+
+    /**
      * Log out function.
      */
     public function logOut() {
@@ -93,6 +115,9 @@ class Authenticator {
 
     // Set logged in details (either a user or an account if an API login).
     private function setLoggedInDetails($user = null, $account = null) {
+
+        // Log out just in case we are already logged in to clean up.
+        $this->logOut();
 
         if ($user) {
 
@@ -119,6 +144,11 @@ class Authenticator {
         }
 
         if ($account) {
+
+            if ($account->getStatus() == Account::STATUS_SUSPENDED) {
+                throw new AccountSuspendedException();
+            }
+
             Session::instance()->setLoggedInAccount($account);
         }
     }

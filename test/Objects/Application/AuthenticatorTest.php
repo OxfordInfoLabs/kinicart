@@ -3,6 +3,7 @@
 namespace Kinicart\Test\Objects\Application;
 
 use Kinicart\Exception\Application\AccountSuspendedException;
+use Kinicart\Exception\Application\InvalidAPICredentialsException;
 use Kinicart\Exception\Application\InvalidLoginException;
 use Kinicart\Exception\Application\UserSuspendedException;
 use Kinicart\Objects\Account\Account;
@@ -199,6 +200,25 @@ class AuthenticatorTest extends TestBase {
     }
 
 
+    public function testCanAuthenticateWithAPICredentials() {
+
+        try {
+            Authenticator::instance()->apiAuthenticate("BADKEY", "BADSECRET");
+            $this->fail("Should have thrown here");
+        } catch (InvalidAPICredentialsException $e) {
+            // Success
+        }
+
+        Authenticator::instance()->apiAuthenticate("TESTAPIKEY", "TESTAPISECRET");
+
+        $this->assertNull(Session::instance()->getLoggedInUser());
+        $this->assertNotNull(Session::instance()->getLoggedInAccount());
+
+        $this->assertEquals(1, Session::instance()->getLoggedInAccount()->getId());
+
+    }
+
+
     public function testCanLogOut() {
         Authenticator::instance()->logIn("james@smartcoasting.org", "password");
         $this->assertNotNull(Session::instance()->getLoggedInAccount());
@@ -209,5 +229,6 @@ class AuthenticatorTest extends TestBase {
         $this->assertNull(Session::instance()->getLoggedInUser());
 
     }
+
 
 }

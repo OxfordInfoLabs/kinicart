@@ -4,6 +4,7 @@ namespace Kinicart\Objects\Account;
 
 
 use Kinicart\Objects\Application\Session;
+use Kinikit\Core\Util\StringUtils;
 
 /**
  * Main account business object.  Users can belong to one or more accounts.
@@ -31,6 +32,20 @@ class Account extends AccountSummary {
      */
     private $parentAccountId;
 
+    /**
+     * API key for account access
+     *
+     * @var string
+     */
+    private $apiKey;
+
+    /**
+     * API secret for account access
+     *
+     * @var string
+     */
+    private $apiSecret;
+
 
     /**
      * Construct an account
@@ -40,6 +55,9 @@ class Account extends AccountSummary {
     public function __construct($name = null, $parentAccountId = null) {
         $this->name = $name;
         $this->parentAccountId = $parentAccountId ? $parentAccountId : Session::instance()->getActiveParentAccountId();
+
+        $this->apiKey = StringUtils::generateRandomString(10, true, true, false);
+        $this->apiSecret = StringUtils::generateRandomString(10, true, true, false);
     }
 
 
@@ -83,6 +101,34 @@ class Account extends AccountSummary {
      */
     public function setStatus($status) {
         $this->status = $status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiKey() {
+        return $this->apiKey;
+    }
+
+    /**
+     * @param string $apiKey
+     */
+    public function setApiKey($apiKey) {
+        $this->apiKey = $apiKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiSecret() {
+        return $this->apiSecret;
+    }
+
+    /**
+     * @param string $apiSecret
+     */
+    public function setApiSecret($apiSecret) {
+        $this->apiSecret = $apiSecret;
     }
 
 

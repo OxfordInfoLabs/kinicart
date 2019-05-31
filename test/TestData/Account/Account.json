@@ -3,6 +3,8 @@
     "id": 1,
     "name": "Sam Davis Design",
     "subAccountsEnabled": 1,
+    "apiKey": "TESTAPIKEY",
+    "apiSecret": "TESTAPISECRET",
     "status": "ACTIVE"
   },
   {
