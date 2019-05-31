@@ -5,7 +5,7 @@ CREATE TABLE kc_account (
     id  INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(255),
     sub_accounts_enabled  BOOLEAN,
-    parent_account_id INTEGER,
+    parent_account_id INTEGER DEFAULT 0,
     status  VARCHAR(20)
 );
 
@@ -15,7 +15,7 @@ CREATE TABLE kc_user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email_address   VARCHAR(255),
     name VARCHAR(255),
-    context_key VARCHAR(255),
+    parent_account_id INTEGER DEFAULT 0,
     hashed_password  VARCHAR(50),
     mobile_number   VARCHAR(50),
     backup_email_address    VARCHAR(255),

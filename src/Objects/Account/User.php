@@ -4,6 +4,7 @@
 namespace Kinicart\Objects\Account;
 
 
+use Kinikit\Core\Validation\FieldValidationError;
 use Kinikit\Persistence\UPF\Object\ActiveRecord;
 
 
@@ -39,12 +40,13 @@ class User extends ActiveRecord {
     private $name;
 
     /**
-     * An optional second context identifier for this user if we wish to allow multiple users with
-     * the same email address e.g. when supporting multiple sites in the same system.
+     * An optional parent account id, if this account has been created in the context of a
+     * parent account.  This allows for multiple accounts for the same email address across multiple
+     * contexts.
      *
      * @var string
      */
-    private $contextKey;
+    private $parentAccountId;
 
 
     /**
@@ -140,15 +142,15 @@ class User extends ActiveRecord {
     /**
      * @return string
      */
-    public function getContextKey() {
-        return $this->contextKey;
+    public function getParentAccountId() {
+        return $this->parentAccountId;
     }
 
     /**
-     * @param string $contextKey
+     * @param string $parentAccountId
      */
-    public function setContextKey($contextKey) {
-        $this->contextKey = $contextKey;
+    public function setParentAccountId($parentAccountId) {
+        $this->parentAccountId = $parentAccountId;
     }
 
     /**
@@ -301,6 +303,24 @@ class User extends ActiveRecord {
      */
     public function setStatus($status) {
         $this->status = $status;
+    }
+
+    /**
+     * Handle more advanced checking for no overlap of email addresses in same context
+     *
+     * @return array
+     */
+    public function validate() {
+        $validationErrors = parent::validate();
+
+        // Check for duplication across parent accounts
+        $matchingUsers = self::countQuery("WHERE emailAddress = ? AND parent_account_id = ? AND id <> ?", $this->emailAddress,
+            $this->parentAccountId ? $this->parentAccountId : null, $this->id ? $this->id : -1);
+
+        if ($matchingUsers > 0)
+            $validationErrors["emailAddress"] = new FieldValidationError("emailAddress", "duplicateEmail", "A user already exists with this email address");
+
+        return $validationErrors;
     }
 
 

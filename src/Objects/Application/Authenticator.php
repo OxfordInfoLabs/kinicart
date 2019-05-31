@@ -48,8 +48,13 @@ class Authenticator {
      * @param $emailAddress
      * @param null $contextKey
      */
-    public function emailExists($emailAddress, $contextKey = null) {
-        return User::countQuery("WHERE emailAddress = ?", $emailAddress) > 0;
+    public function emailExists($emailAddress, $parentAccountId = null) {
+
+        if ($parentAccountId === null) {
+            $parentAccountId = Session::instance()->getActiveParentAccountId() ? Session::instance()->getActiveParentAccountId() : 0;
+        }
+
+        return User::countQuery("WHERE emailAddress = ? AND parentAccountId = ?", $emailAddress, $parentAccountId) > 0;
     }
 
 
@@ -59,9 +64,13 @@ class Authenticator {
      * @param $emailAddress
      * @param $password
      */
-    public function logIn($emailAddress, $password, $contextKey = null) {
+    public function logIn($emailAddress, $password, $parentAccountId = null) {
 
-        $matchingUsers = User::query("WHERE emailAddress = ? AND hashedPassword = ?", $emailAddress, hash("md5", $password));
+        if ($parentAccountId === null) {
+            $parentAccountId = Session::instance()->getActiveParentAccountId() ? Session::instance()->getActiveParentAccountId() : 0;
+        }
+
+        $matchingUsers = User::query("WHERE emailAddress = ? AND hashedPassword = ? AND parentAccountId = ?", $emailAddress, hash("md5", $password), $parentAccountId);
 
         // If there is a matching user, return it now.
         if (sizeof($matchingUsers) > 0) {
@@ -102,9 +111,9 @@ class Authenticator {
             $account = $user->getActiveAccount();
 
             if (!$account && $user->getAccounts()) {
-
+                throw new AccountSuspendedException();
             }
-            
+
             Session::instance()->setLoggedInUser($user);
 
         }

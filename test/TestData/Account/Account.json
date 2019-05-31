@@ -8,7 +8,6 @@
   {
     "id": 2,
     "name": "Peter Jones Car Washing",
-    "parentAccountId": 1,
     "status": "ACTIVE"
   },
   {
@@ -20,5 +19,11 @@
     "id": 4,
     "name": "Suspended Account",
     "status": "SUSPENDED"
+  },
+  {
+    "id": 5,
+    "name": "Smart Coasting - Design Account",
+    "status": "ACTIVE",
+    "parentAccountId": 1
   }
 ]

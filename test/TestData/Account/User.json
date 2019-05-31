@@ -53,5 +53,13 @@
     "hashedPassword": "5f4dcc3b5aa765d61d8327deb882cf99",
     "activeAccountId": 2,
     "status": "PENDING"
+  },
+  {
+    "id": 9,
+    "emailAddress": "james@smartcoasting.org",
+    "hashedPassword": "5f4dcc3b5aa765d61d8327deb882cf99",
+    "activeAccountId": 5,
+    "parentAccountId": 1,
+    "status": "ACTIVE"
   }
 ]

@@ -57,6 +57,46 @@ class Session extends HttpSession {
 
 
     /**
+     * Get the referring URL
+     *
+     * @return $string
+     */
+    public function getReferringURL() {
+        return $this->getValue("referringURL");
+    }
+
+
+    /**
+     * Set the referring URL.
+     *
+     * @param $referringURL
+     */
+    public function setReferringURL($referringURL) {
+        $this->setValue("referringURL", $referringURL);
+    }
+
+
+    /**
+     * Get the active parent account Id.
+     *
+     * @return integer
+     */
+    public function getActiveParentAccountId() {
+        return $this->getValue("activeParentAccountId");
+    }
+
+
+    /**
+     * Set the active parent account Id.
+     *
+     * @param $activeParentAccountId
+     */
+    public function setActiveParentAccountId($activeParentAccountId) {
+        $this->setValue("activeParentAccountId", $activeParentAccountId);
+    }
+
+
+    /**
      * Log out function.
      */
     public function logOut() {
