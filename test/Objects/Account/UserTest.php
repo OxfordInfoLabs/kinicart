@@ -4,6 +4,7 @@ namespace Kinicart\Test\Objects\Account;
 
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Account\User;
+use Kinicart\Objects\Account\UserAccountRole;
 use Kinicart\Test\TestBase;
 use Kinikit\Core\Exception\ValidationException;
 
@@ -29,6 +30,10 @@ class UserTest extends TestBase {
 
         $this->assertEquals(1, sizeof($newUser->getRoles()));
         $this->assertEquals(1, sizeof($newUser->getAccounts()));
+
+        $this->assertEquals($newUser->getActiveAccount()->getId(), $newUser->getRoles()[0]->getAccountId());
+        $this->assertNull($newUser->getRoles()[0]->getRoleId());
+
 
         $this->assertEquals("john@test.com", $newUser->getActiveAccount()->getName());
         $this->assertEquals(Account::STATUS_ACTIVE, $newUser->getActiveAccount()->getStatus());
@@ -100,6 +105,45 @@ class UserTest extends TestBase {
 
         $this->assertEquals("Smith Enterprises", $newUser->getActiveAccount()->getName());
         $this->assertEquals(Account::STATUS_ACTIVE, $newUser->getActiveAccount()->getStatus());
+
+
+    }
+
+
+    public function testCanCreateNewAdminUser() {
+
+        // Simple username / password one.
+        $adminUser = User::createAdminUser("marko@polo.com", "pickle");
+
+        $this->assertNotNull($adminUser->getId());
+        $this->assertEquals("marko@polo.com", $adminUser->getEmailAddress());
+        $this->assertEquals(hash("md5", "pickle"), $adminUser->getHashedPassword());
+        $this->assertEquals(1, sizeof($adminUser->getRoles()));
+        $this->assertNull($adminUser->getRoles()[0]->getAccountId());
+        $this->assertNull($adminUser->getRoles()[0]->getRoleId());
+
+
+        // Username, password and name one.
+        $adminUser = User::createAdminUser("marko2@polo.com", "pickle", "Marko Polo");
+
+        $this->assertNotNull($adminUser->getId());
+        $this->assertEquals("marko2@polo.com", $adminUser->getEmailAddress());
+        $this->assertEquals("Marko Polo", $adminUser->getName());
+        $this->assertEquals(hash("md5", "pickle"), $adminUser->getHashedPassword());
+        $this->assertEquals(1, sizeof($adminUser->getRoles()));
+        $this->assertNull($adminUser->getRoles()[0]->getAccountId());
+        $this->assertNull($adminUser->getRoles()[0]->getRoleId());
+
+
+        // Check duplicate issue
+        try {
+            User::createAdminUser("marko2@polo.com", "pickle", "Marko Polo");
+
+            $this->fail("Should have thrown validation problems here");
+
+        } catch (ValidationException $e) {
+            // Success
+        }
 
 
     }

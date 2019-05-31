@@ -368,4 +368,29 @@ class User extends ActiveRecord {
     }
 
 
+    /**
+     * Create an admin user.
+     *
+     * @param $emailAddress
+     * @param $password
+     * @param null $name
+     */
+    public static function createAdminUser($emailAddress, $password, $name = null) {
+
+        // Create a new user, save it and return it back.
+        $user = new User($emailAddress, $password, $name);
+        if ($validationErrors = $user->validate()) {
+            throw new ValidationException($validationErrors);
+        }
+
+        $user->setRoles(array(new UserAccountRole()));
+        $user->save();
+
+        // Resync the user object
+        $user->synchroniseRelationships();
+
+        return $user;
+    }
+
+
 }
