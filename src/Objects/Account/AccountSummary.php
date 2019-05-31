@@ -34,7 +34,7 @@ class AccountSummary extends ActiveRecord {
      *
      * @var string
      */
-    protected $status;
+    protected $status = self::STATUS_ACTIVE;
 
 
     const STATUS_ACTIVE = "ACTIVE";

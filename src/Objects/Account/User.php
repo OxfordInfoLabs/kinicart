@@ -4,6 +4,8 @@
 namespace Kinicart\Objects\Account;
 
 
+use Kinicart\Objects\Application\Session;
+use Kinikit\Core\Exception\ValidationException;
 use Kinikit\Core\Validation\FieldValidationError;
 use Kinikit\Persistence\UPF\Object\ActiveRecord;
 
@@ -92,7 +94,7 @@ class User extends ActiveRecord {
      * @relatedFields id=>userId
      *
      */
-    private $roles;
+    private $roles = array();
 
 
     /**
@@ -109,13 +111,28 @@ class User extends ActiveRecord {
      *
      * @var string
      */
-    private $status;
+    private $status = self::STATUS_PENDING;
 
 
     const STATUS_PENDING = "PENDING";
     const STATUS_ACTIVE = "ACTIVE";
     const STATUS_SUSPENDED = "SUSPENDED";
     const STATUS_PASSWORD_RESET = "PASSWORD_RESET";
+
+
+    /**
+     * Create a new user with basic data.
+     *
+     * @param string $emailAddress
+     * @param string $password
+     * @param string $name
+     */
+    public function __construct($emailAddress = null, $password = null, $name = null, $parentAccountId = null) {
+        $this->emailAddress = $emailAddress;
+        if ($password) $this->hashedPassword = hash("md5", $password);
+        $this->name = $name;
+        $this->parentAccountId = $parentAccountId ? $parentAccountId : Session::instance()->getActiveParentAccountId();
+    }
 
 
     /**
@@ -315,7 +332,7 @@ class User extends ActiveRecord {
 
         // Check for duplication across parent accounts
         $matchingUsers = self::countQuery("WHERE emailAddress = ? AND parent_account_id = ? AND id <> ?", $this->emailAddress,
-            $this->parentAccountId ? $this->parentAccountId : null, $this->id ? $this->id : -1);
+            $this->parentAccountId ? $this->parentAccountId : 0, $this->id ? $this->id : -1);
 
         if ($matchingUsers > 0)
             $validationErrors["emailAddress"] = new FieldValidationError("emailAddress", "duplicateEmail", "A user already exists with this email address");
@@ -325,9 +342,28 @@ class User extends ActiveRecord {
 
 
     /**
-     * Create a brand new user.
+     * Create a brand new user - optionally supply a name, account name and parent account id if relevant.  If no
+     * parent Account Id is supplied, the session context will be used.
      */
-    public static function createWithAccount($emailAddress, $password, $name = null, $accountName = null) {
+    public static function createWithAccount($emailAddress, $password, $name = null, $accountName = null, $parentAccountId = null) {
+
+        // Create a new user, save it and return it back.
+        $user = new User($emailAddress, $password, $name, $parentAccountId);
+        if ($validationErrors = $user->validate()) {
+            throw new ValidationException($validationErrors);
+        }
+
+        // Create an account to match with any name we can find.
+        $account = new Account($accountName ? $accountName : ($name ? $name : $emailAddress), $parentAccountId);
+        $account->save();
+
+        $user->setRoles(array(new UserAccountRole($account->getId())));
+        $user->save();
+
+        // Resync the user object
+        $user->synchroniseRelationships();
+
+        return $user;
 
     }
 

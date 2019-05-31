@@ -70,6 +70,18 @@ class UserAccountRole extends ActiveRecord {
 
 
     /**
+     * Construct a new user account role object.
+     *
+     * @param integer $accountId
+     * @param integer $roleId
+     */
+    public function __construct($accountId = null, $roleId = null) {
+        $this->accountId = $accountId;
+        $this->roleId = $roleId;
+    }
+
+
+    /**
      * @return int
      */
     public function getUserId() {

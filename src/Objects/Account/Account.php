@@ -3,6 +3,8 @@
 namespace Kinicart\Objects\Account;
 
 
+use Kinicart\Objects\Application\Session;
+
 /**
  * Main account business object.  Users can belong to one or more accounts.
  *
@@ -28,6 +30,17 @@ class Account extends AccountSummary {
      * @var integer
      */
     private $parentAccountId;
+
+
+    /**
+     * Construct an account
+     *
+     * Account constructor.
+     */
+    public function __construct($name = null, $parentAccountId = null) {
+        $this->name = $name;
+        $this->parentAccountId = $parentAccountId ? $parentAccountId : Session::instance()->getActiveParentAccountId();
+    }
 
 
     /**
