@@ -34,6 +34,7 @@ class EmailSummary extends ActiveRecord {
      *
      * @var string
      * @validation required
+     * @formatter britishdatetime
      */
     protected $sentDate;
 
@@ -43,6 +44,7 @@ class EmailSummary extends ActiveRecord {
      *
      * @var string
      * @validation required
+     *
      */
     protected $sender;
 
@@ -50,15 +52,17 @@ class EmailSummary extends ActiveRecord {
     /**
      * To field
      *
-     * @var string
+     * @var string[]
      * @validation required
+     * @formatter json
      */
-    protected $recipient;
+    protected $recipients;
 
     /**
      * Optional CC field
      *
-     * @var string
+     * @var string[]
+     * @formatter json
      */
 
     protected $cc;
@@ -66,7 +70,8 @@ class EmailSummary extends ActiveRecord {
     /**
      * Optional BCC field
      *
-     * @var string
+     * @var string[]
+     * @formatter json
      */
     protected $bcc;
 
@@ -112,14 +117,14 @@ class EmailSummary extends ActiveRecord {
     }
 
     /**
-     * @return string
+     * @return string[]
      */
     public function getCc() {
         return $this->cc;
     }
 
     /**
-     * @return string
+     * @return string[]
      */
     public function getBcc() {
         return $this->bcc;
@@ -161,10 +166,17 @@ class EmailSummary extends ActiveRecord {
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getRecipient() {
-        return $this->recipient;
+    public function getAccountId() {
+        return $this->accountId;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getRecipients() {
+        return $this->recipients;
     }
 
     /**

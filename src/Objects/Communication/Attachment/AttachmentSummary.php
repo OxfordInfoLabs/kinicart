@@ -9,7 +9,7 @@ use Kinikit\Persistence\UPF\Object\ActiveRecord;
 /**
  * Attachment summary for use when summarising attachments.
  *
- * Class AttachmentSummary
+ * @ormTable kc_attachment
  */
 class AttachmentSummary extends ActiveRecord {
 
@@ -20,6 +20,14 @@ class AttachmentSummary extends ActiveRecord {
      * @var integer
      */
     protected $id;
+
+
+    /**
+     * Account id for this attachment.
+     *
+     * @var integer
+     */
+    protected $accountId;
 
 
     /**
@@ -50,6 +58,34 @@ class AttachmentSummary extends ActiveRecord {
      * @var string
      */
     protected $mimeType = "text/plain";
+
+    /**
+     * @return int
+     */
+    public function getId() {
+        return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAccountId() {
+        return $this->accountId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParentObjectType() {
+        return $this->parentObjectType;
+    }
+
+    /**
+     * @return int
+     */
+    public function getParentObjectId() {
+        return $this->parentObjectId;
+    }
 
 
     /**

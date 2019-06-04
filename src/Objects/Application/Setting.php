@@ -187,20 +187,7 @@ class Setting extends ActiveRecord {
         return self::$settingDefinitions;
     }
 
-    /**
-     * Get a setting by key and value
-     *
-     * @param $key string
-     * @param $value string
-     */
-    public static function getByKeyAndValue($key, $value) {
-        $matches = self::query("WHERE key = ? AND value = ?", $key, $value);
-        if (sizeof($matches) > 0) {
-            return $matches[0];
-        } else {
-            return null;
-        }
-    }
+
 
 
 }

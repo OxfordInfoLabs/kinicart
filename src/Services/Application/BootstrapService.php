@@ -1,36 +1,30 @@
 <?php
 
 
-namespace Kinicart\Objects\Application;
+namespace Kinicart\Services\Application;
 
+use Kinicart\Objects\Application\Session;
 use Kinikit\MVC\Framework\SourceBaseManager;
 
 /**
  * Generic bootstrap class - should be called early in application flow to ensure that global data is set up correctly.
  */
-class Bootstrap {
+class BootstrapService {
 
-    /**
-     * @var $instance Bootstrap
-     */
-    private static $instance;
-
-    // Block direct construction.
-    private function __construct() {
-    }
+    private $authenticationService;
+    private $settingsService;
 
 
     /**
-     * Static instance method in lieu of constructor.
+     * Construct with authentication service
      *
-     * @return Bootstrap
+     * @param \Kinicart\Services\Application\AuthenticationService $authenticationService
+     * @param \Kinicart\Services\Application\SettingsService $settingsService
+     *
      */
-    public static function instance() {
-        if (!self::$instance) {
-            self::$instance = new Bootstrap();
-        }
-
-        return self::$instance;
+    public function __construct($authenticationService, $settingsService) {
+        $this->authenticationService = $authenticationService;
+        $this->settingsService = $settingsService;
     }
 
 
@@ -40,7 +34,7 @@ class Bootstrap {
     public function run() {
 
         // Ensure kinicart is appended as a source base.
-        SourceBaseManager::instance()->appendSourceBase(__DIR__ . "/../..");
+        SourceBaseManager::instance()->appendSourceBase(__DIR__ . "/../src");
 
         // Check the referring URL to see whether or not we need to update our logged in state.
         $splitReferrer = explode("//", $_SERVER["HTTP_REFERER"]);
@@ -51,7 +45,7 @@ class Bootstrap {
             Session::instance()->setReferringURL($referer);
 
             // Now attempt to look up the setting by key and value
-            $setting = Setting::getByKeyAndValue("referringDomains", $referer);
+            $setting = $this->settingsService->getSettingByKeyAndValue("referringDomains", $referer);
             if ($setting) {
                 $parentAccountId = $setting->getAccountId();
             } else {
@@ -59,8 +53,9 @@ class Bootstrap {
             }
 
             // Make sure we log out if the active parent account id has changed.
-            if (Session::instance()->getActiveParentAccountId() != $parentAccountId)
-                Authenticator::instance()->logOut();
+            if (Session::instance()->getActiveParentAccountId() != $parentAccountId) {
+                $this->authenticationService->logOut();
+            }
 
             Session::instance()->setActiveParentAccountId($parentAccountId);
 

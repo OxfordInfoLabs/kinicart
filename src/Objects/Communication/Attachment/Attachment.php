@@ -3,7 +3,10 @@
 
 namespace Kinicart\Objects\Communication\Attachment;
 
-
+/**
+ *
+ * @ormTable kc_attachment
+ */
 class Attachment extends AttachmentSummary {
 
     /**
@@ -13,15 +16,22 @@ class Attachment extends AttachmentSummary {
      */
     private $content;
 
-    
-    public function __construct($parentObjectType = null, $parentObjectId = null, $attachmentFilename = null,
-                                $mimeType = null, $content = null) {
+
+    public function __construct($parentObjectType = null, $parentObjectId = null, $localFilePath = null, $attachmentFilename = null, $accountId = null) {
 
         $this->parentObjectType = $parentObjectType;
         $this->parentObjectId = $parentObjectId;
-        $this->attachmentFilename = $attachmentFilename;
-        $this->mimeType = $mimeType;
-        $this->content = $content;
+        if ($localFilePath) {
+            // Split the file
+            $explodedFile = explode("/", $localFilePath);
+
+            $this->attachmentFilename = $attachmentFilename ? $attachmentFilename : array_pop($explodedFile);
+            $this->mimeType = mime_content_type($localFilePath);
+            $this->content = file_get_contents($localFilePath);
+        } else {
+            $this->attachmentFilename = $attachmentFilename;
+        }
+        $this->accountId = $accountId;
 
     }
 

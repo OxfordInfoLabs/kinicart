@@ -3,8 +3,13 @@
 namespace Kinicart\Objects\Communication\Email;
 
 
+use Kinicart\Objects\Communication\Attachment\Attachment;
 use Kinikit\Persistence\UPF\Object\ActiveRecord;
 
+/**
+ *
+ * @ormTable kc_email
+ */
 class Email extends EmailSummary {
 
 
@@ -43,25 +48,26 @@ class Email extends EmailSummary {
      * Email constructor.
      *
      * @param string $sender
-     * @param string $recipient
+     * @param string[] $recipient
      * @param string $subject
      * @param string $textBody
-     * @param string $cc
-     * @param string $bcc
+     * @param string[] $cc
+     * @param string[] $bcc
      * @param string $replyTo
      * @param integer $accountId
      */
-    public function __construct($sender = null, $recipient = null, $subject = null, $textBody = null,
+    public function __construct($sender = null, $recipients = null, $subject = null, $textBody = null,
                                 $cc = null, $bcc = null, $replyTo = null, $accountId = null) {
 
         $this->sender = $sender;
-        $this->recipient = $recipient;
+        $this->recipients = $recipients;
         $this->subject = $subject;
         $this->textBody = $textBody;
         $this->cc = $cc;
         $this->bcc = $bcc;
         $this->replyTo = $replyTo;
         $this->accountId = $accountId;
+        $this->sentDate = date("d/m/Y H:i:s");
 
     }
 
@@ -74,14 +80,14 @@ class Email extends EmailSummary {
     }
 
     /**
-     * @param string $cc
+     * @param string[] $cc
      */
     public function setCc($cc) {
         $this->cc = $cc;
     }
 
     /**
-     * @param string $bcc
+     * @param string[] $bcc
      */
     public function setBcc($bcc) {
         $this->bcc = $bcc;
@@ -123,10 +129,10 @@ class Email extends EmailSummary {
     }
 
     /**
-     * @param string $to
+     * @param string[] $recipients
      */
-    public function setRecipient($recipient) {
-        $this->recipient = $recipient;
+    public function setRecipients($recipients) {
+        $this->recipients = $recipients;
     }
 
     /**
@@ -176,6 +182,25 @@ class Email extends EmailSummary {
      */
     public function setLocalAttachmentFiles($localAttachmentFiles) {
         $this->localAttachmentFiles = $localAttachmentFiles;
+    }
+
+
+    /**
+     * Overridden save method to also save any attachments which may have been added as local files.
+     */
+    public function save() {
+        parent::save();
+
+        // Save any local attachments if set.
+        if ($this->localAttachmentFiles) {
+            foreach ($this->getLocalAttachmentFiles() as $file) {
+
+                $attachment = new Attachment("Email", $this->id, $file, null, $this->accountId);
+                $attachment->save();
+            }
+
+            $this->localAttachmentFiles = null;
+        }
     }
 
 

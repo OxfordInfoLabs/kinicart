@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Kinicart\Objects\Application;
+namespace Kinicart\Services\Application;
 
 
 use Kinicart\Exception\Application\AccountSuspendedException;
@@ -10,38 +10,15 @@ use Kinicart\Exception\Application\InvalidLoginException;
 use Kinicart\Exception\Application\UserSuspendedException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Account\User;
+use Kinicart\Objects\Application\Session;
 
 /**
- * Authenticator object for coordinating authentication functions for Kinicart.
+ * AuthenticationService object for coordinating authentication functions for Kinicart.
  *
- * Class AuthenticationWorker
+ * Class AuthenticationService
  * @package Kinicart\Workers\Application
  */
-class Authenticator {
-
-    /**
-     * @var $instance Authenticator
-     */
-    private static $instance;
-
-    // Block direct construction.
-    private function __construct() {
-    }
-
-
-    /**
-     * Static instance method in lieu of constructor.
-     *
-     * @return Authenticator
-     */
-    public static function instance() {
-        if (!self::$instance) {
-            self::$instance = new Authenticator();
-        }
-
-        return self::$instance;
-    }
-
+class AuthenticationService {
 
     /**
      * Boolean indicator as to whether or not an email address exists.

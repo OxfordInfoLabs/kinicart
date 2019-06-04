@@ -1,9 +1,10 @@
 <?php
 
 
-namespace Kinicart\Objects\Communication\Email\Provider;
+namespace Kinicart\Services\Communication\Email\Provider;
 
 use Kinicart\Objects\Communication\Email\Email;
+use Kinicart\Objects\Communication\Email\EmailSendResult;
 use Kinikit\Core\Configuration;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -83,6 +84,8 @@ class PHPMailerProvider extends EmailProvider {
      *
      * @param Email $email
      *
+     * @return \Kinicart\Objects\Communication\Email\EmailSendResult
+     *
      */
     public function send($email) {
 
@@ -119,7 +122,7 @@ class PHPMailerProvider extends EmailProvider {
                 $recipient = $this->convertAddressToAddressAndName($this->tunnelUser)[0];
                 $phpMailer->addAddress($recipient[0], $recipient[1]);
             } else {
-                $recipients = $this->convertAddressToAddressAndName($email->getRecipient());
+                $recipients = $this->convertAddressToAddressAndName($email->getRecipients());
                 foreach ($recipients as $recipient) {
 
                     $phpMailer->addAddress($recipient[0], $recipient[1]);
@@ -162,11 +165,10 @@ class PHPMailerProvider extends EmailProvider {
 
             $phpMailer->send();
 
-            $email->setStatus(Email::STATUS_SENT);
+            return new EmailSendResult(Email::STATUS_SENT);
 
         } catch (Exception $e) {
-            $email->setStatus(Email::STATUS_FAILED);
-            $email->setErrorMessage($phpMailer->ErrorInfo);
+            return new EmailSendResult(Email::STATUS_FAILED, $phpMailer->ErrorInfo);
         }
     }
 

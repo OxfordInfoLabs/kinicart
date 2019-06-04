@@ -9,21 +9,31 @@ use Kinicart\Exception\Application\UserSuspendedException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Account\AccountSummary;
 use Kinicart\Objects\Account\User;
-use Kinicart\Objects\Application\Authenticator;
-use Kinicart\Objects\Application\Bootstrap;
+use Kinicart\Services\Application\AuthenticationService;
+use Kinicart\Objects\Application\BootstrapService;
 use Kinicart\Objects\Application\Session;
 use Kinicart\Test\TestBase;
+use Kinikit\Core\DependencyInjection\Container;
 
 include_once __DIR__ . "/../../autoloader.php";
 
-class AuthenticatorTest extends TestBase {
+class AuthenticationServiceTest extends TestBase {
 
+
+    private $authenticationService;
+    private $bootstrapService;
+
+
+    public function setUp() {
+        $this->authenticationService = Container::instance()->createInstance("Kinicart\Services\Application\AuthenticationService");
+        $this->bootstrapService = Container::instance()->createInstance("Kinicart\Services\Application\BootstrapService");
+    }
 
     public function testCanCheckWhetherEmailExistsOrNot() {
 
-        $this->assertFalse(Authenticator::instance()->emailExists("james@test.com"));
-        $this->assertFalse(Authenticator::instance()->emailExists("bobby@wrong.test"));
-        $this->assertTrue(Authenticator::instance()->emailExists("admin@kinicart.com"));
+        $this->assertFalse($this->authenticationService->emailExists("james@test.com"));
+        $this->assertFalse($this->authenticationService->emailExists("bobby@wrong.test"));
+        $this->assertTrue($this->authenticationService->emailExists("admin@kinicart.com"));
 
     }
 
@@ -34,7 +44,7 @@ class AuthenticatorTest extends TestBase {
     public function testCanLoginAsSuperUser() {
 
         // Attempt a login.
-        Authenticator::instance()->logIn("admin@kinicart.com", "password");
+        $this->authenticationService->logIn("admin@kinicart.com", "password");
 
         // Confirm that we are now logged in
         $this->assertNull(Session::instance()->getLoggedInAccount());
@@ -54,7 +64,7 @@ class AuthenticatorTest extends TestBase {
     public function testCanLoginAsRegularAccount() {
 
         // Attempt a login.
-        Authenticator::instance()->logIn("sam@samdavisdesign.co.uk", "password");
+        $this->authenticationService->logIn("sam@samdavisdesign.co.uk", "password");
 
         // Check the user
         $loggedInUser = Session::instance()->getLoggedInUser();
@@ -78,7 +88,7 @@ class AuthenticatorTest extends TestBase {
 
     public function testCanLoginAsUserWithPrescribedActiveAccount() {
 
-        Authenticator::instance()->logIn("james@smartcoasting.org", "password");
+        $this->authenticationService->logIn("james@smartcoasting.org", "password");
 
         // Check the user
         $loggedInUser = Session::instance()->getLoggedInUser();
@@ -104,9 +114,9 @@ class AuthenticatorTest extends TestBase {
 
         // Activate parent context.
         $_SERVER["HTTP_REFERER"] = "http://samdavis.org/mark";
-        Bootstrap::instance()->run();
+        $this->bootstrapService->run();
 
-        Authenticator::instance()->logIn("james@smartcoasting.org", "password");
+        $this->authenticationService->logIn("james@smartcoasting.org", "password");
 
         // Check the user
         $loggedInUser = Session::instance()->getLoggedInUser();
@@ -125,7 +135,7 @@ class AuthenticatorTest extends TestBase {
 
         // Reset parent context.
         $_SERVER["HTTP_REFERER"] = "https://www.google.com/hello/123";
-        Bootstrap::instance()->run();
+        $this->bootstrapService->run();
 
 
     }
@@ -134,14 +144,14 @@ class AuthenticatorTest extends TestBase {
     public function testExceptionRaisedIfInvalidUsernameOrPasswordSupplied() {
 
         try {
-            Authenticator::instance()->logIn("bobby@wrong.test", "helloworld");
+            $this->authenticationService->logIn("bobby@wrong.test", "helloworld");
             $this->fail("Should have thrown here");
         } catch (InvalidLoginException $e) {
             // Success
         }
 
         try {
-            Authenticator::instance()->logIn("admin@kinicart.com", "helloworld");
+            $this->authenticationService->logIn("admin@kinicart.com", "helloworld");
             $this->fail("Should have thrown here");
         } catch (InvalidLoginException $e) {
             // Success
@@ -155,14 +165,14 @@ class AuthenticatorTest extends TestBase {
 
 
         try {
-            Authenticator::instance()->logIn("suspended@suspendeduser.com", "password");
+            $this->authenticationService->logIn("suspended@suspendeduser.com", "password");
             $this->fail("Should have thrown here");
         } catch (UserSuspendedException $e) {
             // Success
         }
 
         try {
-            Authenticator::instance()->logIn("pending@myfactoryoutlet.com", "password");
+            $this->authenticationService->logIn("pending@myfactoryoutlet.com", "password");
             $this->fail("Should have thrown here");
         } catch (InvalidLoginException $e) {
             // Success
@@ -178,7 +188,7 @@ class AuthenticatorTest extends TestBase {
 
         // Test one where the user is attached to a single account which is suspended.
         try {
-            Authenticator::instance()->logIn("john@shoppingonline.com", "password");
+            $this->authenticationService->logIn("john@shoppingonline.com", "password");
             $this->fail("Should have thrown here");
         } catch (AccountSuspendedException $e) {
             // Success
@@ -186,7 +196,7 @@ class AuthenticatorTest extends TestBase {
 
 
         // now test one with an active account which is suspended.  Check that the active account is set to the alternative account.
-        Authenticator::instance()->logIn("mary@shoppingonline.com", "password");
+        $this->authenticationService->logIn("mary@shoppingonline.com", "password");
 
         $loggedInUser = Session::instance()->getLoggedInUser();
         $this->assertTrue($loggedInUser instanceof User);
@@ -203,13 +213,13 @@ class AuthenticatorTest extends TestBase {
     public function testCanAuthenticateWithAPICredentials() {
 
         try {
-            Authenticator::instance()->apiAuthenticate("BADKEY", "BADSECRET");
+            $this->authenticationService->apiAuthenticate("BADKEY", "BADSECRET");
             $this->fail("Should have thrown here");
         } catch (InvalidAPICredentialsException $e) {
             // Success
         }
 
-        Authenticator::instance()->apiAuthenticate("TESTAPIKEY", "TESTAPISECRET");
+        $this->authenticationService->apiAuthenticate("TESTAPIKEY", "TESTAPISECRET");
 
         $this->assertNull(Session::instance()->getLoggedInUser());
         $this->assertNotNull(Session::instance()->getLoggedInAccount());
@@ -220,11 +230,11 @@ class AuthenticatorTest extends TestBase {
 
 
     public function testCanLogOut() {
-        Authenticator::instance()->logIn("james@smartcoasting.org", "password");
+        $this->authenticationService->logIn("james@smartcoasting.org", "password");
         $this->assertNotNull(Session::instance()->getLoggedInAccount());
         $this->assertNotNull(Session::instance()->getLoggedInUser());
 
-        Authenticator::instance()->logOut();
+        $this->authenticationService->logOut();
         $this->assertNull(Session::instance()->getLoggedInAccount());
         $this->assertNull(Session::instance()->getLoggedInUser());
 
