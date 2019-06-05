@@ -19,12 +19,17 @@ include_once __DIR__ . "/../../autoloader.php";
 
 class AuthenticationServiceTest extends TestBase {
 
-
+    /**
+     * @var AuthenticationService
+     */
     private $authenticationService;
     private $bootstrapService;
 
 
     public function setUp() {
+
+        parent::setUp();
+
         $this->authenticationService = Container::instance()->createInstance("Kinicart\Services\Application\AuthenticationService");
         $this->bootstrapService = Container::instance()->createInstance("Kinicart\Services\Application\BootstrapService");
     }
@@ -113,8 +118,7 @@ class AuthenticationServiceTest extends TestBase {
 
 
         // Activate parent context.
-        $_SERVER["HTTP_REFERER"] = "http://samdavis.org/mark";
-        $this->bootstrapService->run();
+        $this->authenticationService->updateActiveParentAccount("http://samdavis.org/mark");
 
         $this->authenticationService->logIn("james@smartcoasting.org", "password");
 
@@ -134,8 +138,7 @@ class AuthenticationServiceTest extends TestBase {
         $this->assertEquals("Smart Coasting - Design Account", $loggedInAccount->getName());
 
         // Reset parent context.
-        $_SERVER["HTTP_REFERER"] = "https://www.google.com/hello/123";
-        $this->bootstrapService->run();
+        $this->authenticationService->updateActiveParentAccount( "https://www.google.com/hello/123");
 
 
     }
@@ -239,6 +242,45 @@ class AuthenticationServiceTest extends TestBase {
         $this->assertNull(Session::instance()->getLoggedInUser());
 
     }
+
+    public function testSessionReferrerAndParentAccountIsCorrectlyUpdatedWhenCallingUpdateParentAccount() {
+
+
+        $this->authenticationService->updateActiveParentAccount("https://www.google.com/hello/123");
+
+        $this->assertEquals("www.google.com", Session::instance()->getReferringURL());
+        $this->assertEquals(0, Session::instance()->getActiveParentAccountId());
+
+        $this->authenticationService->updateActiveParentAccount("http://apps.hello.org/mark");
+
+        $this->assertEquals("apps.hello.org", Session::instance()->getReferringURL());
+        $this->assertEquals(0, Session::instance()->getActiveParentAccountId());
+
+
+        $this->authenticationService->updateActiveParentAccount("http://samdavis.org/mark");
+
+        $this->assertEquals("samdavis.org", Session::instance()->getReferringURL());
+        $this->assertEquals(1, Session::instance()->getActiveParentAccountId());
+
+    }
+
+    public function testIfLoggedInAndParentAccountHasChangedOnUpdateUserUserLoggedOutForSecurity() {
+
+        $this->authenticationService->updateActiveParentAccount("https://www.google.com/hello/123");
+
+        $this->authenticationService->logIn("simon@peterjonescarwash.com", "password");
+
+        $this->assertNotNull(Session::instance()->getLoggedInUser());
+        $this->assertNotNull(Session::instance()->getLoggedInAccount());
+
+        $this->authenticationService->updateActiveParentAccount("http://samdavis.org/mark");
+
+        $this->assertNull(Session::instance()->getLoggedInUser());
+        $this->assertNull(Session::instance()->getLoggedInAccount());
+
+
+    }
+
 
 
 }

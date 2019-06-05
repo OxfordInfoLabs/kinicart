@@ -19,6 +19,8 @@ class EmailServiceTest extends TestBase {
 
 
     public function setUp() {
+        parent::setUp();
+
         $this->emailService = Container::instance()->createInstance("Kinicart\Services\Communication\Email\EmailService");
     }
 

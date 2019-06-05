@@ -20,6 +20,15 @@ use Kinicart\Objects\Application\Session;
  */
 class AuthenticationService {
 
+    private $settingsService;
+
+    /**
+     * @param \Kinicart\Services\Application\SettingsService $settingsService
+     */
+    public function __construct($settingsService) {
+        $this->settingsService = $settingsService;
+    }
+
     /**
      * Boolean indicator as to whether or not an email address exists.
      *
@@ -78,6 +87,43 @@ class AuthenticationService {
             throw new InvalidAPICredentialsException();
         }
 
+
+    }
+
+
+    /**
+     * Update the active parent URL according to a referring URL.
+     *
+     * @param $referringURL
+     */
+    public function updateActiveParentAccount($referringURL) {
+
+        // Check the referring URL to see whether or not we need to update our logged in state.
+        $splitReferrer = explode("//", $referringURL);
+
+        $referer = sizeof($splitReferrer) > 1 ? explode("/", $splitReferrer[1])[0] : $splitReferrer[0];
+
+        // If the referer differs from the session value, check some stuff.
+        if ($referer !== Session::instance()->getReferringURL()) {
+            Session::instance()->setReferringURL($referer);
+
+            // Now attempt to look up the setting by key and value
+            $setting = $this->settingsService->getSettingByKeyAndValue("referringDomains", $referer);
+            if ($setting) {
+                $parentAccountId = $setting->getAccountId();
+            } else {
+                $parentAccountId = 0;
+            }
+
+            // Make sure we log out if the active parent account id has changed.
+            if (Session::instance()->getActiveParentAccountId() != $parentAccountId) {
+                $this->logOut();
+            }
+
+            Session::instance()->setActiveParentAccountId($parentAccountId);
+
+
+        }
 
     }
 
