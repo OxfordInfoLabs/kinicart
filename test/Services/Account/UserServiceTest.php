@@ -1,18 +1,31 @@
 <?php
 
-namespace Kinicart\Test\Objects\Account;
-
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Account\User;
-use Kinicart\Objects\Account\UserAccountRole;
 use Kinicart\Test\TestBase;
+use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Core\Exception\ValidationException;
 
 include_once __DIR__ . "/../../autoloader.php";
 
+class UserServiceTest extends TestBase {
 
-class UserTest extends TestBase {
+    /**
+     * @var \Kinicart\Services\Account\UserService
+     */
+    private $userService;
 
+    /**
+     * @var \Kinicart\Services\Application\AuthenticationService
+     */
+    private $authenticationService;
+
+
+    public function setUp() {
+        parent::setUp();
+        $this->userService = Container::instance()->createInstance("Kinicart\Services\Account\UserService");
+        $this->authenticationService = Container::instance()->createInstance("Kinicart\Services\Security\AuthenticationService");
+    }
 
     /**
      * Create a user with a brand new account.
@@ -20,7 +33,7 @@ class UserTest extends TestBase {
     public function testCanCreateUserWithABrandNewAccount() {
 
         // Simple one with just email address and password.
-        $newUser = User::createWithAccount("john@test.com", "helloworld");
+        $newUser = $this->userService->createWithAccount("john@test.com", "helloworld");
 
         $this->assertNotNull($newUser->getId());
         $this->assertEquals("john@test.com", $newUser->getEmailAddress());
@@ -41,7 +54,7 @@ class UserTest extends TestBase {
 
         // Now do one with a users name, check propagation to account name.
         // Simple one with just email address and password.
-        $newUser = User::createWithAccount("john2@test.com", "helloworld", "John Smith");
+        $newUser = $this->userService->createWithAccount("john2@test.com", "helloworld", "John Smith");
 
         $this->assertNotNull($newUser->getId());
         $this->assertEquals("john2@test.com", $newUser->getEmailAddress());
@@ -59,7 +72,7 @@ class UserTest extends TestBase {
 
         // Now do one with a user and account name, check propagation to account name.
         // Simple one with just email address and password.
-        $newUser = User::createWithAccount("john3@test.com", "helloworld", "John Smith",
+        $newUser = $this->userService->createWithAccount("john3@test.com", "helloworld", "John Smith",
             "Smith Enterprises");
 
         $this->assertNotNull($newUser->getId());
@@ -79,7 +92,7 @@ class UserTest extends TestBase {
         // Check duplicate issue
 
         try {
-            User::createWithAccount("john3@test.com", "helloworld", "John Smith",
+            $this->userService->createWithAccount("john3@test.com", "helloworld", "John Smith",
                 "Smith Enterprises");
 
             $this->fail("Should have thrown validation problems here");
@@ -90,7 +103,7 @@ class UserTest extends TestBase {
 
         // Now do one with a user and account name and parent account id. check propagation to account name.
         // Simple one with just email address and password.
-        $newUser = User::createWithAccount("john3@test.com", "helloworld", "John Smith",
+        $newUser = $this->userService->createWithAccount("john3@test.com", "helloworld", "John Smith",
             "Smith Enterprises", 1);
 
         $this->assertNotNull($newUser->getId());
@@ -110,34 +123,47 @@ class UserTest extends TestBase {
     }
 
 
-    public function testCanCreateNewAdminUser() {
+    public function testCanCreateNewAdminUserProvidedWeAreLoggedInAsSuperUser() {
+
+        // Log out
+        $this->authenticationService->logOut();
+
+        try {
+            $adminUser = $this->userService->createAdminUser("marko@polo.com", "pickle");
+            $this->fail("Should have thrown here");
+        } catch (\Kinikit\Persistence\UPF\Exception\UPFObjectSaveVetoedException $e) {
+            // Expected
+        }
+
+        // Log in as super user.
+        $this->authenticationService->logIn("admin@kinicart.com", "password");
 
         // Simple username / password one.
-        $adminUser = User::createAdminUser("marko@polo.com", "pickle");
+        $adminUser = $this->userService->createAdminUser("marko@polo.com", "pickle");
 
         $this->assertNotNull($adminUser->getId());
         $this->assertEquals("marko@polo.com", $adminUser->getEmailAddress());
         $this->assertEquals(hash("md5", "pickle"), $adminUser->getHashedPassword());
         $this->assertEquals(1, sizeof($adminUser->getRoles()));
-        $this->assertNull($adminUser->getRoles()[0]->getAccountId());
+        $this->assertEquals(0, $adminUser->getRoles()[0]->getAccountId());
         $this->assertNull($adminUser->getRoles()[0]->getRoleId());
 
 
         // Username, password and name one.
-        $adminUser = User::createAdminUser("marko2@polo.com", "pickle", "Marko Polo");
+        $adminUser = $this->userService->createAdminUser("marko2@polo.com", "pickle", "Marko Polo");
 
         $this->assertNotNull($adminUser->getId());
         $this->assertEquals("marko2@polo.com", $adminUser->getEmailAddress());
         $this->assertEquals("Marko Polo", $adminUser->getName());
         $this->assertEquals(hash("md5", "pickle"), $adminUser->getHashedPassword());
         $this->assertEquals(1, sizeof($adminUser->getRoles()));
-        $this->assertNull($adminUser->getRoles()[0]->getAccountId());
+        $this->assertEquals(0, $adminUser->getRoles()[0]->getAccountId());
         $this->assertNull($adminUser->getRoles()[0]->getRoleId());
 
 
         // Check duplicate issue
         try {
-            User::createAdminUser("marko2@polo.com", "pickle", "Marko Polo");
+            $this->userService->createAdminUser("marko2@polo.com", "pickle", "Marko Polo");
 
             $this->fail("Should have thrown validation problems here");
 
@@ -147,6 +173,5 @@ class UserTest extends TestBase {
 
 
     }
-
 
 }

@@ -7,13 +7,8 @@ use Kinikit\Persistence\UPF\Framework\UPF;
 
 class TestBase extends \PHPUnit\Framework\TestCase {
 
-    public function setUp() {
-
+    public static function setUpBeforeClass() {
         include_once __DIR__ . "/InstallTestData.php";
-
-        Container::instance()->createInstance("Kinicart\Services\Application\BootstrapService");
-
-
     }
 
 }

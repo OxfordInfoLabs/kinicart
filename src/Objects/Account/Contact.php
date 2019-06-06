@@ -6,10 +6,14 @@ namespace Kinicart\Objects\Account;
 
 use Kinikit\Persistence\UPF\Object\ActiveRecord;
 
+
+
 /**
  * Contact object for use across the system.
  *
  * Class Contact
+ *
+ * @ormTable kc_contact
  */
 class Contact extends ActiveRecord {
 
@@ -26,7 +30,7 @@ class Contact extends ActiveRecord {
      * Owner account id.
      *
      * @var integer
-     * @validation required.
+     * @validation required
      */
     protected $accountId;
 
@@ -126,6 +130,39 @@ class Contact extends ActiveRecord {
 
 
     const ADDRESS_TYPE_GENERAL = "GENERAL";
+
+    /**
+     * Contact constructor.
+     * @param int $accountId
+     * @param string $type
+     * @param string $name
+     * @param string $organisation
+     * @param string $street1
+     * @param string $street2
+     * @param string $city
+     * @param string $county
+     * @param string $postcode
+     * @param string $countryCode
+     * @param string $telephoneNumber
+     * @param string $emailAddress
+     */
+    public function __construct($name = null, $organisation = null, $street1 = null, $street2 = null, $city = null,
+                                $county = null, $postcode = null, $countryCode = null, $telephoneNumber = null,
+                                $emailAddress = null, $accountId = null, $type = null) {
+
+        $this->accountId = $accountId;
+        $this->type = $type;
+        $this->name = $name;
+        $this->organisation = $organisation;
+        $this->street1 = $street1;
+        $this->street2 = $street2;
+        $this->city = $city;
+        $this->county = $county;
+        $this->postcode = $postcode;
+        $this->countryCode = $countryCode;
+        $this->telephoneNumber = $telephoneNumber;
+        $this->emailAddress = $emailAddress;
+    }
 
 
     /**
@@ -294,6 +331,13 @@ class Contact extends ActiveRecord {
      */
     public function setEmailAddress($emailAddress) {
         $this->emailAddress = $emailAddress;
+    }
+
+    /**
+     * @param int $accountId
+     */
+    public function setAccountId($accountId) {
+        $this->accountId = $accountId;
     }
 
 

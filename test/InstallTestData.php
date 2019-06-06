@@ -1,5 +1,6 @@
 <?php
 
+use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Persistence\Database\Connection\DefaultDB;
 use Kinikit\Persistence\UPF\Object\ActiveRecord;
 
@@ -21,15 +22,28 @@ foreach ($directoryIterator as $item) {
 }
 
 
+// Initialise the application.
+Container::instance()->createInstance("Kinicart\Services\Application\BootstrapService");
+
+/**
+ * @var $interceptor \Kinicart\Services\Security\ObjectInterceptor
+ */
+$interceptor = Container::instance()->createInstance("Kinicart\Services\Security\ObjectInterceptor");
+
+$interceptor->executeInsecure(function () {
+
 // Add core test data
-echo "\n\nAdding core test data.....";
-processTestDataDirectory(__DIR__ . "/TestData");
+    echo "\n\nAdding core test data.....";
+    processTestDataDirectory(__DIR__ . "/TestData");
+
+});
 
 
 // Process test data directory looking for objects.
 function processTestDataDirectory($directory) {
 
     $iterator = new DirectoryIterator($directory);
+    $filepaths = array();
     foreach ($iterator as $item) {
 
         if ($item->isDot())
@@ -40,12 +54,21 @@ function processTestDataDirectory($directory) {
             continue;
         }
 
+        $filepaths[] = $item->getRealPath();
+
+
+    }
+
+    sort($filepaths);
+
+    foreach ($filepaths as $filepath){
+
         // Now grab the filename and explode on TestData
-        $exploded = explode("TestData/", $item->getRealPath());
+        $exploded = explode("TestData/", $filepath);
         $targetClass = explode(".", $exploded[1]);
         $targetClass = "Kinicart\\Objects\\" . str_replace("/", "\\", $targetClass[0]);
 
-        $items = json_decode(file_get_contents($item->getRealPath()), true);
+        $items = json_decode(file_get_contents($filepath), true);
 
         foreach ($items as $item) {
 
@@ -56,10 +79,11 @@ function processTestDataDirectory($directory) {
             $obj->bind($item);
             $obj->save();
 
+
         }
 
-
     }
+
 
 
 }

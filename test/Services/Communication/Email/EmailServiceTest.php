@@ -21,6 +21,9 @@ class EmailServiceTest extends TestBase {
     public function setUp() {
         parent::setUp();
 
+        $authenticationService = Container::instance()->createInstance("Kinicart\Services\Security\AuthenticationService");
+        $authenticationService->logIn("sam@samdavisdesign.co.uk", "password");
+
         $this->emailService = Container::instance()->createInstance("Kinicart\Services\Communication\Email\EmailService");
     }
 

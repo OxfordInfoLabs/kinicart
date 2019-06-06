@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Kinicart\Objects\Application;
+namespace Kinicart\Services\Application;
 
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Account\User;
@@ -21,7 +21,7 @@ class Session extends HttpSession {
      *
      * @return User
      */
-    public function getLoggedInUser() {
+    public function __getLoggedInUser() {
         return $this->getValue("loggedInUser");
     }
 
@@ -31,7 +31,7 @@ class Session extends HttpSession {
      *
      * @param $user User
      */
-    public function setLoggedInUser($user) {
+    public function __setLoggedInUser($user) {
         $this->setValue("loggedInUser", $user);
     }
 
@@ -41,7 +41,7 @@ class Session extends HttpSession {
      *
      * @return Account
      */
-    public function getLoggedInAccount() {
+    public function __getLoggedInAccount() {
         return $this->getValue("loggedInAccount");
     }
 
@@ -51,8 +51,26 @@ class Session extends HttpSession {
      *
      * @param $account
      */
-    public function setLoggedInAccount($account) {
+    public function __setLoggedInAccount($account) {
         $this->setValue("loggedInAccount", $account);
+    }
+
+
+    /**
+     * Get logged in privileges array - keyed in by account id.  Cached for performance.
+     */
+    public function __getLoggedInPrivileges() {
+        return $this->getValue("loggedInPrivileges");
+    }
+
+
+    /**
+     * Set logged in privileges array - keyed in by account id.  Cached here for performance.
+     *
+     * @param $privileges
+     */
+    public function __setLoggedInPrivileges($privileges) {
+        $this->setValue("loggedInPrivileges", $privileges);
     }
 
 
@@ -61,7 +79,7 @@ class Session extends HttpSession {
      *
      * @return $string
      */
-    public function getReferringURL() {
+    public function __getReferringURL() {
         return $this->getValue("referringURL");
     }
 
@@ -71,7 +89,7 @@ class Session extends HttpSession {
      *
      * @param $referringURL
      */
-    public function setReferringURL($referringURL) {
+    public function __setReferringURL($referringURL) {
         $this->setValue("referringURL", $referringURL);
     }
 
@@ -81,7 +99,7 @@ class Session extends HttpSession {
      *
      * @return integer
      */
-    public function getActiveParentAccountId() {
+    public function __getActiveParentAccountId() {
         return $this->getValue("activeParentAccountId");
     }
 
@@ -91,27 +109,9 @@ class Session extends HttpSession {
      *
      * @param $activeParentAccountId
      */
-    public function setActiveParentAccountId($activeParentAccountId) {
+    public function __setActiveParentAccountId($activeParentAccountId) {
         $this->setValue("activeParentAccountId", $activeParentAccountId);
     }
 
-
-    /**
-     * Log out function.
-     */
-    public function logOut() {
-        $this->setValue("loggedInUser", null);
-        $this->setValue("loggedInAccount", null);
-    }
-
-
-    /**
-     * Enforce a singleton session object
-     *
-     * @return Session
-     */
-    public static function instance() {
-        return parent::instance();
-    }
 
 }

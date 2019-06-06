@@ -27,16 +27,6 @@ CREATE TABLE kc_user (
 );
 
 
--- Role table
-CREATE TABLE kc_role (
-    id  INTEGER PRIMARY KEY AUTOINCREMENT,
-    account_id  INTEGER,
-    scope VARCHAR(20),
-    role_key    VARCHAR(50),
-    description VARCHAR(255),
-    privileges LONGTEXT
-);
-
 -- User account roles relational table
 CREATE TABLE kc_user_account_role (
     user_id INTEGER,
@@ -53,8 +43,8 @@ CREATE TABLE kc_contact (
     type VARCHAR(20),
     name VARCHAR(255),
     organisation VARCHAR(255),
-    street_1 VARCHAR(255),
-    street_2    VARCHAR(255),
+    street1 VARCHAR(255),
+    street2    VARCHAR(255),
     city    VARCHAR(255),
     county  VARCHAR(255),
     postcode    VARCHAR(255),

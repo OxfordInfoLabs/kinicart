@@ -75,9 +75,10 @@ class UserAccountRole extends ActiveRecord {
      * @param integer $accountId
      * @param integer $roleId
      */
-    public function __construct($accountId = null, $roleId = null) {
+    public function __construct($accountId = null, $roleId = null, $userId = null) {
         $this->accountId = $accountId;
         $this->roleId = $roleId;
+        $this->userId = $userId;
     }
 
 

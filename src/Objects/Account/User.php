@@ -131,7 +131,7 @@ class User extends ActiveRecord {
         $this->emailAddress = $emailAddress;
         if ($password) $this->hashedPassword = hash("md5", $password);
         $this->name = $name;
-        $this->parentAccountId = $parentAccountId ? $parentAccountId : Session::instance()->getActiveParentAccountId();
+        $this->parentAccountId = $parentAccountId;
     }
 
 
@@ -338,58 +338,6 @@ class User extends ActiveRecord {
             $validationErrors["emailAddress"] = new FieldValidationError("emailAddress", "duplicateEmail", "A user already exists with this email address");
 
         return $validationErrors;
-    }
-
-
-    /**
-     * Create a brand new user - optionally supply a name, account name and parent account id if relevant.  If no
-     * parent Account Id is supplied, the session context will be used.
-     */
-    public static function createWithAccount($emailAddress, $password, $name = null, $accountName = null, $parentAccountId = null) {
-
-        // Create a new user, save it and return it back.
-        $user = new User($emailAddress, $password, $name, $parentAccountId);
-        if ($validationErrors = $user->validate()) {
-            throw new ValidationException($validationErrors);
-        }
-
-        // Create an account to match with any name we can find.
-        $account = new Account($accountName ? $accountName : ($name ? $name : $emailAddress), $parentAccountId);
-        $account->save();
-
-        $user->setRoles(array(new UserAccountRole($account->getId())));
-        $user->save();
-
-        // Resync the user object
-        $user->synchroniseRelationships();
-
-        return $user;
-
-    }
-
-
-    /**
-     * Create an admin user.
-     *
-     * @param $emailAddress
-     * @param $password
-     * @param null $name
-     */
-    public static function createAdminUser($emailAddress, $password, $name = null) {
-
-        // Create a new user, save it and return it back.
-        $user = new User($emailAddress, $password, $name);
-        if ($validationErrors = $user->validate()) {
-            throw new ValidationException($validationErrors);
-        }
-
-        $user->setRoles(array(new UserAccountRole()));
-        $user->save();
-
-        // Resync the user object
-        $user->synchroniseRelationships();
-
-        return $user;
     }
 
 

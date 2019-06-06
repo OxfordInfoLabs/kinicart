@@ -9,9 +9,10 @@ use Kinicart\Exception\Application\UserSuspendedException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Account\AccountSummary;
 use Kinicart\Objects\Account\User;
-use Kinicart\Services\Application\AuthenticationService;
-use Kinicart\Objects\Application\BootstrapService;
-use Kinicart\Objects\Application\Session;
+use Kinicart\Objects\Account\UserAccountRole;
+use Kinicart\Services\Security\AuthenticationService;
+use Kinicart\Services\Application\BootstrapService;
+use Kinicart\Services\Application\Session;
 use Kinicart\Test\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
 
@@ -25,13 +26,19 @@ class AuthenticationServiceTest extends TestBase {
     private $authenticationService;
     private $bootstrapService;
 
+    /**
+     * @var Session
+     */
+    private $session;
+
 
     public function setUp() {
 
         parent::setUp();
 
-        $this->authenticationService = Container::instance()->createInstance("Kinicart\Services\Application\AuthenticationService");
+        $this->authenticationService = Container::instance()->createInstance("Kinicart\Services\Security\AuthenticationService");
         $this->bootstrapService = Container::instance()->createInstance("Kinicart\Services\Application\BootstrapService");
+        $this->session = Container::instance()->createInstance("Kinicart\Services\Application\Session");
     }
 
     public function testCanCheckWhetherEmailExistsOrNot() {
@@ -52,14 +59,18 @@ class AuthenticationServiceTest extends TestBase {
         $this->authenticationService->logIn("admin@kinicart.com", "password");
 
         // Confirm that we are now logged in
-        $this->assertNull(Session::instance()->getLoggedInAccount());
+        $this->assertNull($this->session->__getLoggedInAccount());
 
-        $loggedInUser = Session::instance()->getLoggedInUser();
+        $loggedInUser = $this->session->__getLoggedInUser();
         $this->assertTrue($loggedInUser instanceof User);
 
         $this->assertEquals(1, $loggedInUser->getId());
         $this->assertEquals("Administrator", $loggedInUser->getName());
         $this->assertEquals(1, sizeof($loggedInUser->getRoles()));
+
+        // Check the logged in privileges are set correctly.
+        $this->assertEquals(array("*" => array("superuser" => 1)), $this->session->__getLoggedInPrivileges());
+
 
     }
 
@@ -72,7 +83,7 @@ class AuthenticationServiceTest extends TestBase {
         $this->authenticationService->logIn("sam@samdavisdesign.co.uk", "password");
 
         // Check the user
-        $loggedInUser = Session::instance()->getLoggedInUser();
+        $loggedInUser = $this->session->__getLoggedInUser();
         $this->assertTrue($loggedInUser instanceof User);
 
         $this->assertEquals(2, $loggedInUser->getId());
@@ -83,10 +94,14 @@ class AuthenticationServiceTest extends TestBase {
         $this->assertEquals(1, sizeof($loggedInUser->getRoles()));
         $this->assertEquals(1, $loggedInUser->getRoles()[0]->getAccountId());
 
-        $loggedInAccount = Session::instance()->getLoggedInAccount();
+        $loggedInAccount = $this->session->__getLoggedInAccount();
         $this->assertTrue($loggedInAccount instanceof AccountSummary);
         $this->assertEquals(1, $loggedInAccount->getId());
         $this->assertEquals("Sam Davis Design", $loggedInAccount->getName());
+
+        // Check logged in privileges
+        $this->assertEquals(array("1" => array("administrator" => 1), "5" => array("access" => 1), "9" => array("access" => 1)), $this->session->__getLoggedInPrivileges());
+
 
     }
 
@@ -96,7 +111,7 @@ class AuthenticationServiceTest extends TestBase {
         $this->authenticationService->logIn("james@smartcoasting.org", "password");
 
         // Check the user
-        $loggedInUser = Session::instance()->getLoggedInUser();
+        $loggedInUser = $this->session->__getLoggedInUser();
         $this->assertTrue($loggedInUser instanceof User);
 
         $this->assertEquals(4, $loggedInUser->getId());
@@ -106,7 +121,7 @@ class AuthenticationServiceTest extends TestBase {
         $this->assertEquals(3, $loggedInUser->getRoles()[1]->getAccountId());
 
 
-        $loggedInAccount = Session::instance()->getLoggedInAccount();
+        $loggedInAccount = $this->session->__getLoggedInAccount();
         $this->assertTrue($loggedInAccount instanceof AccountSummary);
         $this->assertEquals(3, $loggedInAccount->getId());
         $this->assertEquals("Smart Coasting", $loggedInAccount->getName());
@@ -123,7 +138,7 @@ class AuthenticationServiceTest extends TestBase {
         $this->authenticationService->logIn("james@smartcoasting.org", "password");
 
         // Check the user
-        $loggedInUser = Session::instance()->getLoggedInUser();
+        $loggedInUser = $this->session->__getLoggedInUser();
         $this->assertTrue($loggedInUser instanceof User);
 
         $this->assertEquals(9, $loggedInUser->getId());
@@ -132,13 +147,13 @@ class AuthenticationServiceTest extends TestBase {
         $this->assertEquals(5, $loggedInUser->getRoles()[0]->getAccountId());
 
 
-        $loggedInAccount = Session::instance()->getLoggedInAccount();
+        $loggedInAccount = $this->session->__getLoggedInAccount();
         $this->assertTrue($loggedInAccount instanceof AccountSummary);
         $this->assertEquals(5, $loggedInAccount->getId());
         $this->assertEquals("Smart Coasting - Design Account", $loggedInAccount->getName());
 
         // Reset parent context.
-        $this->authenticationService->updateActiveParentAccount( "https://www.google.com/hello/123");
+        $this->authenticationService->updateActiveParentAccount("https://www.google.com/hello/123");
 
 
     }
@@ -201,11 +216,11 @@ class AuthenticationServiceTest extends TestBase {
         // now test one with an active account which is suspended.  Check that the active account is set to the alternative account.
         $this->authenticationService->logIn("mary@shoppingonline.com", "password");
 
-        $loggedInUser = Session::instance()->getLoggedInUser();
+        $loggedInUser = $this->session->__getLoggedInUser();
         $this->assertTrue($loggedInUser instanceof User);
         $this->assertEquals(7, $loggedInUser->getId());
 
-        $loggedInAccount = Session::instance()->getLoggedInAccount();
+        $loggedInAccount = $this->session->__getLoggedInAccount();
         $this->assertTrue($loggedInAccount instanceof AccountSummary);
         $this->assertEquals(2, $loggedInAccount->getId());
 
@@ -224,22 +239,22 @@ class AuthenticationServiceTest extends TestBase {
 
         $this->authenticationService->apiAuthenticate("TESTAPIKEY", "TESTAPISECRET");
 
-        $this->assertNull(Session::instance()->getLoggedInUser());
-        $this->assertNotNull(Session::instance()->getLoggedInAccount());
+        $this->assertNull($this->session->__getLoggedInUser());
+        $this->assertNotNull($this->session->__getLoggedInAccount());
 
-        $this->assertEquals(1, Session::instance()->getLoggedInAccount()->getId());
+        $this->assertEquals(1, $this->session->__getLoggedInAccount()->getId());
 
     }
 
 
     public function testCanLogOut() {
         $this->authenticationService->logIn("james@smartcoasting.org", "password");
-        $this->assertNotNull(Session::instance()->getLoggedInAccount());
-        $this->assertNotNull(Session::instance()->getLoggedInUser());
+        $this->assertNotNull($this->session->__getLoggedInAccount());
+        $this->assertNotNull($this->session->__getLoggedInUser());
 
         $this->authenticationService->logOut();
-        $this->assertNull(Session::instance()->getLoggedInAccount());
-        $this->assertNull(Session::instance()->getLoggedInUser());
+        $this->assertNull($this->session->__getLoggedInAccount());
+        $this->assertNull($this->session->__getLoggedInUser());
 
     }
 
@@ -248,19 +263,21 @@ class AuthenticationServiceTest extends TestBase {
 
         $this->authenticationService->updateActiveParentAccount("https://www.google.com/hello/123");
 
-        $this->assertEquals("www.google.com", Session::instance()->getReferringURL());
-        $this->assertEquals(0, Session::instance()->getActiveParentAccountId());
+        $this->assertEquals("www.google.com", $this->session->__getReferringURL());
+        $this->assertEquals(0, $this->session->__getActiveParentAccountId());
 
         $this->authenticationService->updateActiveParentAccount("http://apps.hello.org/mark");
 
-        $this->assertEquals("apps.hello.org", Session::instance()->getReferringURL());
-        $this->assertEquals(0, Session::instance()->getActiveParentAccountId());
+        $this->assertEquals("apps.hello.org", $this->session->__getReferringURL());
+        $this->assertEquals(0, $this->session->__getActiveParentAccountId());
 
 
         $this->authenticationService->updateActiveParentAccount("http://samdavis.org/mark");
 
-        $this->assertEquals("samdavis.org", Session::instance()->getReferringURL());
-        $this->assertEquals(1, Session::instance()->getActiveParentAccountId());
+        $this->assertEquals("samdavis.org", $this->session->__getReferringURL());
+        $this->assertEquals(1, $this->session->__getActiveParentAccountId());
+
+        $this->authenticationService->updateActiveParentAccount("");
 
     }
 
@@ -270,17 +287,65 @@ class AuthenticationServiceTest extends TestBase {
 
         $this->authenticationService->logIn("simon@peterjonescarwash.com", "password");
 
-        $this->assertNotNull(Session::instance()->getLoggedInUser());
-        $this->assertNotNull(Session::instance()->getLoggedInAccount());
+        $this->assertNotNull($this->session->__getLoggedInUser());
+        $this->assertNotNull($this->session->__getLoggedInAccount());
 
         $this->authenticationService->updateActiveParentAccount("http://samdavis.org/mark");
 
-        $this->assertNull(Session::instance()->getLoggedInUser());
-        $this->assertNull(Session::instance()->getLoggedInAccount());
+        $this->assertNull($this->session->__getLoggedInUser());
+        $this->assertNull($this->session->__getLoggedInAccount());
 
-
+        $this->authenticationService->updateActiveParentAccount("");
     }
 
+
+    public function testCanGetLoggedInPrivilegesForAnAccount() {
+
+        // Logged out
+        $this->authenticationService->logOut();
+
+        $this->assertEquals(array(), $this->authenticationService->getLoggedInPrivileges(1));
+        $this->assertEquals(array(), $this->authenticationService->getLoggedInPrivileges(2));
+        $this->assertEquals(array(), $this->authenticationService->getLoggedInPrivileges(3));
+
+
+        // Super user.
+        $this->authenticationService->logIn("admin@kinicart.com", "password");
+
+        $this->assertEquals(array("superuser"), $this->authenticationService->getLoggedInPrivileges(1));
+        $this->assertEquals(array("superuser"), $this->authenticationService->getLoggedInPrivileges(2));
+        $this->assertEquals(array("superuser"), $this->authenticationService->getLoggedInPrivileges());
+
+
+        // Account admin
+        $this->authenticationService->logIn("sam@samdavisdesign.co.uk", "password");
+
+        $this->assertEquals(array("administrator"), $this->authenticationService->getLoggedInPrivileges(1));
+        $this->assertEquals(array(), $this->authenticationService->getLoggedInPrivileges(2));
+        $this->assertEquals(array(), $this->authenticationService->getLoggedInPrivileges(3));
+
+
+        // User with dual account admin access.
+        $this->authenticationService->logIn("mary@shoppingonline.com", "password");
+        $this->assertEquals(array(), $this->authenticationService->getLoggedInPrivileges(1));
+        $this->assertEquals(array("viewdata", "editdata", "deletedata"), $this->authenticationService->getLoggedInPrivileges(2));
+        $this->assertEquals(array(), $this->authenticationService->getLoggedInPrivileges(3));
+        $this->assertEquals(array("viewdata", "editdata"), $this->authenticationService->getLoggedInPrivileges(4));
+
+
+        // User with sub accounts.
+        $this->authenticationService->logIn("sam@samdavisdesign.co.uk", "password");
+        $this->assertEquals(array("access"), $this->authenticationService->getLoggedInPrivileges(5));
+        $this->assertEquals(array("access"), $this->authenticationService->getLoggedInPrivileges(9));
+
+
+        // Account logged in by API
+        $this->authenticationService->apiAuthenticate("TESTAPIKEY", "TESTAPISECRET");
+        $this->assertEquals(array("administrator"), $this->authenticationService->getLoggedInPrivileges());
+        $this->assertEquals(array("access"), $this->authenticationService->getLoggedInPrivileges(5));
+        $this->assertEquals(array("access"), $this->authenticationService->getLoggedInPrivileges(9));
+
+    }
 
 
 }

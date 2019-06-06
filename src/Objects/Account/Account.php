@@ -54,7 +54,7 @@ class Account extends AccountSummary {
      */
     public function __construct($name = null, $parentAccountId = null) {
         $this->name = $name;
-        $this->parentAccountId = $parentAccountId ? $parentAccountId : Session::instance()->getActiveParentAccountId();
+        $this->parentAccountId = $parentAccountId;
 
         $this->apiKey = StringUtils::generateRandomString(10, true, true, false);
         $this->apiSecret = StringUtils::generateRandomString(10, true, true, false);

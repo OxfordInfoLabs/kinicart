@@ -8,17 +8,17 @@
     "value": "TESTLOGO"
   },
   {
-    "accountId": 1,
+    "parentAccountId": 1,
     "key": "brandName",
     "value": "Sam Davis Retail Outlet"
   },
   {
-    "accountId": 1,
+    "parentAccountId": 1,
     "key": "logo",
     "value": "TESTLOGO2"
   },
   {
-    "accountId": 1,
+    "parentAccountId": 1,
     "key": "referringDomains",
     "value": "samdavis.org"
   }

@@ -34,7 +34,6 @@ class Role extends ActiveRecord {
     /**
      * Scope of this role.  This is one of the following
      *
-     * SUPER_USER - Where the role only applies to super users.
      * PARENT_ACCOUNT - Where the role only applies to accounts which have the subAccountsEnabled flag set.
      * ACCOUNT - Where the role applies to any account.
      *
@@ -44,12 +43,12 @@ class Role extends ActiveRecord {
 
 
     /**
-     * String identifier for programmatic use.
+     * String name .
      *
      * @var string
      * @validation required
      */
-    private $roleKey;
+    private $name;
 
 
     /**
@@ -64,14 +63,13 @@ class Role extends ActiveRecord {
     /**
      * An array of privileges.
      *
-     * @formatter jsonformat
-     * @var Privilege[]
+     * @formatter json
+     * @var string[]
      */
     private $privileges;
 
 
     // SCOPE CONSTANTS
-    const SCOPE_SUPER_USER = "SUPER_USER";
     const SCOPE_PARENT_ACCOUNT = "PARENT_ACCOUNT";
     const SCOPE_ACCOUNT = "ACCOUNT";
 
@@ -81,7 +79,6 @@ class Role extends ActiveRecord {
     public function getId() {
         return $this->id;
     }
-
 
 
     /**
@@ -115,15 +112,15 @@ class Role extends ActiveRecord {
     /**
      * @return string
      */
-    public function getRoleKey() {
-        return $this->roleKey;
+    public function getName() {
+        return $this->name;
     }
 
     /**
-     * @param string $roleKey
+     * @param string $name
      */
-    public function setRoleKey($roleKey) {
-        $this->roleKey = $roleKey;
+    public function setName($name) {
+        $this->name = $name;
     }
 
     /**

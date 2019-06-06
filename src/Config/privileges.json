@@ -1,0 +1,10 @@
+[
+  {
+    "key": "administrator",
+    "description": "Full access to an account."
+  },
+  {
+    "key": "access",
+    "description": "Lowest level of access to an account."
+  }
+]

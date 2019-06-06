@@ -23,7 +23,7 @@ class Setting extends ActiveRecord {
      * @var integer
      * @primaryKey
      */
-    private $accountId;
+    private $parentAccountId;
 
     /**
      * @var string
@@ -73,15 +73,15 @@ class Setting extends ActiveRecord {
     /**
      * @return int
      */
-    public function getAccountId() {
-        return $this->accountId;
+    public function getParentAccountId() {
+        return $this->parentAccountId;
     }
 
     /**
-     * @param int $accountId
+     * @param int $parentAccountId
      */
-    public function setAccountId($accountId) {
-        $this->accountId = $accountId;
+    public function setParentAccountId($parentAccountId) {
+        $this->parentAccountId = $parentAccountId;
     }
 
     /**
@@ -186,8 +186,6 @@ class Setting extends ActiveRecord {
 
         return self::$settingDefinitions;
     }
-
-
 
 
 }

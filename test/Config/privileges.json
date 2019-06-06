@@ -1,0 +1,14 @@
+[
+  {
+    "key": "viewdata",
+    "description": "Test View Data Privilege."
+  },
+  {
+    "key": "editdata",
+    "description": "Test Edit Data Privilege"
+  },
+  {
+    "key": "deletedata",
+    "description": "Test Delete Data Privilege"
+  }
+]
