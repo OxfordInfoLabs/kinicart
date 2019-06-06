@@ -24,8 +24,8 @@ class ObjectInterceptorTest extends TestBase {
 
     public function setUp() {
         parent::setUp();
-        $this->objectInterceptor = Container::instance()->createInstance("Kinicart\Services\Security\ObjectInterceptor");
-        $this->authenticationService = Container::instance()->createInstance("Kinicart\Services\Security\AuthenticationService");
+        $this->objectInterceptor = Container::instance()->get("Kinicart\Services\Security\ObjectInterceptor");
+        $this->authenticationService = Container::instance()->get("Kinicart\Services\Security\AuthenticationService");
     }
 
 

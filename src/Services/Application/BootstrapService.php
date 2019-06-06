@@ -43,7 +43,7 @@ class BootstrapService {
         UPF::instance()->getPersistenceCoordinator()->setIncludedMappingFiles(__DIR__ . "/../../Config/upf.xml");
 
         // Add the object interceptor
-        $objectInterceptor = Container::instance()->createInstance("Kinicart\Services\Security\ObjectInterceptor");
+        $objectInterceptor = Container::instance()->get("Kinicart\Services\Security\ObjectInterceptor");
         UPF::instance()->getPersistenceCoordinator()->setInterceptors(array($objectInterceptor));
 
         // Add the method interceptor

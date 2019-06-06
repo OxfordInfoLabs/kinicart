@@ -36,9 +36,9 @@ class AuthenticationServiceTest extends TestBase {
 
         parent::setUp();
 
-        $this->authenticationService = Container::instance()->createInstance("Kinicart\Services\Security\AuthenticationService");
-        $this->bootstrapService = Container::instance()->createInstance("Kinicart\Services\Application\BootstrapService");
-        $this->session = Container::instance()->createInstance("Kinicart\Services\Application\Session");
+        $this->authenticationService = Container::instance()->get("Kinicart\Services\Security\AuthenticationService");
+        $this->bootstrapService = Container::instance()->get("Kinicart\Services\Application\BootstrapService");
+        $this->session = Container::instance()->get("Kinicart\Services\Application\Session");
     }
 
     public function testCanCheckWhetherEmailExistsOrNot() {

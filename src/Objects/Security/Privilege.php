@@ -29,6 +29,12 @@ class Privilege extends SerialisableObject {
     private $description;
 
 
+    // Built in privileges.
+    const PRIVILEGE_SUPER_USER = "superuser";
+    const PRIVILEGE_ADMINISTRATOR = "administrator";
+    const PRIVILEGE_ACCESS = "access";
+
+
     /**
      * @return string
      */
@@ -56,9 +62,6 @@ class Privilege extends SerialisableObject {
     public function setDescription($description) {
         $this->description = $description;
     }
-
-
-
 
 
 }

@@ -23,8 +23,8 @@ class UserServiceTest extends TestBase {
 
     public function setUp() {
         parent::setUp();
-        $this->userService = Container::instance()->createInstance("Kinicart\Services\Account\UserService");
-        $this->authenticationService = Container::instance()->createInstance("Kinicart\Services\Security\AuthenticationService");
+        $this->userService = Container::instance()->get("Kinicart\Services\Account\UserService");
+        $this->authenticationService = Container::instance()->get("Kinicart\Services\Security\AuthenticationService");
     }
 
     /**

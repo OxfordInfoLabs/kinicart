@@ -26,8 +26,8 @@ class MethodInterceptorTest extends TestBase {
 
     public function setUp() {
         parent::setUp();
-        $this->testMethodService = Container::instance()->createInstance("\Kinicart\Test\Services\Security\TestMethodService");
-        $this->authenticationService = Container::instance()->createInstance("\Kinicart\Services\Security\AuthenticationService");
+        $this->testMethodService = Container::instance()->get("\Kinicart\Test\Services\Security\TestMethodService");
+        $this->authenticationService = Container::instance()->get("\Kinicart\Services\Security\AuthenticationService");
     }
 
 

@@ -12,6 +12,7 @@ use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Account\AccountSummary;
 use Kinicart\Objects\Account\User;
 use Kinicart\Objects\Application\Session;
+use Kinicart\Objects\Security\Privilege;
 use Kinikit\Core\Util\SerialisableArrayUtils;
 use Kinikit\Persistence\Database\Connection\DefaultDB;
 
@@ -83,6 +84,7 @@ class AuthenticationService {
      *
      * @param $apiKey
      * @param $apiSecret
+     *
      */
     public function apiAuthenticate($apiKey, $apiSecret) {
 
@@ -261,7 +263,7 @@ class AuthenticationService {
                         foreach ($role->getRole()->getPrivileges() as $privilege)
                             $privileges[$accountId][$privilege] = 1;
                     } else {
-                        $privileges[$accountId][$accountId == "*" ? "superuser" : "administrator"] = 1;
+                        $privileges[$accountId][$accountId == "*" ? Privilege::PRIVILEGE_SUPER_USER : Privilege::PRIVILEGE_ADMINISTRATOR] = 1;
                     }
 
                 }
@@ -269,7 +271,7 @@ class AuthenticationService {
             }
 
         } else if ($account) {
-            $privileges[$account->getId()]["administrator"] = 1;
+            $privileges[$account->getId()][Privilege::PRIVILEGE_ADMINISTRATOR] = 1;
             $accountIds[$account->getId()] = 1;
         }
 
@@ -277,7 +279,7 @@ class AuthenticationService {
         if (!$superUser && sizeof($accountIds) > 0) {
             $childAccounts = AccountSummary::query("WHERE parent_account_id IN (" . join(",", $accountIds) . ")");
             foreach ($childAccounts as $childAccount) {
-                $privileges[$childAccount->getId()]["access"] = 1;
+                $privileges[$childAccount->getId()][Privilege::PRIVILEGE_ACCESS] = 1;
             }
         }
 
