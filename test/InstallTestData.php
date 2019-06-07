@@ -70,18 +70,10 @@ function processTestDataDirectory($directory) {
 
         $items = json_decode(file_get_contents($filepath), true);
 
-        foreach ($items as $item) {
+        $objects = \Kinikit\Core\Util\SerialisableArrayUtils::convertArrayToSerialisableObjects($items, $targetClass . "[]");
 
-
-            /**
-             * @var $obj ActiveRecord
-             */
-            $obj = new $targetClass();
-            $obj->bind($item);
-
-            $obj->save();
-
-
+        foreach ($objects as $item) {
+            $item->save();
         }
 
     }
