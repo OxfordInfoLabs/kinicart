@@ -4,7 +4,8 @@
 namespace Kinicart\Services\Application;
 
 use Kinicart\Objects\Account\Account;
-use Kinicart\Objects\Account\User;
+
+use Kinicart\Objects\Security\User;
 use Kinikit\Core\Util\HTTP\HttpSession;
 
 /**

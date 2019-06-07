@@ -29,10 +29,28 @@ class Privilege extends SerialisableObject {
     private $description;
 
 
+    /**
+     * The scope for this privilege
+     *
+     * @var string
+     */
+    private $scope = Role::SCOPE_ACCOUNT;
+
+
     // Built in privileges.
-    const PRIVILEGE_SUPER_USER = "superuser";
-    const PRIVILEGE_ADMINISTRATOR = "administrator";
     const PRIVILEGE_ACCESS = "access";
+
+    /**
+     * Privilege constructor.
+     * @param string $key
+     * @param string $description
+     * @param string $scope
+     */
+    public function __construct($key = null, $description = null, $scope = null) {
+        $this->key = $key;
+        $this->description = $description;
+        $this->scope = $scope;
+    }
 
 
     /**
@@ -61,6 +79,20 @@ class Privilege extends SerialisableObject {
      */
     public function setDescription($description) {
         $this->description = $description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getScope() {
+        return $this->scope;
+    }
+
+    /**
+     * @param string $scope
+     */
+    public function setScope($scope) {
+        $this->scope = $scope;
     }
 
 

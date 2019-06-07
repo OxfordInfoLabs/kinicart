@@ -5,6 +5,8 @@ namespace Kinicart\Test\Services\Communication\Email;
 use Kinicart\Objects\Communication\Attachment\Attachment;
 use Kinicart\Objects\Communication\Attachment\AttachmentSummary;
 use Kinicart\Objects\Communication\Email\Email;
+use Kinicart\Services\Communication\Email\EmailService;
+use Kinicart\Services\Security\AuthenticationService;
 use Kinicart\Test\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
 
@@ -21,10 +23,10 @@ class EmailServiceTest extends TestBase {
     public function setUp() {
         parent::setUp();
 
-        $authenticationService = Container::instance()->get("Kinicart\Services\Security\AuthenticationService");
+        $authenticationService = Container::instance()->get(AuthenticationService::class);
         $authenticationService->login("sam@samdavisdesign.co.uk", "password");
 
-        $this->emailService = Container::instance()->get("Kinicart\Services\Communication\Email\EmailService");
+        $this->emailService = Container::instance()->get(EmailService::class);
     }
 
     public function testWhenEmailSentCorrectlyWithDefaultProviderEmailIsAlsoLoggedInDatabase() {

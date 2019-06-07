@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Kinicart\Exception\Application;
+namespace Kinicart\Exception\Security;
 
 
 class AccountSuspendedException extends \Exception {

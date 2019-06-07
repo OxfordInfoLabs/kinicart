@@ -23,12 +23,12 @@ foreach ($directoryIterator as $item) {
 
 
 // Initialise the application.
-Container::instance()->get("Kinicart\Services\Application\BootstrapService");
+Container::instance()->get(\Kinicart\Services\Application\BootstrapService::class);
 
 /**
  * @var $interceptor \Kinicart\Services\Security\ObjectInterceptor
  */
-$interceptor = Container::instance()->get("Kinicart\Services\Security\ObjectInterceptor");
+$interceptor = Container::instance()->get(\Kinicart\Services\Security\ObjectInterceptor::class);
 
 $interceptor->executeInsecure(function () {
 

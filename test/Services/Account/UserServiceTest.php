@@ -23,8 +23,8 @@ class UserServiceTest extends TestBase {
 
     public function setUp() {
         parent::setUp();
-        $this->userService = Container::instance()->get("Kinicart\Services\Account\UserService");
-        $this->authenticationService = Container::instance()->get("Kinicart\Services\Security\AuthenticationService");
+        $this->userService = Container::instance()->get(\Kinicart\Services\Account\UserService::class);
+        $this->authenticationService = Container::instance()->get(\Kinicart\Services\Security\AuthenticationService::class);
     }
 
     /**
@@ -114,7 +114,7 @@ class UserServiceTest extends TestBase {
         try {
             $this->userService->createAdminUser("marko@polo.com", "pickle");
             $this->fail("Should have thrown here");
-        } catch (\Kinikit\Persistence\UPF\Exception\UPFObjectSaveVetoedException $e) {
+        } catch (\Kinicart\Exception\Security\AccessDeniedException $e) {
             // Expected
         }
 

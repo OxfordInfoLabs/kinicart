@@ -2,10 +2,10 @@
 
 namespace Kinicart\Test\Objects\Application;
 
-use Kinicart\Exception\Application\AccountSuspendedException;
-use Kinicart\Exception\Application\InvalidAPICredentialsException;
-use Kinicart\Exception\Application\InvalidLoginException;
-use Kinicart\Exception\Application\UserSuspendedException;
+use Kinicart\Exception\Security\AccountSuspendedException;
+use Kinicart\Exception\Security\InvalidAPICredentialsException;
+use Kinicart\Exception\Security\InvalidLoginException;
+use Kinicart\Exception\Security\UserSuspendedException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Account\AccountSummary;
 use Kinicart\Objects\Account\UserAccountRole;
@@ -36,9 +36,9 @@ class AuthenticationServiceTest extends TestBase {
 
         parent::setUp();
 
-        $this->authenticationService = Container::instance()->get("Kinicart\Services\Security\AuthenticationService");
-        $this->bootstrapService = Container::instance()->get("Kinicart\Services\Application\BootstrapService");
-        $this->session = Container::instance()->get("Kinicart\Services\Application\Session");
+        $this->authenticationService = Container::instance()->get(AuthenticationService::class);
+        $this->bootstrapService = Container::instance()->get(BootstrapService::class);
+        $this->session = Container::instance()->get(Session::class);
     }
 
     public function testCanCheckWhetherEmailExistsOrNot() {
@@ -69,7 +69,6 @@ class AuthenticationServiceTest extends TestBase {
         $this->assertEquals(1, sizeof($loggedInUser->getRoles()));
 
 
-
     }
 
     /**
@@ -96,7 +95,6 @@ class AuthenticationServiceTest extends TestBase {
         $this->assertTrue($loggedInAccount instanceof AccountSummary);
         $this->assertEquals(1, $loggedInAccount->getAccountId());
         $this->assertEquals("Sam Davis Design", $loggedInAccount->getName());
-
 
 
     }
@@ -293,9 +291,6 @@ class AuthenticationServiceTest extends TestBase {
 
         $this->authenticationService->updateActiveParentAccount("");
     }
-
-
-
 
 
 }

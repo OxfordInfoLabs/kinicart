@@ -111,6 +111,12 @@
     "emailAddress": "regularuser@smartcoasting.org",
     "hashedPassword": "5f4dcc3b5aa765d61d8327deb882cf99",
     "activeAccountId": 3,
-    "status": "ACTIVE"
+    "status": "ACTIVE",
+    "roles": [
+      {
+        "scopeId": 1,
+        "roleId": 2
+      }
+    ]
   }
 ]

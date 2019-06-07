@@ -4,23 +4,36 @@
 namespace Kinicart\Services\Security;
 
 
-use Kinicart\Exception\Application\AccountSuspendedException;
-use Kinicart\Exception\Application\InvalidLoginException;
-use Kinicart\Exception\Application\UserSuspendedException;
+use Kinicart\Exception\Security\AccountSuspendedException;
+use Kinicart\Exception\Security\InvalidLoginException;
+use Kinicart\Exception\Security\MissingScopeObjectIdForPrivilegeException;
+use Kinicart\Exception\Security\NonExistentPrivilegeException;
+use Kinicart\Exception\Security\UserSuspendedException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Account\AccountSummary;
+use Kinicart\Objects\Security\Privilege;
 use Kinicart\Objects\Security\Role;
 use Kinicart\Objects\Security\User;
+use Kinikit\Core\Object\SerialisableObject;
+use Kinikit\Core\Util\SerialisableArrayUtils;
+use Kinikit\MVC\Framework\SourceBaseManager;
 
 class SecurityService {
 
     private $session;
-    private $accountScopeAccess;
 
     /**
      * @var ScopeAccess[]
      */
     private $scopeAccesses;
+
+
+    /**
+     * Indexed array of all privileges indexed by key.
+     *
+     * @var Privilege[string]
+     */
+    private $privileges;
 
     /**
      * @param \Kinicart\Services\Application\Session $session
@@ -120,6 +133,31 @@ class SecurityService {
 
 
     /**
+     * Get all privileges.  Maintain a cached copy of all privileges
+     */
+    public function getAllPrivileges() {
+
+        if (!$this->privileges) {
+            $this->privileges = array();
+
+
+            foreach (SourceBaseManager::instance()->getSourceBases() as $sourceBase) {
+                if (file_exists($sourceBase . "/Config/privileges.json")) {
+                    $privText = file_get_contents($sourceBase . "/Config/privileges.json");
+                    $privileges = SerialisableArrayUtils::convertArrayToSerialisableObjects(json_decode($privText, true), "\Kinicart\Objects\Security\Privilege[]");
+                    $this->privileges = array_merge($this->privileges, $privileges);
+                }
+            }
+
+            $this->privileges = SerialisableArrayUtils::indexArrayOfObjectsByMember("key", $this->privileges);
+        }
+
+
+        return $this->privileges;
+    }
+
+
+    /**
      * Verify whether or not a logged in user can access an object by checking all available installed scope accesses.
      *
      * @param $object
@@ -145,8 +183,51 @@ class SecurityService {
 
 
     /**
-     * Get all privileges for a given account id.  If no account id is passed in, the currently logged in
-     * account privileges are returned.
+     * Check whether or not the logged in entity has the privilege for the passed
+     * scope.  If the scope id is supplied as null we either complain unless the scope
+     * is ACCOUNT in which case we fall back to the logged in account id as a convention.
+     *
+     * @param $privilegeKey
+     * @param $scopeId
+     */
+    public function checkLoggedInHasPrivilege($privilegeKey, $scopeId = null) {
+
+        $allPrivileges = $this->getAllPrivileges();
+
+        // Throw straight away if a bad privilege key is passed.
+        if (!isset($allPrivileges[$privilegeKey])) {
+            throw new NonExistentPrivilegeException($privilegeKey);
+        }
+
+        // Return straight away if not logged in.
+        $loggedInUser = $this->session->__getLoggedInUser();
+        $loggedInAccount = $this->session->__getLoggedInAccount();
+        if ($loggedInUser == null && $loggedInAccount == null) return false;
+
+        $privilegeScope = $allPrivileges[$privilegeKey]->getScope();
+
+        // Resolve missing ids.
+        if (!$scopeId) {
+
+            // Throw if no scope id supplied for a non account role.
+            if ($privilegeScope != Role::SCOPE_ACCOUNT) {
+                throw new MissingScopeObjectIdForPrivilegeException($privilegeKey);
+            } else {
+                // Fall back to logged in user / account
+                if ($loggedInUser) $scopeId = $loggedInUser->getActiveAccountId();
+                else if ($loggedInAccount) $scopeId = $loggedInAccount->getAccountId();
+            }
+        }
+
+        // Now do the main check
+        $loggedInPrivileges = $this->getLoggedInScopePrivileges($privilegeScope, $scopeId);
+        return in_array($privilegeKey, $loggedInPrivileges) || in_array("*", $loggedInPrivileges);
+
+    }
+
+
+    /**
+     * Get all privileges for a given scope and scope id.
      *
      * @param integer $accountId
      *

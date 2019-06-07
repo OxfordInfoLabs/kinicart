@@ -29,7 +29,7 @@ class AccountScopeAccessTest extends TestBase {
     public function setUp() {
         parent::setUp();
         $this->accountScopeAccess = new AccountScopeAccess();
-        $this->authenticationService = Container::instance()->get("Kinicart\Services\Security\AuthenticationService");
+        $this->authenticationService = Container::instance()->get(AuthenticationService::class);
 
         $this->authenticationService->login("admin@kinicart.com", "password");
     }

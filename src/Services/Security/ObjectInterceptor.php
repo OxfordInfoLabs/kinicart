@@ -3,6 +3,7 @@
 
 namespace Kinicart\Services\Security;
 
+use Kinicart\Exception\Security\AccessDeniedException;
 use Kinicart\Objects\Application\Session;
 use Kinikit\Core\Object\SerialisableObject;
 use Kinikit\Persistence\UPF\Framework\UPFObjectInterceptorBase;
@@ -72,7 +73,10 @@ class ObjectInterceptor extends UPFObjectInterceptorBase {
      * @return bool
      */
     private function resolveAccessForObject($object) {
-        return $this->securityService->checkLoggedInObjectAccess($object);
+        if ($this->securityService->checkLoggedInObjectAccess($object))
+            return true;
+        else
+            throw new AccessDeniedException();
     }
 
 

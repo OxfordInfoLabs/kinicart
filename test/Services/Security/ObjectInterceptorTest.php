@@ -3,7 +3,10 @@
 
 namespace Kinicart\Test\Services\Application;
 
+use Kinicart\Exception\Security\AccessDeniedException;
 use Kinicart\Objects\Account\Contact;
+use Kinicart\Services\Security\AuthenticationService;
+use Kinicart\Services\Security\ObjectInterceptor;
 use Kinicart\Test\Services\Security\TestNonAccountObject;
 use Kinicart\Test\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
@@ -24,8 +27,8 @@ class ObjectInterceptorTest extends TestBase {
 
     public function setUp() {
         parent::setUp();
-        $this->objectInterceptor = Container::instance()->get("Kinicart\Services\Security\ObjectInterceptor");
-        $this->authenticationService = Container::instance()->get("Kinicart\Services\Security\AuthenticationService");
+        $this->objectInterceptor = Container::instance()->get(ObjectInterceptor::class);
+        $this->authenticationService = Container::instance()->get(AuthenticationService::class);
     }
 
 
@@ -48,17 +51,52 @@ class ObjectInterceptorTest extends TestBase {
         // Start logged out and confirm that interceptors fail.
         $this->authenticationService->logout();
 
-        $this->assertFalse($this->objectInterceptor->preSave($contact));
-        $this->assertFalse($this->objectInterceptor->preDelete($contact));
-        $this->assertFalse($this->objectInterceptor->postMap($contact));
+        try {
+            $this->objectInterceptor->preSave($contact);
+            $this->fail("Should have thrown here");
+        } catch (AccessDeniedException $e){
+            // Success
+        }
+
+        try {
+            $this->objectInterceptor->preDelete($contact);
+            $this->fail("Should have thrown here");
+        } catch (AccessDeniedException $e){
+            // Success
+        }
+
+        try {
+            $this->objectInterceptor->postMap($contact);
+            $this->fail("Should have thrown here");
+        } catch (AccessDeniedException $e){
+            // Success
+        }
+
 
 
         // Now log in as a different account and confirm that interceptors fail.
         $this->authenticationService->login("simon@peterjonescarwash.com", "password");
 
-        $this->assertFalse($this->objectInterceptor->preSave($contact));
-        $this->assertFalse($this->objectInterceptor->preDelete($contact));
-        $this->assertFalse($this->objectInterceptor->postMap($contact));
+        try {
+            $this->objectInterceptor->preSave($contact);
+            $this->fail("Should have thrown here");
+        } catch (AccessDeniedException $e){
+            // Success
+        }
+
+        try {
+            $this->objectInterceptor->preDelete($contact);
+            $this->fail("Should have thrown here");
+        } catch (AccessDeniedException $e){
+            // Success
+        }
+
+        try {
+            $this->objectInterceptor->postMap($contact);
+            $this->fail("Should have thrown here");
+        } catch (AccessDeniedException $e){
+            // Success
+        }
 
 
         // Now log in as an account with authority and confirm that interceptors succeed.
@@ -88,9 +126,26 @@ class ObjectInterceptorTest extends TestBase {
         });
 
         // And re-enabled afterwards.
-        $this->assertFalse($this->objectInterceptor->preSave($contact));
-        $this->assertFalse($this->objectInterceptor->preDelete($contact));
-        $this->assertFalse($this->objectInterceptor->postMap($contact));
+        try {
+            $this->objectInterceptor->preSave($contact);
+            $this->fail("Should have thrown here");
+        } catch (AccessDeniedException $e){
+            // Success
+        }
+
+        try {
+            $this->objectInterceptor->preDelete($contact);
+            $this->fail("Should have thrown here");
+        } catch (AccessDeniedException $e){
+            // Success
+        }
+
+        try {
+            $this->objectInterceptor->postMap($contact);
+            $this->fail("Should have thrown here");
+        } catch (AccessDeniedException $e){
+            // Success
+        }
 
 
         try {
@@ -104,10 +159,26 @@ class ObjectInterceptorTest extends TestBase {
         }
 
         // And re-enabled afterwards.
-        $this->assertFalse($this->objectInterceptor->preSave($contact));
-        $this->assertFalse($this->objectInterceptor->preDelete($contact));
-        $this->assertFalse($this->objectInterceptor->postMap($contact));
+        try {
+            $this->objectInterceptor->preSave($contact);
+            $this->fail("Should have thrown here");
+        } catch (AccessDeniedException $e){
+            // Success
+        }
 
+        try {
+            $this->objectInterceptor->preDelete($contact);
+            $this->fail("Should have thrown here");
+        } catch (AccessDeniedException $e){
+            // Success
+        }
+
+        try {
+            $this->objectInterceptor->postMap($contact);
+            $this->fail("Should have thrown here");
+        } catch (AccessDeniedException $e){
+            // Success
+        }
 
     }
 

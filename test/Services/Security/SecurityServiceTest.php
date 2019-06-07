@@ -4,8 +4,11 @@
 namespace Kinicart\Test\Services\Security;
 
 
+use Kinicart\Exception\Security\NonExistentPrivilegeException;
 use Kinicart\Objects\Account\Contact;
+use Kinicart\Objects\Security\Privilege;
 use Kinicart\Objects\Security\Role;
+use Kinicart\Services\Security\AuthenticationService;
 use Kinicart\Services\Security\SecurityService;
 use Kinicart\Test\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
@@ -22,8 +25,8 @@ class SecurityServiceTest extends TestBase {
 
     public function setUp() {
         parent::setUp();
-        $this->authenticationService = Container::instance()->get("Kinicart\Services\Security\AuthenticationService");
-        $this->securityService = Container::instance()->get("Kinicart\Services\Security\SecurityService");
+        $this->authenticationService = Container::instance()->get(AuthenticationService::class);
+        $this->securityService = Container::instance()->get(SecurityService::class);
     }
 
 
@@ -97,6 +100,59 @@ class SecurityServiceTest extends TestBase {
         $this->assertTrue($this->securityService->checkLoggedInObjectAccess($contact));
 
 
+    }
+
+    public function testCanGetAllPrivileges() {
+
+        $allPrivileges = $this->securityService->getAllPrivileges();
+
+
+        $this->assertEquals(new Privilege("access", "Lowest level of access to an account.", "ACCOUNT"), $allPrivileges["access"]);
+        $this->assertEquals(new Privilege("viewdata", "Test View Data Privilege.", "ACCOUNT"), $allPrivileges["viewdata"]);
+        $this->assertEquals(new Privilege("editdata", "Test Edit Data Privilege.", "ACCOUNT"), $allPrivileges["editdata"]);
+        $this->assertEquals(new Privilege("deletedata", "Test Delete Data Privilege.", "ACCOUNT"), $allPrivileges["deletedata"]);
+
+    }
+
+
+    public function testCanCheckLoggedInHasPrivilege() {
+
+        // Try non-existent privilege first
+        try {
+            $this->securityService->checkLoggedInHasPrivilege("peterpan");
+            $this->fail("Should have thrown here");
+        } catch (NonExistentPrivilegeException $e) {
+            // Success
+        }
+
+
+        // Logged out
+        $this->authenticationService->logout();
+        $this->assertFalse($this->securityService->checkLoggedInHasPrivilege("access"));
+        $this->assertFalse($this->securityService->checkLoggedInHasPrivilege("access", 5));
+
+        // Super user
+        $this->authenticationService->login("admin@kinicart.com", "password");
+        $this->assertTrue($this->securityService->checkLoggedInHasPrivilege("access"));
+        $this->assertTrue($this->securityService->checkLoggedInHasPrivilege("viewdata"));
+        $this->assertTrue($this->securityService->checkLoggedInHasPrivilege("editdata"));
+        $this->assertTrue($this->securityService->checkLoggedInHasPrivilege("deletedata"));
+        $this->assertTrue($this->securityService->checkLoggedInHasPrivilege("deletedata", 7));
+
+        // Administrator
+        $this->authenticationService->login("sam@samdavisdesign.co.uk", "password");
+        $this->assertTrue($this->securityService->checkLoggedInHasPrivilege("access"));
+        $this->assertTrue($this->securityService->checkLoggedInHasPrivilege("viewdata"));
+        $this->assertTrue($this->securityService->checkLoggedInHasPrivilege("editdata"));
+        $this->assertFalse($this->securityService->checkLoggedInHasPrivilege("access", 2));
+        $this->assertFalse($this->securityService->checkLoggedInHasPrivilege("viewdata", 2));
+        $this->assertFalse($this->securityService->checkLoggedInHasPrivilege("editdata", 2));
+
+        // User with selective roles
+        $this->authenticationService->login("regularuser@smartcoasting.org", "password");
+        $this->assertTrue($this->securityService->checkLoggedInHasPrivilege("editdata"));
+        $this->assertFalse($this->securityService->checkLoggedInHasPrivilege("deletedata"));
+        $this->assertFalse($this->securityService->checkLoggedInHasPrivilege("editdata", 2));
 
     }
 

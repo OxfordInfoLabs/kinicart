@@ -13,8 +13,8 @@ class TestMethodService {
      * Normal unrestricted method
      */
     public function normalMethod() {
-        $contact = new Contact("Mark R", "Test Organisation","My Lane","My Shire","Oxford",
-            "Oxon","OX4 7YY","GB",null,"test@test.com",1,Contact::ADDRESS_TYPE_GENERAL);
+        $contact = new Contact("Mark R", "Test Organisation", "My Lane", "My Shire", "Oxford",
+            "Oxon", "OX4 7YY", "GB", null, "test@test.com", 1, Contact::ADDRESS_TYPE_GENERAL);
         $contact->save();
     }
 
@@ -25,13 +25,32 @@ class TestMethodService {
      * @objectInterceptorDisabled
      */
     public function objectInterceptorDisabledMethod() {
-        $contact = new Contact("Mark R", "Test Organisation","My Lane","My Shire","Oxford",
-            "Oxon","OX4 7YY","GB",null,"test@test.com",1,Contact::ADDRESS_TYPE_GENERAL);
+        $contact = new Contact("Mark R", "Test Organisation", "My Lane", "My Shire", "Oxford",
+            "Oxon", "OX4 7YY", "GB", null, "test@test.com", 1, Contact::ADDRESS_TYPE_GENERAL);
         $contact->save();
     }
 
 
+    /**
+     *
+     * @hasPrivilege deletedata
+     *
+     * @return string
+     */
+    public function accountPermissionRestricted() {
+        return "OK";
+    }
 
+
+    /**
+     * @hasPrivilege editdata($accountId)
+     *
+     * @param $accountId
+     * @param $newName
+     */
+    public function otherAccountPermissionRestricted($accountId, $newName) {
+        return "DONE";
+    }
 
 
 }

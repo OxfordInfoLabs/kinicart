@@ -4,8 +4,8 @@
 namespace Kinicart\Services\Security;
 
 
-use Kinicart\Exception\Application\InvalidAPICredentialsException;
-use Kinicart\Exception\Application\InvalidLoginException;
+use Kinicart\Exception\Security\InvalidAPICredentialsException;
+use Kinicart\Exception\Security\InvalidLoginException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Security\User;
 
