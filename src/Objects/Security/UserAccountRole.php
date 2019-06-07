@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Kinicart\Objects\Account;
+namespace Kinicart\Objects\Security;
 
 
 use Kinikit\Persistence\UPF\Object\ActiveRecord;
@@ -11,6 +11,7 @@ use Kinikit\Persistence\UPF\Object\ActiveRecord;
  * Encodes a role for a user on an account.
  *
  * @ormTable kc_user_account_role
+ * @ormView kc_vw_user_account_role
  *
  */
 class UserAccountRole extends ActiveRecord {
@@ -44,29 +45,22 @@ class UserAccountRole extends ActiveRecord {
 
 
     /**
-     * The role object which this user account role represents.
+     * The read only array of privileges from the role object
      *
-     * @var \Kinicart\Objects\Account\Role
-     *
-     * @relationship
-     * @relatedClassName Kinicart\Objects\Security\Role
-     * @relatedFields roleId=>id
+     * @var string[]
+     * @formatter json
      * @readOnly
      */
-    protected $role;
+    protected $privileges;
 
 
     /**
-     * The account summary object which this user account role is attached to.
+     * Read only status for the linked account
      *
-     * @var \Kinicart\Objects\Account\AccountSummary
-     *
-     * @relationship
-     * @relatedClassName Kinicart\Objects\Account\AccountSummary
-     * @relatedFields accountId=>id
+     * @var string
      * @readOnly
      */
-    protected $accountSummary;
+    protected $accountStatus;
 
 
     /**
@@ -104,17 +98,17 @@ class UserAccountRole extends ActiveRecord {
     }
 
     /**
-     * @return Role
+     * @return string[]
      */
-    public function getRole() {
-        return $this->role;
+    public function getPrivileges() {
+        return $this->privileges;
     }
 
     /**
-     * @return AccountSummary
+     * @return string
      */
-    public function getAccountSummary() {
-        return $this->accountSummary;
+    public function getAccountStatus() {
+        return $this->accountStatus;
     }
 
 

@@ -1,7 +1,7 @@
 <?php
 
 use Kinicart\Objects\Account\Account;
-use Kinicart\Objects\Account\User;
+use Kinicart\Objects\Security\User;
 use Kinicart\Test\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Core\Exception\ValidationException;
@@ -42,14 +42,9 @@ class UserServiceTest extends TestBase {
         $this->assertEquals(User::STATUS_PENDING, $newUser->getStatus());
 
         $this->assertEquals(1, sizeof($newUser->getRoles()));
-        $this->assertEquals(1, sizeof($newUser->getAccounts()));
 
-        $this->assertEquals($newUser->getActiveAccount()->getId(), $newUser->getRoles()[0]->getAccountId());
+        $this->assertEquals($newUser->getActiveAccountId(), $newUser->getRoles()[0]->getAccountId());
         $this->assertNull($newUser->getRoles()[0]->getRoleId());
-
-
-        $this->assertEquals("john@test.com", $newUser->getActiveAccount()->getName());
-        $this->assertEquals(Account::STATUS_ACTIVE, $newUser->getActiveAccount()->getStatus());
 
 
         // Now do one with a users name, check propagation to account name.
@@ -64,10 +59,6 @@ class UserServiceTest extends TestBase {
         $this->assertEquals(User::STATUS_PENDING, $newUser->getStatus());
 
         $this->assertEquals(1, sizeof($newUser->getRoles()));
-        $this->assertEquals(1, sizeof($newUser->getAccounts()));
-
-        $this->assertEquals("John Smith", $newUser->getActiveAccount()->getName());
-        $this->assertEquals(Account::STATUS_ACTIVE, $newUser->getActiveAccount()->getStatus());
 
 
         // Now do one with a user and account name, check propagation to account name.
@@ -83,10 +74,6 @@ class UserServiceTest extends TestBase {
         $this->assertEquals(User::STATUS_PENDING, $newUser->getStatus());
 
         $this->assertEquals(1, sizeof($newUser->getRoles()));
-        $this->assertEquals(1, sizeof($newUser->getAccounts()));
-
-        $this->assertEquals("Smith Enterprises", $newUser->getActiveAccount()->getName());
-        $this->assertEquals(Account::STATUS_ACTIVE, $newUser->getActiveAccount()->getStatus());
 
 
         // Check duplicate issue
@@ -114,10 +101,6 @@ class UserServiceTest extends TestBase {
         $this->assertEquals(User::STATUS_PENDING, $newUser->getStatus());
 
         $this->assertEquals(1, sizeof($newUser->getRoles()));
-        $this->assertEquals(1, sizeof($newUser->getAccounts()));
-
-        $this->assertEquals("Smith Enterprises", $newUser->getActiveAccount()->getName());
-        $this->assertEquals(Account::STATUS_ACTIVE, $newUser->getActiveAccount()->getStatus());
 
 
     }
@@ -126,7 +109,7 @@ class UserServiceTest extends TestBase {
     public function testCanCreateNewAdminUserProvidedWeAreLoggedInAsSuperUser() {
 
         // Log out
-        $this->authenticationService->logOut();
+        $this->authenticationService->logout();
 
         try {
             $adminUser = $this->userService->createAdminUser("marko@polo.com", "pickle");
@@ -136,7 +119,7 @@ class UserServiceTest extends TestBase {
         }
 
         // Log in as super user.
-        $this->authenticationService->logIn("admin@kinicart.com", "password");
+        $this->authenticationService->login("admin@kinicart.com", "password");
 
         // Simple username / password one.
         $adminUser = $this->userService->createAdminUser("marko@polo.com", "pickle");

@@ -61,7 +61,7 @@ function processTestDataDirectory($directory) {
 
     sort($filepaths);
 
-    foreach ($filepaths as $filepath){
+    foreach ($filepaths as $filepath) {
 
         // Now grab the filename and explode on TestData
         $exploded = explode("TestData/", $filepath);
@@ -72,18 +72,19 @@ function processTestDataDirectory($directory) {
 
         foreach ($items as $item) {
 
+
             /**
              * @var $obj ActiveRecord
              */
             $obj = new $targetClass();
             $obj->bind($item);
+
             $obj->save();
 
 
         }
 
     }
-
 
 
 }

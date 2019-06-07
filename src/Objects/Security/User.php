@@ -1,11 +1,14 @@
 <?php
 
 
-namespace Kinicart\Objects\Account;
+namespace Kinicart\Objects\Security;
 
 
+use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Application\Session;
 use Kinikit\Core\Exception\ValidationException;
+use Kinikit\Core\Object\SerialisableObject;
+use Kinikit\Core\Util\SerialisableArrayUtils;
 use Kinikit\Core\Validation\FieldValidationError;
 use Kinikit\Persistence\UPF\Object\ActiveRecord;
 
@@ -85,12 +88,12 @@ class User extends ActiveRecord {
 
 
     /**
-     * An array of role objects.
+     * An array of explicit user account role objects
      *
-     * @var \Kinicart\Objects\Account\UserAccountRole[]
+     * @var \Kinicart\Objects\Security\UserAccountRole[]
      * @relationship
      * @isMultiple
-     * @relatedClassName Kinicart\Objects\Account\UserAccountRole
+     * @relatedClassName Kinicart\Objects\Security\UserAccountRole
      * @relatedFields id=>userId
      *
      */
@@ -256,48 +259,37 @@ class User extends ActiveRecord {
     }
 
 
-    /**
-     * Get an array of account summary objects for which this user has one or more roles.
-     *
-     * @return AccountSummary[]
-     */
-    public function getAccounts() {
-        $accounts = array();
-        if (is_array($this->roles)) {
-            foreach ($this->roles as $role) {
-                if ($role->getAccountSummary()) {
-                    $accounts[$role->getAccountId()] = $role->getAccountSummary();
-                }
-            }
+    public function getAccountIds() {
+        $accountIds = array();
+        foreach ($this->roles as $role) {
+            if ($role->getAccountId())
+                $accountIds[$role->getAccountId()] = 1;
         }
-        return array_values($accounts);
+        return array_keys($accountIds);
     }
 
-
-    /**
-     * Get the active account by looking up in our summary objects.
-     */
-    public function getActiveAccount() {
-        $firstActiveAccount = null;
-        foreach ($this->getAccounts() as $account) {
-            if ($account->getStatus() == Account::STATUS_ACTIVE) {
-                if ($this->activeAccountId == $account->getId())
-                    return $account;
-
-                if (!$firstActiveAccount)
-                    $firstActiveAccount = $account;
-
-            }
-        }
-
-        return $firstActiveAccount;
-    }
 
     /**
      * @return int
      */
     public function getActiveAccountId() {
-        return $this->activeAccountId;
+        $firstActiveAccountId = null;
+
+        $rolesByAccountId = SerialisableArrayUtils::indexArrayOfObjectsByMember("accountId", $this->getRoles());
+
+        foreach ($rolesByAccountId as $role) {
+
+            if ($role->getAccountStatus() == Account::STATUS_ACTIVE) {
+                if ($this->activeAccountId == $role->getAccountId())
+                    return $role->getAccountId();
+
+                if (!$firstActiveAccountId)
+                    $firstActiveAccountId = $role->getAccountId();
+
+            }
+        }
+
+        return $firstActiveAccountId;
     }
 
     /**

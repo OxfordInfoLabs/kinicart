@@ -12,28 +12,6 @@ CREATE TABLE kc_account (
 );
 
 
--- User table.
-CREATE TABLE kc_user (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email_address   VARCHAR(255),
-    name VARCHAR(255),
-    parent_account_id INTEGER DEFAULT 0,
-    hashed_password  VARCHAR(50),
-    mobile_number   VARCHAR(50),
-    backup_email_address    VARCHAR(255),
-    two_factor_data TEXT,
-    active_account_id   INTEGER,
-    status  VARCHAR(20)
-);
-
-
--- User account roles relational table
-CREATE TABLE kc_user_account_role (
-    user_id INTEGER,
-    account_id  INTEGER,
-    role_id    INTEGER,
-    PRIMARY KEY (user_id, account_id, role_id)
-);
 
 
 -- Contact table for general application use

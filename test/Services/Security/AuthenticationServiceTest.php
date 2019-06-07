@@ -8,8 +8,8 @@ use Kinicart\Exception\Application\InvalidLoginException;
 use Kinicart\Exception\Application\UserSuspendedException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Account\AccountSummary;
-use Kinicart\Objects\Account\User;
 use Kinicart\Objects\Account\UserAccountRole;
+use Kinicart\Objects\Security\User;
 use Kinicart\Services\Security\AuthenticationService;
 use Kinicart\Services\Application\BootstrapService;
 use Kinicart\Services\Application\Session;
@@ -56,7 +56,7 @@ class AuthenticationServiceTest extends TestBase {
     public function testCanLoginAsSuperUser() {
 
         // Attempt a login.
-        $this->authenticationService->logIn("admin@kinicart.com", "password");
+        $this->authenticationService->login("admin@kinicart.com", "password");
 
         // Confirm that we are now logged in
         $this->assertNull($this->session->__getLoggedInAccount());
@@ -80,7 +80,7 @@ class AuthenticationServiceTest extends TestBase {
     public function testCanLoginAsRegularAccount() {
 
         // Attempt a login.
-        $this->authenticationService->logIn("sam@samdavisdesign.co.uk", "password");
+        $this->authenticationService->login("sam@samdavisdesign.co.uk", "password");
 
         // Check the user
         $loggedInUser = $this->session->__getLoggedInUser();
@@ -108,7 +108,7 @@ class AuthenticationServiceTest extends TestBase {
 
     public function testCanLoginAsUserWithPrescribedActiveAccount() {
 
-        $this->authenticationService->logIn("james@smartcoasting.org", "password");
+        $this->authenticationService->login("james@smartcoasting.org", "password");
 
         // Check the user
         $loggedInUser = $this->session->__getLoggedInUser();
@@ -123,8 +123,8 @@ class AuthenticationServiceTest extends TestBase {
 
         $loggedInAccount = $this->session->__getLoggedInAccount();
         $this->assertTrue($loggedInAccount instanceof AccountSummary);
-        $this->assertEquals(3, $loggedInAccount->getId());
-        $this->assertEquals("Smart Coasting", $loggedInAccount->getName());
+        $this->assertEquals(2, $loggedInAccount->getId());
+        $this->assertEquals("Peter Jones Car Washing", $loggedInAccount->getName());
 
     }
 
@@ -135,7 +135,7 @@ class AuthenticationServiceTest extends TestBase {
         // Activate parent context.
         $this->authenticationService->updateActiveParentAccount("http://samdavis.org/mark");
 
-        $this->authenticationService->logIn("james@smartcoasting.org", "password");
+        $this->authenticationService->login("james@smartcoasting.org", "password");
 
         // Check the user
         $loggedInUser = $this->session->__getLoggedInUser();
@@ -162,14 +162,14 @@ class AuthenticationServiceTest extends TestBase {
     public function testExceptionRaisedIfInvalidUsernameOrPasswordSupplied() {
 
         try {
-            $this->authenticationService->logIn("bobby@wrong.test", "helloworld");
+            $this->authenticationService->login("bobby@wrong.test", "helloworld");
             $this->fail("Should have thrown here");
         } catch (InvalidLoginException $e) {
             // Success
         }
 
         try {
-            $this->authenticationService->logIn("admin@kinicart.com", "helloworld");
+            $this->authenticationService->login("admin@kinicart.com", "helloworld");
             $this->fail("Should have thrown here");
         } catch (InvalidLoginException $e) {
             // Success
@@ -183,14 +183,14 @@ class AuthenticationServiceTest extends TestBase {
 
 
         try {
-            $this->authenticationService->logIn("suspended@suspendeduser.com", "password");
+            $this->authenticationService->login("suspended@suspendeduser.com", "password");
             $this->fail("Should have thrown here");
         } catch (UserSuspendedException $e) {
             // Success
         }
 
         try {
-            $this->authenticationService->logIn("pending@myfactoryoutlet.com", "password");
+            $this->authenticationService->login("pending@myfactoryoutlet.com", "password");
             $this->fail("Should have thrown here");
         } catch (InvalidLoginException $e) {
             // Success
@@ -206,7 +206,7 @@ class AuthenticationServiceTest extends TestBase {
 
         // Test one where the user is attached to a single account which is suspended.
         try {
-            $this->authenticationService->logIn("john@shoppingonline.com", "password");
+            $this->authenticationService->login("john@shoppingonline.com", "password");
             $this->fail("Should have thrown here");
         } catch (AccountSuspendedException $e) {
             // Success
@@ -214,7 +214,7 @@ class AuthenticationServiceTest extends TestBase {
 
 
         // now test one with an active account which is suspended.  Check that the active account is set to the alternative account.
-        $this->authenticationService->logIn("mary@shoppingonline.com", "password");
+        $this->authenticationService->login("mary@shoppingonline.com", "password");
 
         $loggedInUser = $this->session->__getLoggedInUser();
         $this->assertTrue($loggedInUser instanceof User);
@@ -248,11 +248,11 @@ class AuthenticationServiceTest extends TestBase {
 
 
     public function testCanLogOut() {
-        $this->authenticationService->logIn("james@smartcoasting.org", "password");
+        $this->authenticationService->login("james@smartcoasting.org", "password");
         $this->assertNotNull($this->session->__getLoggedInAccount());
         $this->assertNotNull($this->session->__getLoggedInUser());
 
-        $this->authenticationService->logOut();
+        $this->authenticationService->logout();
         $this->assertNull($this->session->__getLoggedInAccount());
         $this->assertNull($this->session->__getLoggedInUser());
 
@@ -285,7 +285,7 @@ class AuthenticationServiceTest extends TestBase {
 
         $this->authenticationService->updateActiveParentAccount("https://www.google.com/hello/123");
 
-        $this->authenticationService->logIn("simon@peterjonescarwash.com", "password");
+        $this->authenticationService->login("simon@peterjonescarwash.com", "password");
 
         $this->assertNotNull($this->session->__getLoggedInUser());
         $this->assertNotNull($this->session->__getLoggedInAccount());
@@ -299,53 +299,7 @@ class AuthenticationServiceTest extends TestBase {
     }
 
 
-    public function testCanGetLoggedInPrivilegesForAnAccount() {
 
-        // Logged out
-        $this->authenticationService->logOut();
-
-        $this->assertEquals(array(), $this->authenticationService->getLoggedInPrivileges(1));
-        $this->assertEquals(array(), $this->authenticationService->getLoggedInPrivileges(2));
-        $this->assertEquals(array(), $this->authenticationService->getLoggedInPrivileges(3));
-
-
-        // Super user.
-        $this->authenticationService->logIn("admin@kinicart.com", "password");
-
-        $this->assertEquals(array("superuser"), $this->authenticationService->getLoggedInPrivileges(1));
-        $this->assertEquals(array("superuser"), $this->authenticationService->getLoggedInPrivileges(2));
-        $this->assertEquals(array("superuser"), $this->authenticationService->getLoggedInPrivileges());
-
-
-        // Account admin
-        $this->authenticationService->logIn("sam@samdavisdesign.co.uk", "password");
-
-        $this->assertEquals(array("administrator"), $this->authenticationService->getLoggedInPrivileges(1));
-        $this->assertEquals(array(), $this->authenticationService->getLoggedInPrivileges(2));
-        $this->assertEquals(array(), $this->authenticationService->getLoggedInPrivileges(3));
-
-
-        // User with dual account admin access.
-        $this->authenticationService->logIn("mary@shoppingonline.com", "password");
-        $this->assertEquals(array(), $this->authenticationService->getLoggedInPrivileges(1));
-        $this->assertEquals(array("viewdata", "editdata", "deletedata"), $this->authenticationService->getLoggedInPrivileges(2));
-        $this->assertEquals(array(), $this->authenticationService->getLoggedInPrivileges(3));
-        $this->assertEquals(array("viewdata", "editdata"), $this->authenticationService->getLoggedInPrivileges(4));
-
-
-        // User with sub accounts.
-        $this->authenticationService->logIn("sam@samdavisdesign.co.uk", "password");
-        $this->assertEquals(array("access"), $this->authenticationService->getLoggedInPrivileges(5));
-        $this->assertEquals(array("access"), $this->authenticationService->getLoggedInPrivileges(9));
-
-
-        // Account logged in by API
-        $this->authenticationService->apiAuthenticate("TESTAPIKEY", "TESTAPISECRET");
-        $this->assertEquals(array("administrator"), $this->authenticationService->getLoggedInPrivileges());
-        $this->assertEquals(array("access"), $this->authenticationService->getLoggedInPrivileges(5));
-        $this->assertEquals(array("access"), $this->authenticationService->getLoggedInPrivileges(9));
-
-    }
 
 
 }

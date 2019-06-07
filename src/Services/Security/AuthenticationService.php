@@ -10,8 +10,8 @@ use Kinicart\Exception\Application\InvalidLoginException;
 use Kinicart\Exception\Application\UserSuspendedException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Account\AccountSummary;
-use Kinicart\Objects\Account\User;
-use Kinicart\Objects\Application\Session;
+use Kinicart\Objects\Security\User;
+use Kinicart\Services\Application\Session;
 use Kinicart\Objects\Security\Privilege;
 use Kinikit\Core\Util\SerialisableArrayUtils;
 use Kinikit\Persistence\Database\Connection\DefaultDB;
@@ -26,14 +26,17 @@ class AuthenticationService {
 
     private $settingsService;
     private $session;
+    private $securityService;
 
     /**
      * @param \Kinicart\Services\Application\SettingsService $settingsService
      * @param \Kinicart\Services\Application\Session $session
+     * @param \Kinicart\Services\Security\SecurityService $securityService
      */
-    public function __construct($settingsService, $session) {
+    public function __construct($settingsService, $session, $securityService) {
         $this->settingsService = $settingsService;
         $this->session = $session;
+        $this->securityService = $securityService;
     }
 
     /**
@@ -60,7 +63,7 @@ class AuthenticationService {
      *
      * @objectInterceptorDisabled
      */
-    public function logIn($emailAddress, $password, $parentAccountId = null) {
+    public function login($emailAddress, $password, $parentAccountId = null) {
 
         if ($parentAccountId === null) {
             $parentAccountId = $this->session->__getActiveParentAccountId() ? $this->session->__getActiveParentAccountId() : 0;
@@ -70,7 +73,7 @@ class AuthenticationService {
 
         // If there is a matching user, return it now.
         if (sizeof($matchingUsers) > 0) {
-            $this->setLoggedInDetails($matchingUsers[0]);
+            $this->securityService->logIn($matchingUsers[0]);
         } else {
             throw new InvalidLoginException();
         }
@@ -92,7 +95,7 @@ class AuthenticationService {
 
         // If there is a matching user, return it now.
         if (sizeof($matchingAccounts) > 0) {
-            $this->setLoggedInDetails(null, $matchingAccounts[0]);
+            $this->securityService->login(null, $matchingAccounts[0]);
         } else {
             throw new InvalidAPICredentialsException();
         }
@@ -141,150 +144,8 @@ class AuthenticationService {
     /**
      * Log out function.
      */
-    public function logOut() {
-        $this->session->__setLoggedInUser(null);
-        $this->session->__setLoggedInAccount(null);
-        $this->session->__setLoggedInPrivileges(null);
-    }
-
-
-    /**
-     * Get all privileges for a given account id.  If no account id is passed in, the currently logged in
-     * account privileges are returned.
-     *
-     * @param integer $accountId
-     *
-     * @return string[]
-     */
-    public function getLoggedInPrivileges($accountId = null) {
-        $allPrivileges = $this->session->__getLoggedInPrivileges();
-
-        // Merge any global privileges in.
-        $privileges = array();
-        if (isset($allPrivileges["*"])) {
-            $privileges = $allPrivileges["*"];
-        }
-
-        // Revert back to logged in account if possible.
-        if (!$accountId && $this->session->__getLoggedInAccount()) {
-            $accountId = $this->session->__getLoggedInAccount()->getId();
-        }
-
-        if ($accountId) {
-            if (isset($allPrivileges[$accountId]))
-                $privileges = array_merge($privileges, $allPrivileges[$accountId]);
-        }
-
-        return array_keys($privileges);
-
-    }
-
-
-    // Set logged in details (either a user or an account if an API login).
-    private function setLoggedInDetails($user = null, $account = null) {
-
-        // Log out just in case we are already logged in to clean up.
-        $this->logOut();
-
-        if ($user) {
-
-
-            // Throw suspended exception if user is suspended.
-            if ($user->getStatus() == User::STATUS_SUSPENDED) {
-                throw new UserSuspendedException();
-            }
-
-            // Throw invalid login if still pending.
-            if ($user->getStatus() == User::STATUS_PENDING) {
-                throw new InvalidLoginException();
-            }
-
-
-            $account = $user->getActiveAccount();
-
-            if (!$account && $user->getAccounts()) {
-                throw new AccountSuspendedException();
-            }
-
-            $this->session->__setLoggedInUser($user);
-
-
-        }
-
-        if ($account) {
-
-            if ($account->getStatus() == Account::STATUS_SUSPENDED) {
-                throw new AccountSuspendedException();
-            }
-
-            $this->session->__setLoggedInAccount($account);
-        }
-
-
-        $this->setLoggedInPrivileges($user, $account);
-
-
-    }
-
-
-    /**
-     * Set logged in privileges according to whether or not we have a logged in user
-     * or account.
-     *
-     * @param User $user
-     * @param Account $account
-     */
-    private function setLoggedInPrivileges($user, $account) {
-
-        $privileges = array();
-        $accountIds = array();
-        $superUser = false;
-
-        if ($user) {
-
-
-            foreach ($user->getRoles() as $role) {
-
-                // Determine our core roles.
-                if (is_numeric($role->getAccountId())) {
-
-                    if ($role->getAccountId() == 0) {
-                        $accountId = "*";
-                        $superUser = true;
-                    } else {
-                        $accountId = $role->getAccountId();
-                        $accountIds[$accountId] = 1;
-                    }
-                    if (!isset($privileges[$accountId])) {
-                        $privileges[$accountId] = array();
-                    }
-
-                    if ($role->getRoleId()) {
-                        foreach ($role->getRole()->getPrivileges() as $privilege)
-                            $privileges[$accountId][$privilege] = 1;
-                    } else {
-                        $privileges[$accountId][$accountId == "*" ? Privilege::PRIVILEGE_SUPER_USER : Privilege::PRIVILEGE_ADMINISTRATOR] = 1;
-                    }
-
-                }
-
-            }
-
-        } else if ($account) {
-            $privileges[$account->getId()][Privilege::PRIVILEGE_ADMINISTRATOR] = 1;
-            $accountIds[$account->getId()] = 1;
-        }
-
-        // If we have at least one account, check for child accounts and add privileges for these.
-        if (!$superUser && sizeof($accountIds) > 0) {
-            $childAccounts = AccountSummary::query("WHERE parent_account_id IN (" . join(",", $accountIds) . ")");
-            foreach ($childAccounts as $childAccount) {
-                $privileges[$childAccount->getId()][Privilege::PRIVILEGE_ACCESS] = 1;
-            }
-        }
-
-        $this->session->__setLoggedInPrivileges($privileges);
-
+    public function logout() {
+        $this->securityService->logOut();
     }
 
 

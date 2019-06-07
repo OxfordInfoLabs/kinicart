@@ -46,7 +46,7 @@ class ObjectInterceptorTest extends TestBase {
             "London", "LH1 4YY", "GB", null, null, 1);
 
         // Start logged out and confirm that interceptors fail.
-        $this->authenticationService->logOut();
+        $this->authenticationService->logout();
 
         $this->assertFalse($this->objectInterceptor->preSave($contact));
         $this->assertFalse($this->objectInterceptor->preDelete($contact));
@@ -54,7 +54,7 @@ class ObjectInterceptorTest extends TestBase {
 
 
         // Now log in as a different account and confirm that interceptors fail.
-        $this->authenticationService->logIn("simon@peterjonescarwash.com", "password");
+        $this->authenticationService->login("simon@peterjonescarwash.com", "password");
 
         $this->assertFalse($this->objectInterceptor->preSave($contact));
         $this->assertFalse($this->objectInterceptor->preDelete($contact));
@@ -62,7 +62,7 @@ class ObjectInterceptorTest extends TestBase {
 
 
         // Now log in as an account with authority and confirm that interceptors succeed.
-        $this->authenticationService->logIn("sam@samdavisdesign.co.uk", "password");
+        $this->authenticationService->login("sam@samdavisdesign.co.uk", "password");
 
         $this->assertTrue($this->objectInterceptor->preSave($contact));
         $this->assertTrue($this->objectInterceptor->preDelete($contact));
@@ -78,7 +78,7 @@ class ObjectInterceptorTest extends TestBase {
             "London", "LH1 4YY", "GB", null, null, 1);
 
         // Start logged out.
-        $this->authenticationService->logOut();
+        $this->authenticationService->logout();
 
         // Check that the interceptor is disabled for the duration of this function
         $this->objectInterceptor->executeInsecure(function () use ($contact) {

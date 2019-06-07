@@ -14,22 +14,18 @@ use Kinikit\Persistence\UPF\Framework\UPFObjectInterceptorBase;
  */
 class ObjectInterceptor extends UPFObjectInterceptorBase {
 
-    private $authenticationService;
+    private $securityService;
     private $session;
-
-    private $loggedInUserId = null;
-    private $loggedInAccountId = null;
-    private $loggedInAuthorisedAccountIds = null;
 
     private $disabled = false;
 
 
     /**
-     * @param \Kinicart\Services\Security\AuthenticationService $authenticationService
+     * @param \Kinicart\Services\Security\SecurityService $securityService
      * @param \Kinicart\Services\Application\Session $session
      */
-    public function __construct($authenticationService, $session) {
-        $this->authenticationService = $authenticationService;
+    public function __construct($securityService, $session) {
+        $this->securityService = $securityService;
         $this->session = $session;
     }
 
@@ -83,7 +79,7 @@ class ObjectInterceptor extends UPFObjectInterceptorBase {
         if (isset($accessors["accountid"])) {
             $accountId = $object->__getSerialisablePropertyValue("accountId");
             if (is_numeric($accountId)) {
-                $accountPrivileges = $this->authenticationService->getLoggedInPrivileges($accountId);
+                $accountPrivileges = $this->securityService->getLoggedInPrivileges($accountId);
                 return sizeof($accountPrivileges) > 0;
             }
         }
