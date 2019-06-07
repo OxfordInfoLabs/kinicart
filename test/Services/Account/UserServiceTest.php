@@ -43,7 +43,7 @@ class UserServiceTest extends TestBase {
 
         $this->assertEquals(1, sizeof($newUser->getRoles()));
 
-        $this->assertEquals($newUser->getActiveAccountId(), $newUser->getRoles()[0]->getAccountId());
+        $this->assertEquals($newUser->getActiveAccountId(), $newUser->getRoles()[0]->getScopeId());
         $this->assertNull($newUser->getRoles()[0]->getRoleId());
 
 
@@ -112,7 +112,7 @@ class UserServiceTest extends TestBase {
         $this->authenticationService->logout();
 
         try {
-            $adminUser = $this->userService->createAdminUser("marko@polo.com", "pickle");
+            $this->userService->createAdminUser("marko@polo.com", "pickle");
             $this->fail("Should have thrown here");
         } catch (\Kinikit\Persistence\UPF\Exception\UPFObjectSaveVetoedException $e) {
             // Expected
@@ -128,7 +128,7 @@ class UserServiceTest extends TestBase {
         $this->assertEquals("marko@polo.com", $adminUser->getEmailAddress());
         $this->assertEquals(hash("md5", "pickle"), $adminUser->getHashedPassword());
         $this->assertEquals(1, sizeof($adminUser->getRoles()));
-        $this->assertEquals(0, $adminUser->getRoles()[0]->getAccountId());
+        $this->assertEquals(0, $adminUser->getRoles()[0]->getScopeId());
         $this->assertNull($adminUser->getRoles()[0]->getRoleId());
 
 
@@ -140,7 +140,7 @@ class UserServiceTest extends TestBase {
         $this->assertEquals("Marko Polo", $adminUser->getName());
         $this->assertEquals(hash("md5", "pickle"), $adminUser->getHashedPassword());
         $this->assertEquals(1, sizeof($adminUser->getRoles()));
-        $this->assertEquals(0, $adminUser->getRoles()[0]->getAccountId());
+        $this->assertEquals(0, $adminUser->getRoles()[0]->getScopeId());
         $this->assertNull($adminUser->getRoles()[0]->getRoleId());
 
 

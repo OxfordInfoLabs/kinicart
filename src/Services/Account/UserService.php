@@ -4,8 +4,9 @@
 namespace Kinicart\Services\Account;
 
 use Kinicart\Objects\Account\Account;
+use Kinicart\Objects\Security\Role;
 use Kinicart\Objects\Security\User;
-use Kinicart\Objects\Security\UserAccountRole;
+use Kinicart\Objects\Security\UserRole;
 use Kinikit\Core\Exception\ValidationException;
 
 
@@ -30,7 +31,7 @@ class UserService {
         $account = new Account($accountName ? $accountName : ($name ? $name : $emailAddress), $parentAccountId);
         $account->save();
 
-        $user->setRoles(array(new UserAccountRole($account->getId())));
+        $user->setRoles(array(new UserRole(Role::SCOPE_ACCOUNT, $account->getAccountId())));
         $user->save();
 
         // Resync the user object
@@ -57,7 +58,7 @@ class UserService {
             throw new ValidationException($validationErrors);
         }
 
-        $user->setRoles(array(new UserAccountRole(0)));
+        $user->setRoles(array(new UserRole(0)));
         $user->save();
 
         // Resync the user object

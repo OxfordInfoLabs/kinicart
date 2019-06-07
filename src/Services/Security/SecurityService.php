@@ -9,50 +9,26 @@ use Kinicart\Exception\Application\InvalidLoginException;
 use Kinicart\Exception\Application\UserSuspendedException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Account\AccountSummary;
-use Kinicart\Objects\Security\Privilege;
+use Kinicart\Objects\Security\Role;
 use Kinicart\Objects\Security\User;
 
 class SecurityService {
 
     private $session;
+    private $accountScopeAccess;
+
+    /**
+     * @var ScopeAccess[]
+     */
+    private $scopeAccesses;
 
     /**
      * @param \Kinicart\Services\Application\Session $session
+     * @param \Kinicart\Services\Security\AccountScopeAccess $accountScopeAccess
      */
-    public function __construct($session) {
+    public function __construct($session, $accountScopeAccess) {
         $this->session = $session;
-    }
-
-
-    /**
-     * Get all privileges for a given account id.  If no account id is passed in, the currently logged in
-     * account privileges are returned.
-     *
-     * @param integer $accountId
-     *
-     * @return string[]
-     */
-    public function getLoggedInPrivileges($accountId = null) {
-        $allPrivileges = $this->session->__getLoggedInPrivileges();
-
-        // Merge any global privileges in.
-        $privileges = array();
-        if (isset($allPrivileges["*"])) {
-            $privileges = $allPrivileges["*"];
-        }
-
-        // Revert back to logged in account if possible.
-        if (!$accountId && $this->session->__getLoggedInAccount()) {
-            $accountId = $this->session->__getLoggedInAccount()->getId();
-        }
-
-        if ($accountId) {
-            if (isset($allPrivileges[$accountId]))
-                $privileges = array_merge($privileges, $allPrivileges[$accountId]);
-        }
-
-        return array_keys($privileges);
-
+        $this->scopeAccesses = [$accountScopeAccess];
     }
 
 
@@ -104,7 +80,7 @@ class SecurityService {
                 throw new AccountSuspendedException();
             }
 
-            $accountId = $account->getId();
+            $accountId = $account->getAccountId();
         }
 
 
@@ -114,9 +90,20 @@ class SecurityService {
             $this->session->__setLoggedInAccount($account);
         }
 
+        /**
+         * Process all scope accesses and build the global privileges array
+         */
+        $privileges = array();
 
-        $this->setLoggedInPrivileges($user, $account);
+        // Add account scope access
+        $accountPrivileges = null;
+        foreach ($this->scopeAccesses as $scopeAccess) {
+            $scopePrivileges = $scopeAccess->generateScopePrivileges($user, $account, $accountPrivileges);
+            $privileges[$scopeAccess->getScope()] = $scopePrivileges;
+            if ($scopeAccess->getScope() == Role::SCOPE_ACCOUNT) $accountPrivileges = $scopePrivileges;
+        }
 
+        $this->session->__setLoggedInPrivileges($privileges);
 
     }
 
@@ -133,62 +120,53 @@ class SecurityService {
 
 
     /**
-     * Set logged in privileges according to whether or not we have a logged in user
-     * or account.
+     * Verify whether or not a logged in user can access an object by checking all available installed scope accesses.
      *
-     * @param User $user
-     * @param Account $account
+     * @param $object
      */
-    private function setLoggedInPrivileges($user, $account) {
+    public function checkLoggedInObjectAccess($object) {
 
+        $accessors = $object->__findSerialisablePropertyAccessors();
+
+        $access = true;
+        foreach ($this->scopeAccesses as $scopeAccess) {
+            $objectMember = $scopeAccess->getObjectMember();
+            if ($objectMember && isset($accessors[strtolower($objectMember)])) {
+                $scopeId = $object->__getSerialisablePropertyValue($objectMember);
+                $access = $access && $this->getLoggedInScopePrivileges($scopeAccess->getScope(), $scopeId);
+            }
+            if (!$access)
+                break;
+        }
+
+        return $access;
+
+    }
+
+
+    /**
+     * Get all privileges for a given account id.  If no account id is passed in, the currently logged in
+     * account privileges are returned.
+     *
+     * @param integer $accountId
+     *
+     * @return string[]
+     */
+    public function getLoggedInScopePrivileges($scope, $scopeId) {
+
+        $allPrivileges = $this->session->__getLoggedInPrivileges();
+
+        // Merge any global privileges in.
         $privileges = array();
-        $accountIds = array();
-        $superUser = false;
-
-        if ($user) {
-
-
-            foreach ($user->getRoles() as $role) {
-
-                // Determine our core roles.
-                if (is_numeric($role->getAccountId())) {
-
-                    if ($role->getAccountId() == 0) {
-                        $accountId = "*";
-                        $superUser = true;
-                    } else {
-                        $accountId = $role->getAccountId();
-                        $accountIds[$accountId] = 1;
-                    }
-                    if (!isset($privileges[$accountId])) {
-                        $privileges[$accountId] = array();
-                    }
-
-                    if ($role->getRoleId()) {
-                        foreach ($role->getPrivileges() as $privilege)
-                            $privileges[$accountId][$privilege] = 1;
-                    } else {
-                        $privileges[$accountId][$accountId == "*" ? Privilege::PRIVILEGE_SUPER_USER : Privilege::PRIVILEGE_ADMINISTRATOR] = 1;
-                    }
-
-                }
-
-            }
-
-        } else if ($account) {
-            $privileges[$account->getId()][Privilege::PRIVILEGE_ADMINISTRATOR] = 1;
-            $accountIds[$account->getId()] = 1;
+        if (isset($allPrivileges[$scope]["*"])) {
+            $privileges = $allPrivileges[$scope]["*"];
         }
 
-        // If we have at least one account, check for child accounts and add privileges for these.
-        if (!$superUser && sizeof($accountIds) > 0) {
-            $childAccounts = AccountSummary::query("WHERE parent_account_id IN (" . join(",", $accountIds) . ")");
-            foreach ($childAccounts as $childAccount) {
-                $privileges[$childAccount->getId()][Privilege::PRIVILEGE_ACCESS] = 1;
-            }
-        }
+        if (isset($allPrivileges[$scope][$scopeId]))
+            $privileges = $privileges + $allPrivileges[$scope][$scopeId];
 
-        $this->session->__setLoggedInPrivileges($privileges);
+
+        return $privileges;
 
     }
 

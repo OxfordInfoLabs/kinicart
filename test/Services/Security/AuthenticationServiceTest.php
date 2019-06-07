@@ -68,8 +68,6 @@ class AuthenticationServiceTest extends TestBase {
         $this->assertEquals("Administrator", $loggedInUser->getName());
         $this->assertEquals(1, sizeof($loggedInUser->getRoles()));
 
-        // Check the logged in privileges are set correctly.
-        $this->assertEquals(array("*" => array("superuser" => 1)), $this->session->__getLoggedInPrivileges());
 
 
     }
@@ -96,11 +94,9 @@ class AuthenticationServiceTest extends TestBase {
 
         $loggedInAccount = $this->session->__getLoggedInAccount();
         $this->assertTrue($loggedInAccount instanceof AccountSummary);
-        $this->assertEquals(1, $loggedInAccount->getId());
+        $this->assertEquals(1, $loggedInAccount->getAccountId());
         $this->assertEquals("Sam Davis Design", $loggedInAccount->getName());
 
-        // Check logged in privileges
-        $this->assertEquals(array("1" => array("administrator" => 1), "5" => array("access" => 1), "9" => array("access" => 1)), $this->session->__getLoggedInPrivileges());
 
 
     }
@@ -123,7 +119,7 @@ class AuthenticationServiceTest extends TestBase {
 
         $loggedInAccount = $this->session->__getLoggedInAccount();
         $this->assertTrue($loggedInAccount instanceof AccountSummary);
-        $this->assertEquals(2, $loggedInAccount->getId());
+        $this->assertEquals(2, $loggedInAccount->getAccountId());
         $this->assertEquals("Peter Jones Car Washing", $loggedInAccount->getName());
 
     }
@@ -149,7 +145,7 @@ class AuthenticationServiceTest extends TestBase {
 
         $loggedInAccount = $this->session->__getLoggedInAccount();
         $this->assertTrue($loggedInAccount instanceof AccountSummary);
-        $this->assertEquals(5, $loggedInAccount->getId());
+        $this->assertEquals(5, $loggedInAccount->getAccountId());
         $this->assertEquals("Smart Coasting - Design Account", $loggedInAccount->getName());
 
         // Reset parent context.
@@ -222,7 +218,7 @@ class AuthenticationServiceTest extends TestBase {
 
         $loggedInAccount = $this->session->__getLoggedInAccount();
         $this->assertTrue($loggedInAccount instanceof AccountSummary);
-        $this->assertEquals(2, $loggedInAccount->getId());
+        $this->assertEquals(2, $loggedInAccount->getAccountId());
 
 
     }
@@ -242,7 +238,7 @@ class AuthenticationServiceTest extends TestBase {
         $this->assertNull($this->session->__getLoggedInUser());
         $this->assertNotNull($this->session->__getLoggedInAccount());
 
-        $this->assertEquals(1, $this->session->__getLoggedInAccount()->getId());
+        $this->assertEquals(1, $this->session->__getLoggedInAccount()->getAccountId());
 
     }
 

@@ -4,17 +4,11 @@
 namespace Kinicart\Services\Security;
 
 
-use Kinicart\Exception\Application\AccountSuspendedException;
 use Kinicart\Exception\Application\InvalidAPICredentialsException;
 use Kinicart\Exception\Application\InvalidLoginException;
-use Kinicart\Exception\Application\UserSuspendedException;
 use Kinicart\Objects\Account\Account;
-use Kinicart\Objects\Account\AccountSummary;
 use Kinicart\Objects\Security\User;
-use Kinicart\Services\Application\Session;
-use Kinicart\Objects\Security\Privilege;
-use Kinikit\Core\Util\SerialisableArrayUtils;
-use Kinikit\Persistence\Database\Connection\DefaultDB;
+
 
 /**
  * AuthenticationService object for coordinating authentication functions for Kinicart.
@@ -88,6 +82,7 @@ class AuthenticationService {
      * @param $apiKey
      * @param $apiSecret
      *
+     * @objectInterceptorDisabled
      */
     public function apiAuthenticate($apiKey, $apiSecret) {
 

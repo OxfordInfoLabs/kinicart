@@ -33,7 +33,7 @@ class MethodInterceptorTest extends TestBase {
 
     public function testObjectInterceptorIsDisabledIfAttributeAddedToMethod() {
 
-        $this->authenticationService->logOut();
+        $this->authenticationService->logout();
 
         try {
             $this->testMethodService->normalMethod();

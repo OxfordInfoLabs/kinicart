@@ -10,11 +10,11 @@ use Kinikit\Persistence\UPF\Object\ActiveRecord;
 /**
  * Encodes a role for a user on an account.
  *
- * @ormTable kc_user_account_role
- * @ormView kc_vw_user_account_role
+ * @ormTable kc_user_role
+ * @ormView kc_vw_user_role
  *
  */
-class UserAccountRole extends ActiveRecord {
+class UserRole extends ActiveRecord {
 
     /**
      * The user id for which this account role is being attached
@@ -24,15 +24,25 @@ class UserAccountRole extends ActiveRecord {
      */
     protected $userId;
 
+
     /**
-     * The account id for which this role is being attached.  If left blank this is assumed
-     * to be a super user role
+     * The scope of this role (defaults to account).
+     *
+     * @var string
+     * @primaryKey
+     */
+    protected $scope = Role::SCOPE_ACCOUNT;
+
+
+    /**
+     * The id of the scope object for which this role is being attached.  If set to blank this is assumed to
+     * refer to all objects (i.e. superuser).
      *
      * @var integer
      * @primaryKey
      *
      */
-    protected $accountId;
+    protected $scopeId;
 
 
     /**
@@ -55,7 +65,7 @@ class UserAccountRole extends ActiveRecord {
 
 
     /**
-     * Read only status for the linked account
+     * Read only status for the linked account (only applicable in the case that the scope is ACCOUNT).
      *
      * @var string
      * @readOnly
@@ -69,8 +79,9 @@ class UserAccountRole extends ActiveRecord {
      * @param integer $accountId
      * @param integer $roleId
      */
-    public function __construct($accountId = null, $roleId = null, $userId = null) {
-        $this->accountId = $accountId;
+    public function __construct($scope = Role::SCOPE_ACCOUNT, $scopeId = null, $roleId = null, $userId = null) {
+        $this->scope = $scope;
+        $this->scopeId = $scopeId;
         $this->roleId = $roleId;
         $this->userId = $userId;
     }
@@ -84,10 +95,17 @@ class UserAccountRole extends ActiveRecord {
     }
 
     /**
+     * @return string
+     */
+    public function getScope() {
+        return $this->scope;
+    }
+
+    /**
      * @return int
      */
-    public function getAccountId() {
-        return $this->accountId;
+    public function getScopeId() {
+        return $this->scopeId;
     }
 
     /**
@@ -104,7 +122,16 @@ class UserAccountRole extends ActiveRecord {
         return $this->privileges;
     }
 
+
     /**
+     * Get account id if relevant
+     */
+    public function getAccountId() {
+        return $this->scope == Role::SCOPE_ACCOUNT ? $this->scopeId : null;
+    }
+
+    /**
+     *
      * @return string
      */
     public function getAccountStatus() {

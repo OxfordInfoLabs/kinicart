@@ -22,11 +22,20 @@ class AccountSummary extends ActiveRecord {
 
 
     /**
-     * Auto increment id.
+     * Auto increment id.  Strategically breaking naming convention to
+     * enforce security based upon account id.
      *
      * @var integer
+     * @primaryKey
+     * @autoIncrement
      */
-    protected $id;
+    protected $accountId;
+
+
+    /**
+     * @var integer
+     */
+    protected $parentAccountId;
 
 
     /**
@@ -51,9 +60,17 @@ class AccountSummary extends ActiveRecord {
     /**
      * @return int
      */
-    public function getId() {
-        return $this->id;
+    public function getAccountId() {
+        return $this->accountId;
     }
+
+    /**
+     * @return int
+     */
+    public function getParentAccountId() {
+        return $this->parentAccountId;
+    }
+
 
     /**
      * @return string

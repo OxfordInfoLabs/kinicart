@@ -22,7 +22,7 @@ class EmailServiceTest extends TestBase {
         parent::setUp();
 
         $authenticationService = Container::instance()->get("Kinicart\Services\Security\AuthenticationService");
-        $authenticationService->logIn("sam@samdavisdesign.co.uk", "password");
+        $authenticationService->login("sam@samdavisdesign.co.uk", "password");
 
         $this->emailService = Container::instance()->get("Kinicart\Services\Communication\Email\EmailService");
     }

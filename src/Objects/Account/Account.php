@@ -26,13 +26,6 @@ class Account extends AccountSummary {
 
 
     /**
-     * Id of a parent account if this is a sub account
-     *
-     * @var integer
-     */
-    private $parentAccountId;
-
-    /**
      * API key for account access
      *
      * @var string
@@ -82,12 +75,6 @@ class Account extends AccountSummary {
         $this->subAccountsEnabled = $subAccountsEnabled;
     }
 
-    /**
-     * @return int
-     */
-    public function getParentAccountId() {
-        return $this->parentAccountId;
-    }
 
     /**
      * @param int $parentAccountId

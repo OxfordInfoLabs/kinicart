@@ -1,41 +1,41 @@
 [
   {
     "userId": 1,
-    "accountId": 0
+    "scopeId": 0
   },
   {
     "userId": 2,
-    "accountId": 1
+    "scopeId": 1
   },
   {
     "userId": 3,
-    "accountId": 2
+    "scopeId": 2
   },
   {
     "userId": 4,
-    "accountId": 2
+    "scopeId": 2
   },
   {
     "userId": 4,
-    "accountId": 3
+    "scopeId": 3
   },
   {
     "userId": 6,
-    "accountId": 4,
+    "scopeId": 4,
     "roleId": 1
   },
   {
     "userId": 7,
-    "accountId": 4,
+    "scopeId": 4,
     "roleId": 2
   },
   {
     "userId": 7,
-    "accountId": 2,
+    "scopeId": 2,
     "roleId": 3
   },
   {
     "userId": 9,
-    "accountId": 5
+    "scopeId": 5
   }
 ]

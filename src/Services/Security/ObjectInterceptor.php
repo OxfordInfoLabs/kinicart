@@ -72,20 +72,7 @@ class ObjectInterceptor extends UPFObjectInterceptorBase {
      * @return bool
      */
     private function resolveAccessForObject($object) {
-
-        $accessors = $object->__findSerialisablePropertyAccessors();
-
-        // If an account id, check logged in items
-        if (isset($accessors["accountid"])) {
-            $accountId = $object->__getSerialisablePropertyValue("accountId");
-            if (is_numeric($accountId)) {
-                $accountPrivileges = $this->securityService->getLoggedInPrivileges($accountId);
-                return sizeof($accountPrivileges) > 0;
-            }
-        }
-
-        return true;
-
+        return $this->securityService->checkLoggedInObjectAccess($object);
     }
 
 

@@ -26,17 +26,18 @@ CREATE TABLE kc_user (
 
 
 -- User account roles relational table
-CREATE TABLE kc_user_account_role (
+CREATE TABLE kc_user_role (
     user_id INTEGER,
-    account_id  INTEGER,
-    role_id    INTEGER,
-    PRIMARY KEY (user_id, account_id, role_id)
+    scope  VARCHAR(100),
+    scope_id    INTEGER,
+    role_id INTEGER,
+    PRIMARY KEY (user_id, scope, scope_id, role_id)
 );
 
 
 -- Create the role join view for optimised querying for users.
-CREATE VIEW kc_vw_user_account_role AS
+CREATE VIEW kc_vw_user_role AS
     SELECT uar.*, r.privileges, a.status account_status
-        FROM kc_user_account_role uar
+        FROM kc_user_role uar
         LEFT JOIN kc_role r ON uar.role_id = r.id
-        LEFT JOIN kc_account a ON uar.account_id = a.id;
+        LEFT JOIN kc_account a ON uar.scope = 'ACCOUNT' AND uar.scope_id = a.account_id;

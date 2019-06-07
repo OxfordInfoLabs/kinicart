@@ -90,10 +90,10 @@ class User extends ActiveRecord {
     /**
      * An array of explicit user account role objects
      *
-     * @var \Kinicart\Objects\Security\UserAccountRole[]
+     * @var \Kinicart\Objects\Security\UserRole[]
      * @relationship
      * @isMultiple
-     * @relatedClassName Kinicart\Objects\Security\UserAccountRole
+     * @relatedClassName Kinicart\Objects\Security\UserRole
      * @relatedFields id=>userId
      *
      */
@@ -245,14 +245,14 @@ class User extends ActiveRecord {
 
 
     /**
-     * @return UserAccountRole[]
+     * @return UserRole[]
      */
     public function getRoles() {
         return $this->roles;
     }
 
     /**
-     * @param UserAccountRole[] $roles
+     * @param UserRole[] $roles
      */
     public function setRoles($roles) {
         $this->roles = $roles;
@@ -262,8 +262,8 @@ class User extends ActiveRecord {
     public function getAccountIds() {
         $accountIds = array();
         foreach ($this->roles as $role) {
-            if ($role->getAccountId())
-                $accountIds[$role->getAccountId()] = 1;
+            if ($role->getScopeId())
+                $accountIds[$role->getScopeId()] = 1;
         }
         return array_keys($accountIds);
     }

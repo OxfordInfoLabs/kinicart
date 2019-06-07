@@ -2,7 +2,7 @@
 
 -- Account table.
 CREATE TABLE kc_account (
-    id  INTEGER PRIMARY KEY AUTOINCREMENT,
+    account_id  INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(255),
     sub_accounts_enabled  BOOLEAN,
     parent_account_id INTEGER DEFAULT 0,
