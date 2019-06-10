@@ -40,6 +40,10 @@ class Account extends AccountSummary {
     private $apiSecret;
 
 
+    // Logged in account constant for default value usage.
+    const LOGGED_IN_ACCOUNT = "LOGGED_IN_ACCOUNT";
+
+
     /**
      * Construct an account
      *

@@ -54,24 +54,19 @@ class ObjectInterceptorTest extends TestBase {
         try {
             $this->objectInterceptor->preSave($contact);
             $this->fail("Should have thrown here");
-        } catch (AccessDeniedException $e){
+        } catch (AccessDeniedException $e) {
             // Success
         }
 
         try {
             $this->objectInterceptor->preDelete($contact);
             $this->fail("Should have thrown here");
-        } catch (AccessDeniedException $e){
+        } catch (AccessDeniedException $e) {
             // Success
         }
 
-        try {
-            $this->objectInterceptor->postMap($contact);
-            $this->fail("Should have thrown here");
-        } catch (AccessDeniedException $e){
-            // Success
-        }
 
+        $this->assertFalse($this->objectInterceptor->postMap($contact));
 
 
         // Now log in as a different account and confirm that interceptors fail.
@@ -80,23 +75,18 @@ class ObjectInterceptorTest extends TestBase {
         try {
             $this->objectInterceptor->preSave($contact);
             $this->fail("Should have thrown here");
-        } catch (AccessDeniedException $e){
+        } catch (AccessDeniedException $e) {
             // Success
         }
 
         try {
             $this->objectInterceptor->preDelete($contact);
             $this->fail("Should have thrown here");
-        } catch (AccessDeniedException $e){
+        } catch (AccessDeniedException $e) {
             // Success
         }
 
-        try {
-            $this->objectInterceptor->postMap($contact);
-            $this->fail("Should have thrown here");
-        } catch (AccessDeniedException $e){
-            // Success
-        }
+        $this->assertFalse($this->objectInterceptor->postMap($contact));
 
 
         // Now log in as an account with authority and confirm that interceptors succeed.
@@ -129,23 +119,19 @@ class ObjectInterceptorTest extends TestBase {
         try {
             $this->objectInterceptor->preSave($contact);
             $this->fail("Should have thrown here");
-        } catch (AccessDeniedException $e){
+        } catch (AccessDeniedException $e) {
             // Success
         }
 
         try {
             $this->objectInterceptor->preDelete($contact);
             $this->fail("Should have thrown here");
-        } catch (AccessDeniedException $e){
+        } catch (AccessDeniedException $e) {
             // Success
         }
 
-        try {
-            $this->objectInterceptor->postMap($contact);
-            $this->fail("Should have thrown here");
-        } catch (AccessDeniedException $e){
-            // Success
-        }
+        $this->assertFalse($this->objectInterceptor->postMap($contact));
+
 
 
         try {
@@ -162,23 +148,19 @@ class ObjectInterceptorTest extends TestBase {
         try {
             $this->objectInterceptor->preSave($contact);
             $this->fail("Should have thrown here");
-        } catch (AccessDeniedException $e){
+        } catch (AccessDeniedException $e) {
             // Success
         }
 
         try {
             $this->objectInterceptor->preDelete($contact);
             $this->fail("Should have thrown here");
-        } catch (AccessDeniedException $e){
+        } catch (AccessDeniedException $e) {
             // Success
         }
 
-        try {
-            $this->objectInterceptor->postMap($contact);
-            $this->fail("Should have thrown here");
-        } catch (AccessDeniedException $e){
-            // Success
-        }
+        $this->assertFalse($this->objectInterceptor->postMap($contact));
+
 
     }
 

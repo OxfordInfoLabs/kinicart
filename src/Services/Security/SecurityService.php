@@ -133,6 +133,14 @@ class SecurityService {
 
 
     /**
+     * Return an array with both logged in user and account for convenience
+     */
+    public function getLoggedInUserAndAccount() {
+        return array($this->session->__getLoggedInUser(), $this->session->__getLoggedInAccount());
+    }
+
+
+    /**
      * Get all privileges.  Maintain a cached copy of all privileges
      */
     public function getAllPrivileges() {

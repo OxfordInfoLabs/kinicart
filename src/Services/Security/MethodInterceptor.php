@@ -5,6 +5,7 @@ namespace Kinicart\Services\Security;
 
 
 use Kinicart\Exception\Security\AccessDeniedException;
+use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Security\Role;
 use Kinicart\Services\Application\Session;
 
@@ -29,12 +30,15 @@ class MethodInterceptor extends \Kinikit\Core\DependencyInjection\MethodIntercep
 
 
     /**
-     * Check privileges before permitting method to execute.
+     * Check for privileges before we allow the method to be executed.
+     * Also, allow for plugging in of logged in data as default data if required.
      *
-     * @param object $objectInstance
-     * @param string $methodName
-     * @param array $params
-     * @param \Kinikit\Core\Util\Annotation\ClassAnnotations $classAnnotations
+     * @param object $objectInstance - The object being called
+     * @param string $methodName - The method name
+     * @param string[string] $params - The parameters passed to the method as name => value pairs.
+     * @param \Kinikit\Core\Util\Annotation\ClassAnnotations $classAnnotations - The class annotations for convenience for e.g. role based enforcement.
+     *
+     * @return string[string] - The params array either intact or modified if required.
      */
     public function beforeMethod($objectInstance, $methodName, $params, $classAnnotations) {
 
@@ -52,15 +56,7 @@ class MethodInterceptor extends \Kinikit\Core\DependencyInjection\MethodIntercep
                     $paramName = ltrim($matches[2], "$");
 
                     // Locate the parameter in the method signature
-                    $reflectionClass = new \ReflectionClass($objectInstance);
-                    $method = $reflectionClass->getMethod($methodName);
-                    $methodParams = $method->getParameters();
-                    foreach ($methodParams as $index => $param) {
-                        if ($param->getName() == $paramName) {
-                            $scopeId = $params[$index];
-                            break;
-                        }
-                    }
+                    $scopeId = isset($params[$paramName]) ? $params[$paramName] : null;
 
                 } else {
                     $privilegeKey = trim($matchValue);
@@ -74,6 +70,19 @@ class MethodInterceptor extends \Kinikit\Core\DependencyInjection\MethodIntercep
 
             }
         }
+
+        if ($key = array_search(Account::LOGGED_IN_ACCOUNT, $params)) {
+            list($user, $account) = $this->securityService->getLoggedInUserAndAccount();
+            if ($account) {
+                $params[$key] = $account->getAccountId();
+            } else {
+                $params[$key] = null;
+            }
+        }
+
+
+        return $params;
+
 
     }
 

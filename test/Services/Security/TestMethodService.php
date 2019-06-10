@@ -4,6 +4,7 @@
 namespace Kinicart\Test\Services\Security;
 
 
+use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Account\Contact;
 
 class TestMethodService {
@@ -52,5 +53,15 @@ class TestMethodService {
         return "DONE";
     }
 
+
+    /**
+     * Special magic logged in constant
+     *
+     * @param $param1
+     * @param null $accountId
+     */
+    public function loggedInAccountInjection($param1, $accountId = Account::LOGGED_IN_ACCOUNT) {
+        return array($param1, $accountId);
+    }
 
 }

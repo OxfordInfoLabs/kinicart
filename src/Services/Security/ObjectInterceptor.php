@@ -32,7 +32,7 @@ class ObjectInterceptor extends UPFObjectInterceptorBase {
 
 
     public function postMap($object = null, $upfInstance = null) {
-        return $this->disabled || $this->resolveAccessForObject($object);
+        return $this->disabled || $this->resolveAccessForObject($object, false);
     }
 
     public function preSave($object = null, $upfInstance = null) {
@@ -72,11 +72,15 @@ class ObjectInterceptor extends UPFObjectInterceptorBase {
      * @param SerialisableObject $object
      * @return bool
      */
-    private function resolveAccessForObject($object) {
+    private function resolveAccessForObject($object, $throwException = true) {
         if ($this->securityService->checkLoggedInObjectAccess($object))
             return true;
-        else
-            throw new AccessDeniedException();
+        else {
+            if ($throwException)
+                throw new AccessDeniedException();
+            else
+                return false;
+        }
     }
 
 
