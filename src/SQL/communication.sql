@@ -1,6 +1,7 @@
+DROP TABLE IF EXISTS kc_email;
 
 -- Email table for kinicart.
-CREATE TABLE kc_email (
+CREATE TABLE IF NOT EXISTS kc_email (
     id  INTEGER PRIMARY KEY AUTOINCREMENT,
     account_id  INTEGER,
     sent_date    DATETIME,
@@ -16,8 +17,9 @@ CREATE TABLE kc_email (
 );
 
 
+DROP TABLE IF EXISTS kc_attachment;
 
-CREATE TABLE kc_attachment (
+CREATE TABLE IF NOT EXISTS kc_attachment (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     account_id  INTEGER,
     parent_object_type  VARCHAR(255),
@@ -26,3 +28,4 @@ CREATE TABLE kc_attachment (
     mime_type   VARCHAR(255),
     content LONGTEXT
 );
+

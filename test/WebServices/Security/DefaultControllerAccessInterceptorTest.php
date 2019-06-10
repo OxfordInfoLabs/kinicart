@@ -42,7 +42,7 @@ class DefaultControllerAccessInterceptorTest extends TestBase {
 
         URLHelper::setTestURL("/public/somecontroller?mynameistest");
 
-        // Public
+        // Guest
         $this->authenticationService->logout();
         $this->defaultControllerAccessInterceptor->afterCreate($this->testController);
 
@@ -68,7 +68,7 @@ class DefaultControllerAccessInterceptorTest extends TestBase {
 
         URLHelper::setTestURL("/customer/somecontroller?mynameistest");
 
-        // Public
+        // Guest
         $this->authenticationService->logout();
 
         try {
@@ -100,7 +100,7 @@ class DefaultControllerAccessInterceptorTest extends TestBase {
 
         URLHelper::setTestURL("/admin/somecontroller?mynameistest");
 
-        // Public
+        // Guest
         $this->authenticationService->logout();
 
         try {
@@ -144,7 +144,7 @@ class DefaultControllerAccessInterceptorTest extends TestBase {
 
         URLHelper::setTestURL("/api/somecontroller?mynameistest");
 
-        // Public
+        // Guest
         $this->authenticationService->logout();
 
         try {

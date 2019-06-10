@@ -1,6 +1,8 @@
 
+DROP TABLE IF EXISTS kc_setting;
+
 -- Account table.
-CREATE TABLE kc_setting (
+CREATE TABLE IF NOT EXISTS kc_setting (
     parent_account_id INTEGER,
     key VARCHAR(255),
     value TEXT,

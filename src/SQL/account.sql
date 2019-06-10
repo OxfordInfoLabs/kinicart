@@ -1,7 +1,9 @@
 -- Account schema for authentication and account management.
 
+DROP TABLE IF EXISTS kc_account;
+
 -- Account table.
-CREATE TABLE kc_account (
+CREATE TABLE IF NOT EXISTS kc_account (
     account_id  INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(255),
     sub_accounts_enabled  BOOLEAN,
@@ -13,9 +15,10 @@ CREATE TABLE kc_account (
 
 
 
+DROP TABLE IF EXISTS kc_contact;
 
 -- Contact table for general application use
-CREATE TABLE kc_contact (
+CREATE TABLE IF NOT EXISTS kc_contact (
     id  INTEGER PRIMARY KEY AUTOINCREMENT,
     account_id  INTEGER,
     type VARCHAR(20),
@@ -30,6 +33,7 @@ CREATE TABLE kc_contact (
     telephone_number VARCHAR(255),
     email_address   VARCHAR(255)
 );
+
 
 
 
