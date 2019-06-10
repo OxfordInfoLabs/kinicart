@@ -41,8 +41,10 @@ class BootstrapService {
         // Ensure kinicart is appended as a source base.
         SourceBaseManager::instance()->appendSourceBase(__DIR__ . "/../..");
 
+
         // Add the kinicart UPF file for formatters etc.
         UPF::instance()->getPersistenceCoordinator()->setIncludedMappingFiles(__DIR__ . "/../../Config/upf.xml");
+
 
         // Add the object interceptor
         $objectInterceptor = Container::instance()->get(ActiveRecordInterceptor::class);

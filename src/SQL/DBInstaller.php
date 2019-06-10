@@ -14,7 +14,7 @@ class DBInstaller {
      */
     public static function clean($event) {
 
-        $sourceDirectory = isset($event->getComposer()->getPackage()->getConfig()["source-directory"]) ?
+        $sourceDirectory = $event && isset($event->getComposer()->getPackage()->getConfig()["source-directory"]) ?
             $event->getComposer()->getPackage()->getConfig()["source-directory"] : ".";
 
         chdir($sourceDirectory);

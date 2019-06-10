@@ -66,14 +66,12 @@ class SecurityServiceTest extends TestBase {
         // User with sub accounts.
         $this->authenticationService->login("sam@samdavisdesign.co.uk", "password");
         $this->assertEquals(array("*"), $this->securityService->getLoggedInScopePrivileges(Role::SCOPE_ACCOUNT, 5));
-        $this->assertEquals(array("*"), $this->securityService->getLoggedInScopePrivileges(Role::SCOPE_ACCOUNT, 9));
 
 
         // Account logged in by API
         $this->authenticationService->apiAuthenticate("TESTAPIKEY", "TESTAPISECRET");
         $this->assertEquals(array("*"), $this->securityService->getLoggedInScopePrivileges(Role::SCOPE_ACCOUNT, 1));
         $this->assertEquals(array("*"), $this->securityService->getLoggedInScopePrivileges(Role::SCOPE_ACCOUNT, 5));
-        $this->assertEquals(array("*"), $this->securityService->getLoggedInScopePrivileges(Role::SCOPE_ACCOUNT, 9));
 
     }
 

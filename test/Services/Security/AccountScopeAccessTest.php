@@ -60,7 +60,6 @@ class AccountScopeAccessTest extends TestBase {
         $user = User::fetch(2);
         $privileges = $this->accountScopeAccess->generateScopePrivileges($user, null, null);
         $this->assertEquals(["*"], $privileges[5]);
-        $this->assertEquals(["*"], $privileges[9]);
 
 
         // Account logged in by API
@@ -68,7 +67,6 @@ class AccountScopeAccessTest extends TestBase {
         $privileges = $this->accountScopeAccess->generateScopePrivileges(null, $account, null);
         $this->assertEquals(["*"], $privileges[1]);
         $this->assertEquals(["*"], $privileges[5]);
-        $this->assertEquals(["*"], $privileges[9]);
 
 
     }

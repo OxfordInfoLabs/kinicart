@@ -13,22 +13,25 @@ class TestDataInstaller {
 
 
     // Install test data
-    public function install($event) {
+    public static function install($event) {
 
         // Run db installer
         DBInstaller::clean($event);
 
+
         // Initialise the application.
         Container::instance()->get(\Kinicart\Services\Application\BootstrapService::class);
+
 
         /**
          * @var $interceptor \Kinicart\Services\Security\ActiveRecordInterceptor
          */
         $interceptor = Container::instance()->get(\Kinicart\Services\Security\ActiveRecordInterceptor::class);
 
+
         $interceptor->executeInsecure(function () {
 
-            processTestDataDirectory(__DIR__);
+            self::processTestDataDirectory(__DIR__);
 
         });
 
@@ -36,7 +39,7 @@ class TestDataInstaller {
 
 
     // Process test data directory looking for objects.
-    function processTestDataDirectory($directory) {
+    private static function processTestDataDirectory($directory) {
 
         $iterator = new DirectoryIterator($directory);
         $filepaths = array();
@@ -46,7 +49,7 @@ class TestDataInstaller {
                 continue;
 
             if ($item->isDir()) {
-                processTestDataDirectory($item->getRealPath());
+                self::processTestDataDirectory($item->getRealPath());
                 continue;
             }
 
