@@ -3,84 +3,108 @@
 
 namespace Kinicart\Services\Security;
 
+
 use Kinicart\Exception\Security\AccessDeniedException;
-use Kinicart\Objects\Application\Session;
-use Kinikit\Core\Object\SerialisableObject;
-use Kinikit\Persistence\UPF\Framework\UPFObjectInterceptorBase;
+use Kinicart\Objects\Account\Account;
+use Kinicart\Objects\Security\Role;
+use Kinicart\Services\Application\Session;
 
 /**
- * Generic object interceptor for intercepting requests for all objects.  This predominently enforces security rules
- * around objects containing an accountId property.
- *
+ * Generic method interceptor.  Currently allows for privilege based enforcement at the method level as well
+ * as an ability to override object interceptors using markup.
  */
-class ObjectInterceptor extends UPFObjectInterceptorBase {
+class ObjectInterceptor extends \Kinikit\Core\DependencyInjection\ObjectInterceptor {
 
+    private $objectInterceptor;
     private $securityService;
-    private $session;
-
-    private $disabled = false;
 
 
     /**
+     * @param \Kinicart\Services\Security\ActiveRecordInterceptor $objectInterceptor
      * @param \Kinicart\Services\Security\SecurityService $securityService
-     * @param \Kinicart\Services\Application\Session $session
      */
-    public function __construct($securityService, $session) {
+    public function __construct($objectInterceptor, $securityService) {
+        $this->objectInterceptor = $objectInterceptor;
         $this->securityService = $securityService;
-        $this->session = $session;
-    }
-
-
-    public function postMap($object = null, $upfInstance = null) {
-        return $this->disabled || $this->resolveAccessForObject($object, false);
-    }
-
-    public function preSave($object = null, $upfInstance = null) {
-        return $this->disabled || $this->resolveAccessForObject($object);
-    }
-
-    public function preDelete($object = null, $upfInstance = null) {
-        return $this->disabled || $this->resolveAccessForObject($object);
     }
 
 
     /**
-     * Execute a callable block insecurely with interceptors disabled.
+     * Check for privileges before we allow the method to be executed.
+     * Also, allow for plugging in of logged in data as default data if required.
+     *
+     * @param object $objectInstance - The object being called
+     * @param string $methodName - The method name
+     * @param string[string] $params - The parameters passed to the method as name => value pairs.
+     * @param \Kinikit\Core\Util\Annotation\ClassAnnotations $classAnnotations - The class annotations for convenience for e.g. role based enforcement.
+     *
+     * @return string[string] - The params array either intact or modified if required.
+     */
+    public function beforeMethod($objectInstance, $methodName, $params, $classAnnotations) {
+
+        if ($matches = $classAnnotations->getMethodAnnotationsForMatchingTag("hasPrivilege", $methodName)) {
+
+            foreach ($matches as $match) {
+
+                // Work out which scenario we are in - implicit account or explicit parameter.
+                $matchValue = $match->getValue();
+                preg_match("/(.+)\((.+)\)/", $matchValue, $matches);
+
+                if ($matches && sizeof($matches) == 3) {
+
+                    $privilegeKey = trim($matches[1]);
+                    $paramName = ltrim($matches[2], "$");
+
+                    // Locate the parameter in the method signature
+                    $scopeId = isset($params[$paramName]) ? $params[$paramName] : null;
+
+                } else {
+                    $privilegeKey = trim($matchValue);
+                    $scopeId = null;
+                }
+
+                // Throw if an issue is encountered.
+                if (!$this->securityService->checkLoggedInHasPrivilege($privilegeKey, $scopeId))
+                    throw new AccessDeniedException();
+
+
+            }
+        }
+
+        if ($key = array_search(Account::LOGGED_IN_ACCOUNT, $params)) {
+            list($user, $account) = $this->securityService->getLoggedInUserAndAccount();
+            if ($account) {
+                $params[$key] = $account->getAccountId();
+            } else {
+                $params[$key] = null;
+            }
+        }
+
+
+        return $params;
+
+
+    }
+
+
+    /**
+     * Check for object interceptor disabling.
      *
      * @param callable $callable
+     * @param \Kinikit\Core\Util\Annotation\ClassAnnotations $classAnnotations
+     *
+     * @return callable
      */
-    public function executeInsecure($callable) {
+    public function methodCallable($callable, $methodName, $params, $classAnnotations) {
 
-        // Disable for the duration of the callable
-        $this->disabled = true;
-
-        // Run the callable
-        try {
-            $result = $callable();
-        } catch (\Throwable $e) {
-            $this->disabled = false;
-            throw($e);
+        // Check for objectInterceptorDisabled
+        if ($classAnnotations->getMethodAnnotationsForMatchingTag("objectInterceptorDisabled", $methodName)) {
+            return function () use ($callable) {
+                return $this->objectInterceptor->executeInsecure($callable);
+            };
         }
 
-        $this->disabled = false;
-
-        return $result;
-    }
-
-
-    /**
-     * @param SerialisableObject $object
-     * @return bool
-     */
-    private function resolveAccessForObject($object, $throwException = true) {
-        if ($this->securityService->checkLoggedInObjectAccess($object))
-            return true;
-        else {
-            if ($throwException)
-                throw new AccessDeniedException();
-            else
-                return false;
-        }
+        return $callable;
     }
 
 

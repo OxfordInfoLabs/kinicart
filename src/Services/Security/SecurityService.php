@@ -99,7 +99,7 @@ class SecurityService {
 
         // If an accountId, read it and store it.
         if ($accountId) {
-            $account = AccountSummary::fetch($accountId);
+            $account = Account::fetch($accountId);
             $this->session->__setLoggedInAccount($account);
         }
 
@@ -257,6 +257,15 @@ class SecurityService {
 
         return $privileges;
 
+    }
+
+
+    /**
+     * Check if the logged in user is a super user.
+     */
+    public function isSuperUserLoggedIn() {
+        $allPrivileges = $this->session->__getLoggedInPrivileges();
+        return isset($allPrivileges[Role::SCOPE_ACCOUNT]["*"]);
     }
 
 

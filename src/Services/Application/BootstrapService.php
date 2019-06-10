@@ -4,8 +4,8 @@
 namespace Kinicart\Services\Application;
 
 use Kinicart\Services\Application\Session;
-use Kinicart\Services\Security\MethodInterceptor;
 use Kinicart\Services\Security\ObjectInterceptor;
+use Kinicart\Services\Security\ActiveRecordInterceptor;
 use Kinicart\Services\Security\SecurityService;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\MVC\Framework\SourceBaseManager;
@@ -45,12 +45,12 @@ class BootstrapService {
         UPF::instance()->getPersistenceCoordinator()->setIncludedMappingFiles(__DIR__ . "/../../Config/upf.xml");
 
         // Add the object interceptor
-        $objectInterceptor = Container::instance()->get(ObjectInterceptor::class);
+        $objectInterceptor = Container::instance()->get(ActiveRecordInterceptor::class);
         UPF::instance()->getPersistenceCoordinator()->setInterceptors(array($objectInterceptor));
 
         // Add the method interceptor
         $session = Container::instance()->get(SecurityService::class);
-        Container::instance()->addMethodInterceptor(new MethodInterceptor($objectInterceptor, $session));
+        Container::instance()->addMethodInterceptor(new ObjectInterceptor($objectInterceptor, $session));
 
         // Update the active parent account using the HTTP Referer.
         $this->authenticationService->updateActiveParentAccount(isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "");

@@ -26,9 +26,9 @@ foreach ($directoryIterator as $item) {
 Container::instance()->get(\Kinicart\Services\Application\BootstrapService::class);
 
 /**
- * @var $interceptor \Kinicart\Services\Security\ObjectInterceptor
+ * @var $interceptor \Kinicart\Services\Security\ActiveRecordInterceptor
  */
-$interceptor = Container::instance()->get(\Kinicart\Services\Security\ObjectInterceptor::class);
+$interceptor = Container::instance()->get(\Kinicart\Services\Security\ActiveRecordInterceptor::class);
 
 $interceptor->executeInsecure(function () {
 

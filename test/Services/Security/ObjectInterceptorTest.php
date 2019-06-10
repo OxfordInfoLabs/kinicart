@@ -4,10 +4,9 @@
 namespace Kinicart\Test\Services\Application;
 
 use Kinicart\Exception\Security\AccessDeniedException;
-use Kinicart\Objects\Account\Contact;
+use Kinicart\Services\Application\Session;
 use Kinicart\Services\Security\AuthenticationService;
-use Kinicart\Services\Security\ObjectInterceptor;
-use Kinicart\Test\Services\Security\TestNonAccountObject;
+use Kinicart\Test\Services\Security\TestMethodService;
 use Kinicart\Test\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
 
@@ -15,154 +14,111 @@ include_once __DIR__ . "/../../autoloader.php";
 
 class ObjectInterceptorTest extends TestBase {
 
-    /**
-     * @var \Kinicart\Services\Application\ObjectInterceptor
-     */
-    private $objectInterceptor;
 
     /**
-     * @var \Kinicart\Services\Application\AuthenticationService
+     * @var TestMethodService
+     */
+    private $testMethodService;
+
+    /**
+     * @var AuthenticationService\
      */
     private $authenticationService;
 
+
     public function setUp() {
         parent::setUp();
-        $this->objectInterceptor = Container::instance()->get(ObjectInterceptor::class);
+        $this->testMethodService = Container::instance()->get(TestMethodService::class);
         $this->authenticationService = Container::instance()->get(AuthenticationService::class);
     }
 
 
-    public function testAdhocObjectsNotContainingAccountIdAreAllowedThroughAllPreMethods() {
+    public function testObjectInterceptorIsDisabledIfAttributeAddedToMethod() {
 
-        $adhocObject = new TestNonAccountObject(1, "Marky Mark", "Marky Mark and the funky bunch");
-        $this->assertTrue($this->objectInterceptor->preSave($adhocObject));
-        $this->assertTrue($this->objectInterceptor->preDelete($adhocObject));
-        $this->assertTrue($this->objectInterceptor->preMap("TestNonAccountObject", $adhocObject->__getSerialisablePropertyMap()));
-
-    }
-
-
-    public function testObjectsWithAccountIdAreCheckedForAccountOwnershipOfLoggedInUser() {
-
-
-        $contact = new Contact("Mark", "Hello World", "1 This Lane", "This town", "London",
-            "London", "LH1 4YY", "GB", null, null, 1);
-
-        // Start logged out and confirm that interceptors fail.
         $this->authenticationService->logout();
 
         try {
-            $this->objectInterceptor->preSave($contact);
+            $this->testMethodService->normalMethod();
             $this->fail("Should have thrown here");
         } catch (AccessDeniedException $e) {
-            // Success
-        }
-
-        try {
-            $this->objectInterceptor->preDelete($contact);
-            $this->fail("Should have thrown here");
-        } catch (AccessDeniedException $e) {
-            // Success
+            // As expected
         }
 
 
-        $this->assertFalse($this->objectInterceptor->postMap($contact));
-
-
-        // Now log in as a different account and confirm that interceptors fail.
-        $this->authenticationService->login("simon@peterjonescarwash.com", "password");
-
-        try {
-            $this->objectInterceptor->preSave($contact);
-            $this->fail("Should have thrown here");
-        } catch (AccessDeniedException $e) {
-            // Success
-        }
-
-        try {
-            $this->objectInterceptor->preDelete($contact);
-            $this->fail("Should have thrown here");
-        } catch (AccessDeniedException $e) {
-            // Success
-        }
-
-        $this->assertFalse($this->objectInterceptor->postMap($contact));
-
-
-        // Now log in as an account with authority and confirm that interceptors succeed.
-        $this->authenticationService->login("sam@samdavisdesign.co.uk", "password");
-
-        $this->assertTrue($this->objectInterceptor->preSave($contact));
-        $this->assertTrue($this->objectInterceptor->preDelete($contact));
-        $this->assertTrue($this->objectInterceptor->postMap($contact));
-
+        $this->testMethodService->objectInterceptorDisabledMethod();
+        $this->assertTrue(true);
 
     }
 
 
-    public function testCanExecuteABlockInsecurelyWhichWillAlwaysReturnTrueForInterceptors() {
+    // Check that access is denied for an exception raised for a method with has privileges.
+    public function testAccessDeniedExceptionRaisedForMethodWithHasPrivilegesDefined() {
 
-        $contact = new Contact("Mark", "Hello World", "1 This Lane", "This town", "London",
-            "London", "LH1 4YY", "GB", null, null, 1);
-
-        // Start logged out.
         $this->authenticationService->logout();
 
-        // Check that the interceptor is disabled for the duration of this function
-        $this->objectInterceptor->executeInsecure(function () use ($contact) {
-            $this->assertTrue($this->objectInterceptor->preSave($contact));
-            $this->assertTrue($this->objectInterceptor->preDelete($contact));
-            $this->assertTrue($this->objectInterceptor->postMap($contact));
-        });
-
-        // And re-enabled afterwards.
         try {
-            $this->objectInterceptor->preSave($contact);
+            $this->testMethodService->accountPermissionRestricted();
             $this->fail("Should have thrown here");
         } catch (AccessDeniedException $e) {
             // Success
         }
 
+        // Now try logging in as a user without the delete data privilege
+        $this->authenticationService->login("regularuser@smartcoasting.org", "password");
+
         try {
-            $this->objectInterceptor->preDelete($contact);
+            $this->testMethodService->accountPermissionRestricted();
             $this->fail("Should have thrown here");
         } catch (AccessDeniedException $e) {
             // Success
         }
 
-        $this->assertFalse($this->objectInterceptor->postMap($contact));
+        // Now try a user with delete data privilege
+        $this->authenticationService->login("mary@shoppingonline.com", "password");
+        $this->assertEquals("OK", $this->testMethodService->accountPermissionRestricted());
+
+        // Now try logging in as an administrator
+        $this->authenticationService->login("james@smartcoasting.org", "password");
+        $this->assertEquals("OK", $this->testMethodService->accountPermissionRestricted());
 
 
+        $this->authenticationService->logout();
 
         try {
-
-            // Check that an exception raised still resets the interceptor
-            $this->objectInterceptor->executeInsecure(function () use ($contact) {
-                throw new \Exception("Test Exception");
-            });
-        } catch (\Exception $e) {
-            // Fine
-        }
-
-        // And re-enabled afterwards.
-        try {
-            $this->objectInterceptor->preSave($contact);
+            $this->testMethodService->otherAccountPermissionRestricted(1, "marko");
             $this->fail("Should have thrown here");
         } catch (AccessDeniedException $e) {
             // Success
         }
 
+        // Now try logging in as an administrator
+        $this->authenticationService->login("james@smartcoasting.org", "password");
+        $this->assertEquals("DONE", $this->testMethodService->otherAccountPermissionRestricted(2, "Heydude"));
+        $this->assertEquals("DONE", $this->testMethodService->otherAccountPermissionRestricted(3, "Heydude"));
+
         try {
-            $this->objectInterceptor->preDelete($contact);
+            $this->testMethodService->otherAccountPermissionRestricted(4, "marko");
             $this->fail("Should have thrown here");
         } catch (AccessDeniedException $e) {
             // Success
         }
-
-        $this->assertFalse($this->objectInterceptor->postMap($contact));
-
 
     }
+
+
+    public function testCanInjectLoggedInAccountIdAsDefaultValueViaConstant() {
+
+        $this->authenticationService->logout();
+        $this->assertEquals(array("Mark", null), $this->testMethodService->loggedInAccountInjection("Mark"));
+
+        // Now try logging in as a user without the delete data privilege
+        $this->authenticationService->login("regularuser@smartcoasting.org", "password");
+        $this->assertEquals(array("Mark", 1), $this->testMethodService->loggedInAccountInjection("Mark"));
+
+    }
+
+
+
 
 
 }
