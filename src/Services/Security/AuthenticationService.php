@@ -65,9 +65,12 @@ class AuthenticationService {
 
         $matchingUsers = User::query("WHERE emailAddress = ? AND hashedPassword = ? AND parentAccountId = ?", $emailAddress, hash("md5", $password), $parentAccountId);
 
+
         // If there is a matching user, return it now.
         if (sizeof($matchingUsers) > 0) {
             $this->securityService->logIn($matchingUsers[0]);
+            return 1;
+
         } else {
             throw new InvalidLoginException();
         }

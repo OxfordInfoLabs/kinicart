@@ -36,8 +36,8 @@ class AuthenticationServiceTest extends TestBase {
 
         parent::setUp();
 
-        $this->authenticationService = Container::instance()->get(AuthenticationService::class);
         $this->bootstrapService = Container::instance()->get(BootstrapService::class);
+        $this->authenticationService = Container::instance()->get(AuthenticationService::class);
         $this->session = Container::instance()->get(Session::class);
     }
 

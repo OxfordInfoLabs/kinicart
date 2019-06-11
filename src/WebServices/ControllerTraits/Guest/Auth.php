@@ -27,7 +27,7 @@ trait Auth {
      * @param $password
      */
     public function logIn($emailAddress, $password) {
-        $this->authenticationService->login($emailAddress, $password);
+        return $this->authenticationService->login($emailAddress, $password);
     }
 
 }
