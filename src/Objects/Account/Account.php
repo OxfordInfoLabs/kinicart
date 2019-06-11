@@ -49,7 +49,7 @@ class Account extends AccountSummary {
      *
      * Account constructor.
      */
-    public function __construct($name = null, $parentAccountId = null) {
+    public function __construct($name = null, $parentAccountId = 0) {
         $this->name = $name;
         $this->parentAccountId = $parentAccountId;
 

@@ -70,7 +70,6 @@ class AuthenticationService {
         if (sizeof($matchingUsers) > 0) {
             $this->securityService->logIn($matchingUsers[0]);
             return 1;
-
         } else {
             throw new InvalidLoginException();
         }

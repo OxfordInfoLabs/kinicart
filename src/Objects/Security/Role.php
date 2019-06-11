@@ -65,6 +65,7 @@ class Role extends ActiveRecord {
      *
      * @formatter json
      * @var string[]
+     * @ormType LONGTEXT
      */
     private $privileges;
 

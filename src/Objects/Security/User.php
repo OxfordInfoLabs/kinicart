@@ -49,9 +49,9 @@ class User extends ActiveRecord {
      * parent account.  This allows for multiple accounts for the same email address across multiple
      * contexts.
      *
-     * @var string
+     * @var integer
      */
-    private $parentAccountId;
+    private $parentAccountId = 0;
 
 
     /**
@@ -83,6 +83,7 @@ class User extends ActiveRecord {
      * Optional two factor authentication data if this has been enabled.
      *
      * @var string
+     * @validation maxlength(2000)
      */
     private $twoFactorData;
 
@@ -113,6 +114,7 @@ class User extends ActiveRecord {
      * Status for this user.
      *
      * @var string
+     * @validation maxlength(30)
      */
     private $status = self::STATUS_PENDING;
 
@@ -130,11 +132,11 @@ class User extends ActiveRecord {
      * @param string $password
      * @param string $name
      */
-    public function __construct($emailAddress = null, $password = null, $name = null, $parentAccountId = null) {
+    public function __construct($emailAddress = null, $password = null, $name = null, $parentAccountId = 0) {
         $this->emailAddress = $emailAddress;
         if ($password) $this->hashedPassword = hash("md5", $password);
         $this->name = $name;
-        $this->parentAccountId = $parentAccountId;
+        $this->parentAccountId = $parentAccountId ? $parentAccountId : 0;
     }
 
 
@@ -325,6 +327,7 @@ class User extends ActiveRecord {
         // Check for duplication across parent accounts
         $matchingUsers = self::countQuery("WHERE emailAddress = ? AND parent_account_id = ? AND id <> ?", $this->emailAddress,
             $this->parentAccountId ? $this->parentAccountId : 0, $this->id ? $this->id : -1);
+
 
         if ($matchingUsers > 0)
             $validationErrors["emailAddress"] = new FieldValidationError("emailAddress", "duplicateEmail", "A user already exists with this email address");

@@ -18,6 +18,7 @@ class Email extends EmailSummary {
      *
      * @var string
      * @validation required
+     * @ormType LONGTEXT
      */
     private $textBody;
 

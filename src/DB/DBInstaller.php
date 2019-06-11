@@ -6,6 +6,7 @@ namespace Kinicart\DB;
 
 use DirectoryIterator;
 use Kinikit\Persistence\Database\Connection\DefaultDB;
+use Kinikit\Persistence\UPF\Engines\ORM\SchemaGenerator\SchemaGenerator;
 
 class DBInstaller {
 
@@ -18,12 +19,17 @@ class DBInstaller {
 
         $databaseConnection = DefaultDB::instance();
 
-        $directories = array(__DIR__);
+        // Execute the create schema for both the core and application
+        $schemaGenerator = new SchemaGenerator($databaseConnection);
+        $schemaGenerator->createSchema(__DIR__ . "/../Objects", "Kinicart\Objects");
+        $schemaGenerator->createSchema($sourceDirectory . "/Objects");
+
+        $directories = array(__DIR__ . "/..");
         if (!$coreOnly) $directories[] = $sourceDirectory;
 
         // Run core (and application) DB installs
         foreach ($directories as $directory) {
-            $directoryIterator = new DirectoryIterator($directory);
+            $directoryIterator = new DirectoryIterator($directory . "/DB");
             foreach ($directoryIterator as $item) {
                 if ($item->isDot()) continue;
                 if ($item->getExtension() != "sql") continue;

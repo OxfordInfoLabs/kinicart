@@ -10,6 +10,7 @@ use Kinikit\Persistence\UPF\Object\ActiveRecord;
 /**
  * Summary class for listing of emails
  *
+ * @noGeneratedTable
  */
 class EmailSummary extends ActiveRecord {
 
@@ -35,6 +36,7 @@ class EmailSummary extends ActiveRecord {
      * @var string
      * @validation required
      * @formatter britishdatetime
+     * @ormType DATETIME
      */
     protected $sentDate;
 
@@ -54,6 +56,7 @@ class EmailSummary extends ActiveRecord {
      *
      * @var string[]
      * @validation required
+     * @ormType TEXT
      * @formatter json
      */
     protected $recipients;
@@ -62,15 +65,16 @@ class EmailSummary extends ActiveRecord {
      * Optional CC field
      *
      * @var string[]
+     * @ormType TEXT
      * @formatter json
      */
-
     protected $cc;
 
     /**
      * Optional BCC field
      *
      * @var string[]
+     * @ormType TEXT
      * @formatter json
      */
     protected $bcc;
@@ -95,6 +99,7 @@ class EmailSummary extends ActiveRecord {
      * An error string if an error occurred sending this email
      *
      * @var string
+     * @ormType TEXT
      */
     protected $errorMessage;
 
@@ -103,6 +108,7 @@ class EmailSummary extends ActiveRecord {
      * The sent status of this email
      *
      * @var string
+     * @validation maxlength(30)
      */
     protected $status;
 

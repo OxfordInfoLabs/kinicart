@@ -7,9 +7,14 @@ use Kinicart\Test\TestData\TestDataInstaller;
 
 class TestBase extends \PHPUnit\Framework\TestCase {
 
+    private static $run = false;
+
     public static function setUpBeforeClass() {
-        $testDataInstaller = new TestDataInstaller();
-        $testDataInstaller->run(true);
+        if (!self::$run) {
+            $testDataInstaller = new TestDataInstaller();
+            $testDataInstaller->run(true);
+            self::$run = true;
+        }
     }
 
 }

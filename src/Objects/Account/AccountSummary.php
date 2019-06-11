@@ -10,6 +10,7 @@ use Kinikit\Persistence\UPF\Object\ActiveRecord;
  * Account summary.  Used for listing accounts in both Admin and for a user.
  *
  * @ormTable kc_account
+ * @noGeneratedTable
  */
 class AccountSummary extends ActiveRecord {
 
@@ -35,13 +36,14 @@ class AccountSummary extends ActiveRecord {
     /**
      * @var integer
      */
-    protected $parentAccountId;
+    protected $parentAccountId = 0;
 
 
     /**
      * Status of the account in question.
      *
      * @var string
+     * @validation maxlength(30)
      */
     protected $status = self::STATUS_ACTIVE;
 

@@ -77,7 +77,6 @@ class UserServiceTest extends TestBase {
 
 
         // Check duplicate issue
-
         try {
             $this->userService->createWithAccount("john3@test.com", "helloworld", "John Smith",
                 "Smith Enterprises");

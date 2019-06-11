@@ -19,7 +19,7 @@ class UserService {
      *
      * @objectInterceptorDisabled
      */
-    public function createWithAccount($emailAddress, $password, $name = null, $accountName = null, $parentAccountId = null) {
+    public function createWithAccount($emailAddress, $password, $name = null, $accountName = null, $parentAccountId = 0) {
 
         // Create a new user, save it and return it back.
         $user = new User($emailAddress, $password, $name, $parentAccountId);

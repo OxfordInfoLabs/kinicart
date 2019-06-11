@@ -13,6 +13,7 @@ class Attachment extends AttachmentSummary {
      * The raw content of this attachment.
      *
      * @var string
+     * @ormType LONGTEXT
      */
     private $content;
 
