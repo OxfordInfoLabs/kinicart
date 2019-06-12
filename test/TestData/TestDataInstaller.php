@@ -38,13 +38,14 @@ class TestDataInstaller {
         $directories = array(array(__DIR__ . "/..", "Kinicart"));
 
         if (!$coreOnly) {
-            $directories[] = array($testDirectory, Configuration::readParameter("application . namespace"));
+            $directories[] = array($testDirectory, Configuration::readParameter("application.namespace"));
         }
 
         $interceptor->executeInsecure(function () use ($directories) {
 
             foreach ($directories as list($directory, $namespace)) {
-                $this->processTestDataDirectory($directory . "/TestData", $namespace);
+                if (file_exists($directory . "/TestData"))
+                    $this->processTestDataDirectory($directory . "/TestData", $namespace);
             }
 
         });
@@ -55,19 +56,19 @@ class TestDataInstaller {
     // Install test data
     public static function runFromComposer($event) {
 
-        $sourceDirectory = $event && isset($event->getComposer()->getPackage()->getConfig()["source - directory"]) ?
-            $event->getComposer()->getPackage()->getConfig()["source - directory"] : " . ";
+        $sourceDirectory = $event && isset($event->getComposer()->getPackage()->getConfig()["source-directory"]) ?
+            $event->getComposer()->getPackage()->getConfig()["source-directory"] : " . ";
 
 
-        $testDirectory = $event && isset($event->getComposer()->getPackage()->getConfig()["test - directory"]) ?
-            $event->getComposer()->getPackage()->getConfig()["test - directory"] : " . ";
+        $testDirectory = $event && isset($event->getComposer()->getPackage()->getConfig()["test-directory"]) ?
+            $event->getComposer()->getPackage()->getConfig()["test-directory"] : " . ";
 
-        $testDirectory = getcwd() . " / " . $testDirectory;
+        $testDirectory = getcwd() . "/" . $testDirectory;
 
         chdir($sourceDirectory);
 
         $testDataInstaller = new TestDataInstaller();
-        $testDataInstaller->run(false, true, " . ", $testDirectory);
+        $testDataInstaller->run(false, true, ".", $testDirectory);
 
     }
 

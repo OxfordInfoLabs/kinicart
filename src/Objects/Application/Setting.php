@@ -28,6 +28,7 @@ class Setting extends ActiveRecord {
     /**
      * @var string
      * @primaryKey
+     * @ormColumn setting_key
      */
     private $key;
 
