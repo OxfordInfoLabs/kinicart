@@ -7,6 +7,7 @@ namespace Kinicart\Services\Security;
 use Kinicart\Exception\Security\AccessDeniedException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Security\Role;
+use Kinicart\Objects\Security\User;
 use Kinicart\Services\Application\Session;
 
 /**
@@ -71,6 +72,7 @@ class ObjectInterceptor extends \Kinikit\Core\DependencyInjection\ObjectIntercep
             }
         }
 
+
         if ($key = array_search(Account::LOGGED_IN_ACCOUNT, $params)) {
             list($user, $account) = $this->securityService->getLoggedInUserAndAccount();
             if ($account) {
@@ -80,6 +82,14 @@ class ObjectInterceptor extends \Kinikit\Core\DependencyInjection\ObjectIntercep
             }
         }
 
+        if ($key = array_search(User::LOGGED_IN_USER, $params)) {
+            list($user, $account) = $this->securityService->getLoggedInUserAndAccount();
+            if ($user) {
+                $params[$key] = $user->getId();
+            } else {
+                $params[$key] = null;
+            }
+        }
 
         return $params;
 
