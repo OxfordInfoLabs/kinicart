@@ -53,6 +53,20 @@ class AccountSummary extends ActiveRecord {
 
 
     /**
+     * Create an account summary object
+     *
+     * @param integer $accountId
+     * @param string $name
+     * @param integer $parentAccountId
+     */
+    public function __construct($accountId = null, $name = null, $parentAccountId = null) {
+        $this->accountId = $accountId;
+        $this->name = $name;
+        $this->parentAccountId = $parentAccountId;
+    }
+
+
+    /**
      * @return string
      */
     public function getName() {

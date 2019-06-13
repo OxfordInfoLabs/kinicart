@@ -123,4 +123,14 @@ class Account extends AccountSummary {
     }
 
 
+    /**
+     * Create a summary from this object
+     *
+     * @return AccountSummary
+     */
+    public function generateSummary() {
+        return new AccountSummary($this->accountId, $this->name, $this->parentAccountId);
+    }
+
+
 }

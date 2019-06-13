@@ -134,6 +134,8 @@ class SecurityService {
 
     /**
      * Return an array with both logged in user and account for convenience
+     *
+     * @return array
      */
     public function getLoggedInUserAndAccount() {
         return array($this->session->__getLoggedInUser(), $this->session->__getLoggedInAccount());
