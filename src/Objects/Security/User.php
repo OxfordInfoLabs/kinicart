@@ -124,6 +124,7 @@ class User extends ActiveRecord {
     const STATUS_SUSPENDED = "SUSPENDED";
     const STATUS_PASSWORD_RESET = "PASSWORD_RESET";
 
+    const LOGGED_IN_USER = "LOGGED_IN_USER";
 
     /**
      * Create a new user with basic data.
