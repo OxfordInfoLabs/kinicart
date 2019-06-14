@@ -9,14 +9,25 @@ use Kinicart\Services\Security\AuthenticationService;
 trait Auth {
 
     private $authenticationService;
+    private $securityService;
 
     /**
      * @param \Kinicart\Services\Security\AuthenticationService $authenticationService
+     * @param \Kinicart\Services\Security\SecurityService $securityService
      */
-    public function __construct($authenticationService) {
+    public function __construct($authenticationService, $securityService) {
         $this->authenticationService = $authenticationService;
+        $this->securityService = $securityService;
     }
 
+    /**
+     * Return the logged in user/account
+     *
+     * @http GET /
+     */
+    public function getLoggedInUserAccount() {
+        return $this->securityService->getLoggedInUserAndAccount();
+    }
 
     /**
      * Log in with an email address and password.
@@ -30,4 +41,12 @@ trait Auth {
         return $this->authenticationService->login($emailAddress, $password);
     }
 
+    /**
+     * Logout
+     *
+     * @http GET /logout
+     */
+    public function logOut() {
+        $this->authenticationService->logout();
+    }
 }

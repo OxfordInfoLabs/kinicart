@@ -6,6 +6,7 @@ namespace Kinicart\Test\Services\Security;
 
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Account\Contact;
+use Kinicart\Objects\Security\User;
 
 class TestMethodService {
 
@@ -62,6 +63,16 @@ class TestMethodService {
      */
     public function loggedInAccountInjection($param1, $accountId = Account::LOGGED_IN_ACCOUNT) {
         return array($param1, $accountId);
+    }
+
+    /**
+     * Special magic logged in constant
+     *
+     * @param $param1
+     * @param null $userId
+     */
+    public function loggedInUserInjection($param1, $userId = User::LOGGED_IN_USER) {
+        return array($param1, $userId);
     }
 
 }

@@ -118,7 +118,16 @@ class ObjectInterceptorTest extends TestBase {
     }
 
 
+    public function testCanInjectLoggedInUserIdAsDefaultValueViaConstant() {
 
+        $this->authenticationService->logout();
+        $this->assertEquals(array("Mark", null), $this->testMethodService->loggedInUserInjection("Mark"));
+
+        // Now try logging in as a user without the delete data privilege
+        $this->authenticationService->login("regularuser@smartcoasting.org", "password");
+        $this->assertEquals(array("Mark", 10), $this->testMethodService->loggedInUserInjection("Mark"));
+
+    }
 
 
 }
