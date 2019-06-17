@@ -26,16 +26,11 @@ abstract class ControllerAccessInterceptor extends ObjectInterceptor {
      * @param \Kinikit\Core\Util\Annotation\ClassAnnotations $classAnnotations
      * @return string
      */
-    public function beforeMethod($objectInstance, $methodName, $params, $classAnnotations) {
+    public function afterCreate($objectInstance) {
         if ($objectInstance instanceof Controller) {
-
-            // Shortcut if this is handleRequest as there is no need to intercept this method.
-            if (($objectInstance instanceof RESTService) && ($methodName == "handleRequest"))
-                return $params;
-
-            $this->onControllerAccess($objectInstance, $methodName, new URLHelper($_SERVER ['REQUEST_URI']));
+            $this->onControllerAccess($objectInstance, new URLHelper($_SERVER ['REQUEST_URI']));
         }
-        return $params;
+
     }
 
 
@@ -46,7 +41,7 @@ abstract class ControllerAccessInterceptor extends ObjectInterceptor {
      * @param $methodName
      * @param URLHelper $urlHelper
      */
-    public abstract function onControllerAccess($controllerInstance, $methodName, $urlHelper);
+    public abstract function onControllerAccess($controllerInstance, $urlHelper);
 
 
 }

@@ -17,7 +17,7 @@ class SettingTest extends TestBase {
     /**
      * Set up for this - needs to add in the Source Base
      */
-    public function setUp() {
+    public function setUp():void {
         SourceBaseManager::instance()->appendSourceBase(__DIR__ . "/../../../src");
     }
 

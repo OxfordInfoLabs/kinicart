@@ -31,7 +31,7 @@ class DefaultControllerAccessInterceptorTest extends TestBase {
      */
     private $testController;
 
-    public function setUp() {
+    public function setUp():void {
         $this->authenticationService = Container::instance()->get(AuthenticationService::class);
         $securityService = Container::instance()->get(SecurityService::class);
         $this->defaultControllerAccessInterceptor = new DefaultControllerAccessInterceptor($securityService, $this->authenticationService);
@@ -40,7 +40,7 @@ class DefaultControllerAccessInterceptorTest extends TestBase {
 
     public function testPublicControllerURLsAreAccessibleByAll() {
 
-        URLHelper::setTestURL("/public/somecontroller?mynameistest");
+        $_SERVER["REQUEST_URI"] = "/public/somecontroller?mynameistest";
 
         // Guest
         $this->authenticationService->logout();
@@ -66,7 +66,7 @@ class DefaultControllerAccessInterceptorTest extends TestBase {
 
     public function testCustomerControllerURLsAreNotAccessibleByPublic() {
 
-        URLHelper::setTestURL("/customer/somecontroller?mynameistest");
+        $_SERVER["REQUEST_URI"] = "/customer/somecontroller?mynameistest";
 
         // Guest
         $this->authenticationService->logout();
@@ -98,7 +98,7 @@ class DefaultControllerAccessInterceptorTest extends TestBase {
 
     public function testAdminControllerURLsAreNotAccessibleByNonSuperusers() {
 
-        URLHelper::setTestURL("/admin/somecontroller?mynameistest");
+        $_SERVER["REQUEST_URI"] = "/admin/somecontroller?mynameistest";
 
         // Guest
         $this->authenticationService->logout();
@@ -142,7 +142,7 @@ class DefaultControllerAccessInterceptorTest extends TestBase {
 
     public function testAPIControllerURLsAreOnlyAccessibleByLoggedInAccountAndRequireAPIKeyAndSecretForEachRequest() {
 
-        URLHelper::setTestURL("/api/somecontroller?mynameistest");
+        $_SERVER["REQUEST_URI"] = "/api/somecontroller?mynameistest";
 
         // Guest
         $this->authenticationService->logout();
@@ -188,7 +188,7 @@ class DefaultControllerAccessInterceptorTest extends TestBase {
         // Now tweak the URL to include bad credentials
         $this->authenticationService->logout();
 
-        URLHelper::setTestURL("/api/somecontroller?mynameistest?apiKey=BADKEY&apiSecret=BADSECRET");
+        $_SERVER["REQUEST_URI"] = "/api/somecontroller?mynameistest?apiKey=BADKEY&apiSecret=BADSECRET";
         $_GET = array("apiKey" => "BADKEY", "apiSecret" => "BADSECRET");
         HttpRequest::instance(true);
 
@@ -201,7 +201,7 @@ class DefaultControllerAccessInterceptorTest extends TestBase {
 
 
         // Finally good credentials
-        URLHelper::setTestURL("/api/somecontroller?mynameistest?apiKey=TESTAPIKEY&apiSecret=TESTAPISECRET");
+        $_SERVER["REQUEST_URI"] = "/api/somecontroller?mynameistest?apiKey=TESTAPIKEY&apiSecret=TESTAPISECRET";
         $_GET = array("apiKey" => "TESTAPIKEY", "apiSecret" => "TESTAPISECRET");
         HttpRequest::instance(true);
 

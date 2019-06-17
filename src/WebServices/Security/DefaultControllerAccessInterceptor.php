@@ -41,7 +41,7 @@ class DefaultControllerAccessInterceptor extends ControllerAccessInterceptor {
      * @param Controller $controllerInstance
      * @param URLHelper $urlHelper
      */
-    public function onControllerAccess($controllerInstance, $methodName, $urlHelper) {
+    public function onControllerAccess($controllerInstance, $urlHelper) {
         $controlSegment = $urlHelper->getFirstSegment();
 
         list($user, $account) = $this->securityService->getLoggedInUserAndAccount();

@@ -20,7 +20,7 @@ class EmailServiceTest extends TestBase {
     private $emailService;
 
 
-    public function setUp() {
+    public function setUp():void {
         parent::setUp();
 
         $authenticationService = Container::instance()->get(AuthenticationService::class);

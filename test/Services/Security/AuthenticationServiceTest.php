@@ -32,7 +32,7 @@ class AuthenticationServiceTest extends TestBase {
     private $session;
 
 
-    public function setUp() {
+    public function setUp():void {
 
         parent::setUp();
 

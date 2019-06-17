@@ -23,7 +23,7 @@ class SecurityServiceTest extends TestBase {
     private $securityService;
     private $authenticationService;
 
-    public function setUp() {
+    public function setUp():void {
         parent::setUp();
         $this->authenticationService = Container::instance()->get(AuthenticationService::class);
         $this->securityService = Container::instance()->get(SecurityService::class);

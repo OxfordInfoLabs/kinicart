@@ -26,7 +26,7 @@ class ObjectInterceptorTest extends TestBase {
     private $authenticationService;
 
 
-    public function setUp() {
+    public function setUp():void {
         parent::setUp();
         $this->testMethodService = Container::instance()->get(TestMethodService::class);
         $this->authenticationService = Container::instance()->get(AuthenticationService::class);

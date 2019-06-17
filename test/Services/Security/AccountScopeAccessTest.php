@@ -26,7 +26,7 @@ class AccountScopeAccessTest extends TestBase {
      */
     private $authenticationService;
 
-    public function setUp() {
+    public function setUp():void {
         parent::setUp();
         $this->accountScopeAccess = new AccountScopeAccess();
         $this->authenticationService = Container::instance()->get(AuthenticationService::class);
