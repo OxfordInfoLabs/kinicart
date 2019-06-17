@@ -10,6 +10,7 @@ use Kinicart\Services\Security\SecurityService;
 use Kinikit\Core\Util\HTTP\HttpRequest;
 use Kinikit\Core\Util\HTTP\URLHelper;
 use Kinikit\MVC\Framework\Controller;
+use Kinikit\MVC\Framework\Controller\RESTService;
 
 /**
  * Default controller method interceptor.  This implements rules based upon the calling path to a controller using
@@ -40,7 +41,7 @@ class DefaultControllerAccessInterceptor extends ControllerAccessInterceptor {
      * @param Controller $controllerInstance
      * @param URLHelper $urlHelper
      */
-    public function onControllerAccess($controllerInstance, $urlHelper) {
+    public function onControllerAccess($controllerInstance, $methodName, $urlHelper) {
         $controlSegment = $urlHelper->getFirstSegment();
 
         list($user, $account) = $this->securityService->getLoggedInUserAndAccount();
@@ -53,12 +54,13 @@ class DefaultControllerAccessInterceptor extends ControllerAccessInterceptor {
             if (!$this->securityService->isSuperUserLoggedIn())
                 throw new AccessDeniedException();
         } else if ($controlSegment == "api") {
+
             $apiKey = HttpRequest::instance()->getParameter("apiKey");
             $apiSecret = HttpRequest::instance()->getParameter("apiSecret");
             if (!$apiKey || !$apiSecret) {
                 throw new MissingAPICredentialsException();
             }
-            if (!$account || $account->getApiKey() != $apiKey) {
+            if (!$account || $account->getApiKey() != $apiKey || $account->getApiSecret() != $apiSecret) {
                 $this->authenticationService->apiAuthenticate($apiKey, $apiSecret);
             }
         }
