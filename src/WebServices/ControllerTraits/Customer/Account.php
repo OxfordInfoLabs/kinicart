@@ -19,7 +19,6 @@ trait Account {
         $this->accountService = $accountService;
     }
 
-
     /**
      * Get an account defaulting to logged in account
      *
@@ -33,9 +32,15 @@ trait Account {
     }
 
     /**
+     * Get a user object by userId (optional), defaults to the logged in user
+     *
+     * @http GET /user
+     *
      * @param string $userId
+     *
+     * @return User
      */
     public function getUser($userId = User::LOGGED_IN_USER) {
-
+        return User::fetch($userId);
     }
 }
