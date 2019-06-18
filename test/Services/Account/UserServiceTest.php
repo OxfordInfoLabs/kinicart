@@ -1,5 +1,7 @@
 <?php
 
+namespace Kinicart\Test\Services\Account;
+
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Security\User;
 use Kinicart\Test\TestBase;
@@ -21,7 +23,7 @@ class UserServiceTest extends TestBase {
     private $authenticationService;
 
 
-    public function setUp():void {
+    public function setUp(): void {
         parent::setUp();
         $this->userService = Container::instance()->get(\Kinicart\Services\Account\UserService::class);
         $this->authenticationService = Container::instance()->get(\Kinicart\Services\Security\AuthenticationService::class);
