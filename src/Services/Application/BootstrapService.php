@@ -45,8 +45,9 @@ class BootstrapService {
      */
     private function run() {
 
-        // Ensure kinicart is appended as a source base.
+        // Ensure kinicart is appended as a source base and an application namespace.
         SourceBaseManager::instance()->appendSourceBase(__DIR__ . "/../..");
+        SourceBaseManager::instance()->addApplicationNamespace("Kinicart");
 
         // Add the kinicart UPF file for formatters etc.
         UPF::instance()->getPersistenceCoordinator()->setIncludedMappingFiles(__DIR__ . "/../../Config/upf.xml");
