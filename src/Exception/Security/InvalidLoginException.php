@@ -4,7 +4,9 @@
 namespace Kinicart\Exception\Security;
 
 
-class InvalidLoginException extends \Exception {
+use Kinikit\Core\Exception\SerialisableException;
+
+class InvalidLoginException extends SerialisableException {
 
     public function __construct() {
         parent::__construct("The username or password supplied was invalid");

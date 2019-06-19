@@ -4,7 +4,9 @@
 namespace Kinicart\Exception\Security;
 
 
-class AccountSuspendedException extends \Exception {
+use Kinikit\Core\Exception\SerialisableException;
+
+class AccountSuspendedException extends SerialisableException {
 
     public function __construct() {
         parent::__construct("Your account has been suspended.");
