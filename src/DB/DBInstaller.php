@@ -5,6 +5,7 @@ namespace Kinicart\DB;
 
 
 use DirectoryIterator;
+use Kinikit\Core\Init;
 use Kinikit\Persistence\Database\Connection\DefaultDB;
 use Kinikit\Persistence\UPF\Engines\ORM\SchemaGenerator\SchemaGenerator;
 
@@ -44,6 +45,8 @@ class DBInstaller {
      * Main clean function.
      */
     public static function runFromComposer($event) {
+
+        new Init();
 
         $sourceDirectory = $event && isset($event->getComposer()->getPackage()->getConfig()["source-directory"]) ?
             $event->getComposer()->getPackage()->getConfig()["source-directory"] : ".";

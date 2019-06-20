@@ -8,6 +8,7 @@ use DirectoryIterator;
 use Kinicart\DB\DBInstaller;
 use Kinikit\Core\Configuration;
 use Kinikit\Core\DependencyInjection\Container;
+use Kinikit\Core\Init;
 
 
 class TestDataInstaller {
@@ -19,7 +20,6 @@ class TestDataInstaller {
      * local DB directory.
      */
     public function run($coreOnly = false, $installDB = true, $sourceDirectory = "../src", $testDirectory = ".") {
-
 
         if ($installDB) {
             $dbInstaller = new DBInstaller();
@@ -56,12 +56,14 @@ class TestDataInstaller {
     // Install test data
     public static function runFromComposer($event) {
 
+        new Init();
+
         $sourceDirectory = $event && isset($event->getComposer()->getPackage()->getConfig()["source-directory"]) ?
-            $event->getComposer()->getPackage()->getConfig()["source-directory"] : " . ";
+            $event->getComposer()->getPackage()->getConfig()["source-directory"] : ".";
 
 
         $testDirectory = $event && isset($event->getComposer()->getPackage()->getConfig()["test-directory"]) ?
-            $event->getComposer()->getPackage()->getConfig()["test-directory"] : " . ";
+            $event->getComposer()->getPackage()->getConfig()["test-directory"] : ".";
 
         $testDirectory = getcwd() . "/" . $testDirectory;
 
