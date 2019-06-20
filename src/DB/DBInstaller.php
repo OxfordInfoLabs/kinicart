@@ -29,7 +29,8 @@ class DBInstaller {
 
         // Run core (and application) DB installs
         foreach ($directories as $directory) {
-            $directoryIterator = new DirectoryIterator($directory . "/DB");
+            if (file_exists($directory . "/DB"))
+                $directoryIterator = new DirectoryIterator($directory . "/DB");
             foreach ($directoryIterator as $item) {
                 if ($item->isDot()) continue;
                 if ($item->getExtension() != "sql") continue;
