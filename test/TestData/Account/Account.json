@@ -15,7 +15,9 @@
   {
     "accountId": 3,
     "name": "Smart Coasting",
-    "status": "ACTIVE"
+    "status": "ACTIVE",
+    "apiKey": "TESTAPIKEY3",
+    "apiSecret": "TESTAPISECRET3"
   },
   {
     "accountId": 4,
