@@ -4,11 +4,11 @@
 namespace Kinicart\Services\Security;
 
 
-use Kinicart\Exception\Security\AccessDeniedException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Security\Role;
 use Kinicart\Objects\Security\User;
 use Kinicart\Services\Application\Session;
+use Kinikit\Core\Exception\AccessDeniedException;
 
 /**
  * Generic method interceptor.  Currently allows for privilege based enforcement at the method level as well

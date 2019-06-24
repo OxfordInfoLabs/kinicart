@@ -3,13 +3,14 @@
 
 namespace Kinicart\Test\Services\Application;
 
-use Kinicart\Exception\Security\AccessDeniedException;
+
 use Kinicart\Objects\Account\Contact;
 use Kinicart\Services\Security\AuthenticationService;
 use Kinicart\Services\Security\ActiveRecordInterceptor;
 use Kinicart\Test\Services\Security\TestNonAccountObject;
 use Kinicart\Test\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
+use Kinikit\Core\Exception\AccessDeniedException;
 
 include_once __DIR__ . "/../../autoloader.php";
 

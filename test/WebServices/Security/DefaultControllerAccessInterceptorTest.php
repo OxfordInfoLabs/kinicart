@@ -3,7 +3,7 @@
 namespace Kinicart\Test\WebServices\Security;
 
 
-use Kinicart\Exception\Security\AccessDeniedException;
+
 use Kinicart\Exception\Security\InvalidAPICredentialsException;
 use Kinicart\Exception\Security\MissingAPICredentialsException;
 use Kinicart\Services\Security\AuthenticationService;
@@ -11,6 +11,7 @@ use Kinicart\Services\Security\SecurityService;
 use Kinicart\Test\TestBase;
 use Kinicart\WebServices\Security\DefaultControllerAccessInterceptor;
 use Kinikit\Core\DependencyInjection\Container;
+use Kinikit\Core\Exception\AccessDeniedException;
 use Kinikit\Core\Util\HTTP\HttpRequest;
 use Kinikit\Core\Util\HTTP\URLHelper;
 

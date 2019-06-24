@@ -3,8 +3,8 @@
 
 namespace Kinicart\Services\Security;
 
-use Kinicart\Exception\Security\AccessDeniedException;
 use Kinicart\Objects\Application\Session;
+use Kinikit\Core\Exception\AccessDeniedException;
 use Kinikit\Core\Object\SerialisableObject;
 use Kinikit\Persistence\UPF\Framework\UPFObjectInterceptorBase;
 

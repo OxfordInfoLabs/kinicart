@@ -6,6 +6,7 @@ use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Security\User;
 use Kinicart\Test\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
+use Kinikit\Core\Exception\AccessDeniedException;
 use Kinikit\Core\Exception\ValidationException;
 
 include_once __DIR__ . "/../../autoloader.php";
@@ -115,7 +116,7 @@ class UserServiceTest extends TestBase {
         try {
             $this->userService->createAdminUser("marko@polo.com", "pickle");
             $this->fail("Should have thrown here");
-        } catch (\Kinicart\Exception\Security\AccessDeniedException $e) {
+        } catch (AccessDeniedException $e) {
             // Expected
         }
 

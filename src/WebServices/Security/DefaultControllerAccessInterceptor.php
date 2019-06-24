@@ -3,10 +3,11 @@
 
 namespace Kinicart\WebServices\Security;
 
-use Kinicart\Exception\Security\AccessDeniedException;
+
 use Kinicart\Exception\Security\MissingAPICredentialsException;
 use Kinicart\Services\Security\AuthenticationService;
 use Kinicart\Services\Security\SecurityService;
+use Kinikit\Core\Exception\AccessDeniedException;
 use Kinikit\Core\Util\HTTP\HttpRequest;
 use Kinikit\Core\Util\HTTP\URLHelper;
 use Kinikit\MVC\Framework\Controller;
