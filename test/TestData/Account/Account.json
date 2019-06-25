@@ -28,6 +28,8 @@
     "accountId": 5,
     "name": "Smart Coasting - Design Account",
     "status": "ACTIVE",
-    "parentAccountId": 1
+    "parentAccountId": 1,
+    "apiKey": "HELLOWORLD",
+    "apiSecret": "HAPPYCAMPERS"
   }
 ]
