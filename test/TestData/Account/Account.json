@@ -10,7 +10,9 @@
   {
     "accountId": 2,
     "name": "Peter Jones Car Washing",
-    "status": "ACTIVE"
+    "status": "ACTIVE",
+    "apiKey": "TESTAPIKEY2",
+    "apiSecret": "TESTAPISECRET2"
   },
   {
     "accountId": 3,
