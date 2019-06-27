@@ -137,6 +137,69 @@ class AuthenticationService {
 
     }
 
+    public function validateUserPassword($emailAddress, $password, $parentAccountId = null) {
+        if ($parentAccountId === null) {
+            $parentAccountId = $this->session->__getActiveParentAccountId() ? $this->session->__getActiveParentAccountId() : 0;
+        }
+
+        $matchingUsers = User::query("WHERE emailAddress = ? AND hashedPassword = ? AND parentAccountId = ?", $emailAddress, hash("md5", $password), $parentAccountId);
+
+        return sizeof($matchingUsers) > 0;
+    }
+
+    /**
+     * @param $newEmailAddress
+     * @param $password
+     * @param string $userId
+     */
+    public function changeUserEmail($newEmailAddress, $password, $userId = User::LOGGED_IN_USER) {
+        /** @var User $user */
+        $user = User::fetch($userId);
+        if ($this->validateUserPassword($user->getEmailAddress(), $password)) {
+            $user->setEmailAddress($newEmailAddress);
+            $user->save();
+            return $user;
+        }
+    }
+
+    /**
+     * @param $newMobile
+     * @param $password
+     * @param string $userId
+     * @return User
+     */
+    public function changeUserMobile($newMobile, $password, $userId = User::LOGGED_IN_USER) {
+        /** @var User $user */
+        $user = User::fetch($userId);
+        if ($this->validateUserPassword($user->getEmailAddress(), $password)) {
+            $user->setMobileNumber($newMobile);
+            $user->save();
+            return $user;
+        }
+    }
+
+    /**
+     * @param $newEmailAddress
+     * @param $password
+     * @param string $userId
+     * @return User
+     */
+    public function changeUserBackupEmail($newEmailAddress, $password, $userId = User::LOGGED_IN_USER) {
+        /** @var User $user */
+        $user = User::fetch($userId);
+        if ($this->validateUserPassword($user->getEmailAddress(), $password)) {
+            $user->setBackupEmailAddress($newEmailAddress);
+            $user->save();
+            return $user;
+        }
+    }
+
+    public function generateGoogleAuthSettings() {
+//        $googleAuthWorker = new GoogleAuthenticatorWorker("Netistrar", $loggedInUsername);
+//
+//        $secretKey = $googleAuthWorker->createSecretKey();
+//        return array("secret" => $secretKey, "qrCode" => $googleAuthWorker->generateQRCode($secretKey));
+    }
 
     /**
      * Log out function.
