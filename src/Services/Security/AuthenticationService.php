@@ -184,11 +184,27 @@ class AuthenticationService {
         return sizeof($matchingUsers) > 0;
     }
 
-    public function generateGoogleAuthSettings() {
-//        $googleAuthWorker = new GoogleAuthenticatorWorker("Netistrar", $loggedInUsername);
-//
-//        $secretKey = $googleAuthWorker->createSecretKey();
-//        return array("secret" => $secretKey, "qrCode" => $googleAuthWorker->generateQRCode($secretKey));
+    public function generateTwoFactorSettings() {
+        $userEmail = $this->session->__getLoggedInUser()->getEmailAddress();
+        $this->twoFactorProvider->setAccountName($userEmail);
+
+        $secret = $this->twoFactorProvider->createSecretKey();
+        $qrCode = $this->twoFactorProvider->generateQRCode($secret);
+
+        return array("secret" => $secret, "qrCode" => $qrCode);
+    }
+
+    public function authenticateNewTwoFactor($code, $secret) {
+        $user = $this->session->__getLoggedInUser();
+        $authenticated = $this->twoFactorProvider->authenticate($secret, $code);
+
+        if ($authenticated) {
+            $user->setTwoFactorData($secret);
+            $user->save();
+            $this->session->__setLoggedInUser($user);
+            return $user;
+        }
+        return false;
     }
 
     /**

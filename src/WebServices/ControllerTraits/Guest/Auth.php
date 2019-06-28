@@ -65,5 +65,26 @@ trait Auth {
         return $this->authenticationService->validateUserPassword($emailAddress, $password, $parentAccountId);
     }
 
+    /**
+     * Generate two factor settings
+     *
+     * @http GET /twoFactorSettings
+     *
+     * @return array
+     */
+    public function createTwoFactorSettings() {
+        return $this->authenticationService->generateTwoFactorSettings();
+    }
+
+    /**
+     * @http GET /newTwoFactor
+     *
+     * @param $code
+     * @param $secret
+     * @return bool|\Kinicart\Objects\Security\User
+     */
+    public function authenticateNewTwoFactorCode($code, $secret) {
+        return $this->authenticationService->authenticateNewTwoFactor($code, $secret);
+    }
 
 }

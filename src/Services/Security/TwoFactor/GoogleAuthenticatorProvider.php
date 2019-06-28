@@ -19,7 +19,7 @@ class GoogleAuthenticatorProvider extends TwoFactorProvider {
     private $googleAuthenticator;
 
     public function __construct($issuer = null, $accountName = null) {
-        $this->issuer = $issuer ? $issuer : "google-authenticator";
+        $this->issuer = $issuer;
         $this->accountName = $accountName ? $accountName : "new-ga" . time() . rand(0, 10);
         $this->googleAuthenticator = new GoogleAuthenticator();
     }
