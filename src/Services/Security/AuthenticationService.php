@@ -8,6 +8,8 @@ use Kinicart\Exception\Security\InvalidAPICredentialsException;
 use Kinicart\Exception\Security\InvalidLoginException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Security\User;
+use Kinicart\Services\Security\TwoFactor\TwoFactorProvider;
+use Kinikit\Core\Configuration;
 
 
 /**
@@ -21,6 +23,10 @@ class AuthenticationService {
     private $settingsService;
     private $session;
     private $securityService;
+    private $twoFactorProvider;
+
+    const STATUS_LOGGED_IN = "LOGGED_IN";
+    const STATUS_REQUIRES_2FA = "REQUIRES_2FA";
 
     /**
      * @param \Kinicart\Services\Application\SettingsService $settingsService
@@ -31,6 +37,9 @@ class AuthenticationService {
         $this->settingsService = $settingsService;
         $this->session = $session;
         $this->securityService = $securityService;
+
+        $twoFactorProviderKey = Configuration::readParameter("two.factor.provider") ? Configuration::readParameter("two.factor.provider") : null;
+        $this->twoFactorProvider = TwoFactorProvider::getProvider($twoFactorProviderKey);
     }
 
     /**
@@ -65,16 +74,44 @@ class AuthenticationService {
 
         $matchingUsers = User::query("WHERE emailAddress = ? AND hashedPassword = ? AND parentAccountId = ?", $emailAddress, hash("md5", $password), $parentAccountId);
 
-
         // If there is a matching user, return it now.
         if (sizeof($matchingUsers) > 0) {
-            $this->securityService->logIn($matchingUsers[0]);
-            return 1;
+            /** @var User $user */
+            $user = $matchingUsers[0];
+            if ($user->getTwoFactorData()) {
+                $this->session->__setPendingLoggedInUser($user);
+                return self::STATUS_REQUIRES_2FA;
+            } else {
+                $this->securityService->logIn($user);
+                return self::STATUS_LOGGED_IN;
+            }
         } else {
             throw new InvalidLoginException();
         }
+    }
 
+    /**
+     * Check the supplied two factor code and authenticate the login if correct.
+     *
+     * @param $code
+     * @return bool
+     * @throws InvalidLoginException
+     * @throws \Kinicart\Exception\Security\AccountSuspendedException
+     * @throws \Kinicart\Exception\Security\UserSuspendedException
+     */
+    public function authenticateTwoFactor($code) {
+        $pendingUser = $this->session->__getPendingLoggedInUser();
+        $secretKey = $pendingUser->getTwoFactorData();
 
+        if (!$secretKey) return false;
+
+        $authenticated = $this->twoFactorProvider->authenticate($secretKey, $code);
+
+        if ($authenticated) {
+            $this->securityService->logIn($pendingUser);
+            return true;
+        }
+        return false;
     }
 
 
@@ -145,53 +182,6 @@ class AuthenticationService {
         $matchingUsers = User::query("WHERE emailAddress = ? AND hashedPassword = ? AND parentAccountId = ?", $emailAddress, hash("md5", $password), $parentAccountId);
 
         return sizeof($matchingUsers) > 0;
-    }
-
-    /**
-     * @param $newEmailAddress
-     * @param $password
-     * @param string $userId
-     */
-    public function changeUserEmail($newEmailAddress, $password, $userId = User::LOGGED_IN_USER) {
-        /** @var User $user */
-        $user = User::fetch($userId);
-        if ($this->validateUserPassword($user->getEmailAddress(), $password)) {
-            $user->setEmailAddress($newEmailAddress);
-            $user->save();
-            return $user;
-        }
-    }
-
-    /**
-     * @param $newMobile
-     * @param $password
-     * @param string $userId
-     * @return User
-     */
-    public function changeUserMobile($newMobile, $password, $userId = User::LOGGED_IN_USER) {
-        /** @var User $user */
-        $user = User::fetch($userId);
-        if ($this->validateUserPassword($user->getEmailAddress(), $password)) {
-            $user->setMobileNumber($newMobile);
-            $user->save();
-            return $user;
-        }
-    }
-
-    /**
-     * @param $newEmailAddress
-     * @param $password
-     * @param string $userId
-     * @return User
-     */
-    public function changeUserBackupEmail($newEmailAddress, $password, $userId = User::LOGGED_IN_USER) {
-        /** @var User $user */
-        $user = User::fetch($userId);
-        if ($this->validateUserPassword($user->getEmailAddress(), $password)) {
-            $user->setBackupEmailAddress($newEmailAddress);
-            $user->save();
-            return $user;
-        }
     }
 
     public function generateGoogleAuthSettings() {

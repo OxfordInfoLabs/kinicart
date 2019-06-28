@@ -36,6 +36,24 @@ class Session extends HttpSession {
         $this->setValue("loggedInUser", $user);
     }
 
+    /**
+     * Get the pending logged in user
+     *
+     * @return User
+     */
+    public function __getPendingLoggedInUser() {
+        return $this->getValue("pendingLoggedInUser");
+    }
+
+
+    /**
+     * Set the pending logged in user
+     *
+     * @param $user User
+     */
+    public function __setPendingLoggedInUser($user) {
+        $this->setValue("pendingLoggedInUser", $user);
+    }
 
     /**
      * Get the logged in account

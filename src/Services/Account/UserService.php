@@ -12,6 +12,16 @@ use Kinikit\Core\Exception\ValidationException;
 
 class UserService {
 
+    private $authenticationService;
+
+    /**
+     * UserService constructor.
+     *
+     * @param \Kinicart\Services\Security\AuthenticationService $authenticationService
+     */
+    public function __construct($authenticationService) {
+        $this->authenticationService = $authenticationService;
+    }
 
     /**
      * Create a brand new user - optionally supply a name, account name and parent account id if relevant.  If no
@@ -65,6 +75,53 @@ class UserService {
         $user->synchroniseRelationships();
 
         return $user;
+    }
+
+    /**
+     * @param $newEmailAddress
+     * @param $password
+     * @param string $userId
+     */
+    public function changeUserEmail($newEmailAddress, $password, $userId = User::LOGGED_IN_USER) {
+        /** @var User $user */
+        $user = User::fetch($userId);
+        if ($this->authenticationService->validateUserPassword($user->getEmailAddress(), $password)) {
+            $user->setEmailAddress($newEmailAddress);
+            $user->save();
+            return $user;
+        }
+    }
+
+    /**
+     * @param $newMobile
+     * @param $password
+     * @param string $userId
+     * @return User
+     */
+    public function changeUserMobile($newMobile, $password, $userId = User::LOGGED_IN_USER) {
+        /** @var User $user */
+        $user = User::fetch($userId);
+        if ($this->authenticationService->validateUserPassword($user->getEmailAddress(), $password)) {
+            $user->setMobileNumber($newMobile);
+            $user->save();
+            return $user;
+        }
+    }
+
+    /**
+     * @param $newEmailAddress
+     * @param $password
+     * @param string $userId
+     * @return User
+     */
+    public function changeUserBackupEmail($newEmailAddress, $password, $userId = User::LOGGED_IN_USER) {
+        /** @var User $user */
+        $user = User::fetch($userId);
+        if ($this->authenticationService->validateUserPassword($user->getEmailAddress(), $password)) {
+            $user->setBackupEmailAddress($newEmailAddress);
+            $user->save();
+            return $user;
+        }
     }
 
 }
