@@ -87,4 +87,29 @@ trait Auth {
         return $this->authenticationService->authenticateNewTwoFactor($code, $secret);
     }
 
+    /**
+     * Authenticate the two fa code prior to login
+     *
+     * @http GET /twoFactor
+     *
+     * @param $code
+     * @return bool
+     * @throws \Kinicart\Exception\Security\AccountSuspendedException
+     * @throws \Kinicart\Exception\Security\InvalidLoginException
+     * @throws \Kinicart\Exception\Security\UserSuspendedException
+     */
+    public function authenticateTwoFactor($code) {
+        return $this->authenticationService->authenticateTwoFactor($code);
+    }
+
+    /**
+     * Disable the current logged in users two fa.
+     *
+     * @http GET /disableTwoFA
+     *
+     * @return \Kinicart\Objects\Security\User
+     */
+    public function disableTwoFactor() {
+        return  $this->authenticationService->disableTwoFactor();
+    }
 }

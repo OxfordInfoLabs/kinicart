@@ -207,6 +207,13 @@ class AuthenticationService {
         return false;
     }
 
+    public function disableTwoFactor() {
+        $user = $this->session->__getLoggedInUser();
+        $user->setTwoFactorData(null);
+        $user->save();
+        return $user;
+    }
+
     /**
      * Log out function.
      */
