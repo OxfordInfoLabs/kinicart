@@ -9,8 +9,7 @@
       {
         "scopeId": 0
       }
-    ],
-    "twoFactorData": "H5OW4O4TUP4W2CGP"
+    ]
   },
   {
     "id": 2,
@@ -119,5 +118,17 @@
         "roleId": 2
       }
     ]
+  },
+  {
+    "id": 11,
+    "emailAddress": "bob@twofactor.com",
+    "hashedPassword": "5f4dcc3b5aa765d61d8327deb882cf99",
+    "status": "ACTIVE",
+    "roles": [
+      {
+        "scopeId": 1
+      }
+    ],
+    "twoFactorData": "H5OW4O4TUP4W2CGP"
   }
 ]

@@ -7,7 +7,9 @@ use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Security\Role;
 use Kinicart\Objects\Security\User;
 use Kinicart\Objects\Security\UserRole;
+use Kinicart\Services\Security\AuthenticationService;
 use Kinikit\Core\Exception\ValidationException;
+use Kinikit\Core\Object\SerialisableObject;
 
 
 class UserService {

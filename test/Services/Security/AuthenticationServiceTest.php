@@ -96,7 +96,17 @@ class AuthenticationServiceTest extends TestBase {
         $this->assertEquals(1, $loggedInAccount->getAccountId());
         $this->assertEquals("Sam Davis Design", $loggedInAccount->getName());
 
+    }
 
+    public function testTwoFactorInterruptsLoginFlow() {
+        // Attempt a login.
+        $attemptedLogin = $this->authenticationService->login("bob@twofactor.com", "password");
+
+        $this->assertEquals("REQUIRES_2FA", $attemptedLogin);
+
+        $pendingUser = $this->session->__getPendingLoggedInUser();
+        $this->assertTrue($pendingUser instanceof User);
+        $this->assertEquals(11, $pendingUser->getId());
     }
 
 
@@ -290,6 +300,21 @@ class AuthenticationServiceTest extends TestBase {
         $this->assertNull($this->session->__getLoggedInAccount());
 
         $this->authenticationService->updateActiveParentAccount("");
+    }
+
+    public function testCanGenerateTwoFactorSettingsForDefaultProvider() {
+        // Attempt a login. We need to be logged in to generate settings.
+        $this->authenticationService->login("sam@samdavisdesign.co.uk", "password");
+
+        // Check the user
+        $loggedInUser = $this->session->__getLoggedInUser();
+        $this->assertTrue($loggedInUser instanceof User);
+
+        $twoFactorSettings = $this->authenticationService->generateTwoFactorSettings();
+
+        $this->assertNotNull($twoFactorSettings["secret"]);
+        $this->assertNotNull($twoFactorSettings["qrCode"]);
+
     }
 
 
