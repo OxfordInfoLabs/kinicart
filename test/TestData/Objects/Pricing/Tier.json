@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Standard",
+    "defaultPriceMultiplier": 1.25,
+    "defaultTier": true,
+    "upgradeOrder": 1
+  },
+  {
+    "name": "Pro",
+    "defaultPriceMultiplier": 1.1,
+    "upgradeOrder": 2
+  },
+  {
+    "name": "Enterprise",
+    "defaultPriceMultiplier": 1,
+    "upgradeOrder": 3
+  }
+]

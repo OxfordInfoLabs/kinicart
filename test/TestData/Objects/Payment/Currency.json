@@ -1,0 +1,17 @@
+[
+  {
+    "code": "GBP",
+    "description": "British Pounds",
+    "exchangeRateFromBase": 1
+  },
+  {
+    "code": "USD",
+    "description": "US Dollars",
+    "exchangeRateFromBase": 1.2
+  },
+  {
+    "code": "EUR",
+    "description": "Euros",
+    "exchangeRateFromBase": 1.1
+  }
+]
