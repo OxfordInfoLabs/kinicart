@@ -1,0 +1,37 @@
+[
+  {
+    "productIdentifier": "virtual-host",
+    "featureIdentifier": "memory",
+    "unitSupplierBuyPrice": 0.02,
+    "unitBaseMargin": 0.01,
+    "workingCurrency": "USD"
+  },
+  {
+    "productIdentifier": "virtual-host",
+    "featureIdentifier": "diskSpace",
+    "unitSupplierBuyPrice": 0.1,
+    "unitBaseMargin": 0.05,
+    "workingCurrency": "USD"
+  },
+  {
+    "productIdentifier": "virtual-host",
+    "featureIdentifier": "includedBandwidth",
+    "unitSupplierBuyPrice": 0.001,
+    "unitBaseMargin": 0.001,
+    "workingCurrency": "EUR"
+  },
+  {
+    "productIdentifier": "email",
+    "featureIdentifier": "storage",
+    "unitSupplierBuyPrice": 0.2,
+    "unitBaseMargin": 0.1,
+    "workingCurrency": "USD"
+  },
+  {
+    "productIdentifier": "email",
+    "featureIdentifier": "users",
+    "unitSupplierBuyPrice": 0,
+    "unitBaseMargin": 2,
+    "workingCurrency": "GBP"
+  }
+]

@@ -70,21 +70,6 @@ class Package {
     private $features;
 
 
-    /**
-     * The base sale price before any tier based markup is added.
-     *
-     * @var float
-     */
-    private $baseSalePrice;
-
-
-    /**
-     * The currency for which the base sale price has been defined (3 character currency code).
-     *
-     * @var string
-     */
-    private $baseSaleCurrency;
-
     // Package type constants.
     const TYPE_PLAN = "PLAN";
     const TYPE_ADD_ON = "ADD_ON";
@@ -175,33 +160,7 @@ class Package {
         $this->features = $features;
     }
 
-    /**
-     * @return float
-     */
-    public function getBaseSalePrice() {
-        return $this->baseSalePrice;
-    }
 
-    /**
-     * @param float $baseSalePrice
-     */
-    public function setBaseSalePrice($baseSalePrice) {
-        $this->baseSalePrice = $baseSalePrice;
-    }
-
-    /**
-     * @return string
-     */
-    public function getBaseSaleCurrency() {
-        return $this->baseSaleCurrency;
-    }
-
-    /**
-     * @param string $baseSaleCurrency
-     */
-    public function setBaseSaleCurrency($baseSaleCurrency) {
-        $this->baseSaleCurrency = $baseSaleCurrency;
-    }
 
 
 }
