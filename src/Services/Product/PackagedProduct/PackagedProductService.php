@@ -52,8 +52,7 @@ class PackagedProductService {
      * @return PackagedProductFeature[]
      */
     public function getAllProductFeatures($productIdentifier) {
-
-
+        
         // Now get the persisted ones
         $productFeatures = ObjectArrayUtils::indexArrayOfObjectsByMember("featureIdentifier", PackagedProductFeature::filter("WHERE productIdentifier = ?", $productIdentifier));
 
