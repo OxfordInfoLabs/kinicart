@@ -3,10 +3,12 @@
 
 namespace Kinicart\Services\Product\PackagedProduct;
 
+use Kinicart\Objects\Product\PackagedProduct\Feature;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProduct;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductFeature;
 use Kinicart\Services\Product\ProductService;
 use Kinikit\Core\Util\ObjectArrayUtils;
+use Kinikit\Persistence\ORM\ORM;
 
 /**
  * Service for managing packaged products and their lifecycle.
@@ -22,12 +24,19 @@ class PackagedProductService {
 
 
     /**
+     * @var ORM
+     */
+    private $orm;
+
+    /**
      * PackagedProductService constructor.
      *
      * @param ProductService $productService
+     * @param ORM $orm
      */
-    public function __construct($productService) {
+    public function __construct($productService, $orm) {
         $this->productService = $productService;
+        $this->orm = $orm;
     }
 
 
@@ -52,7 +61,7 @@ class PackagedProductService {
      * @return PackagedProductFeature[]
      */
     public function getAllProductFeatures($productIdentifier) {
-        
+
         // Now get the persisted ones
         $productFeatures = ObjectArrayUtils::indexArrayOfObjectsByMember("featureIdentifier", PackagedProductFeature::filter("WHERE productIdentifier = ?", $productIdentifier));
 
@@ -72,6 +81,15 @@ class PackagedProductService {
 
         return $returnedProductFeatures;
 
+    }
+
+    /**
+     * Save product featurs
+     *
+     * @param PackagedProductFeature[] $productFeatures
+     */
+    public function saveProductFeatures($productFeatures) {
+        $this->orm->save($productFeatures);
     }
 
 
