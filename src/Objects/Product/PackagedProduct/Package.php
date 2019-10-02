@@ -34,16 +34,16 @@ class Package {
     private $type;
 
 
-//    /**
-//     * Child packages - these are for e.g. Add ons which may be tightly
-//     * scoped to a plan.
-//     *
-//     * @oneToMany
-//     * @childJoinColumns parent_package_id
-//     *
-//     * @var Package[]
-//     */
-//    private $childPackages;
+    /**
+     * Child packages - these are for e.g. Add ons which may be tightly
+     * scoped to a plan.
+     *
+     * @oneToMany
+     * @childJoinColumns parent_package_id
+     *
+     * @var Package[]
+     */
+    private $childPackages;
 
     /**
      * The descriptive title for this package
@@ -160,7 +160,19 @@ class Package {
         $this->features = $features;
     }
 
+    /**
+     * @return Package[]
+     */
+    public function getChildPackages() {
+        return $this->childPackages;
+    }
 
+    /**
+     * @param Package[] $childPackages
+     */
+    public function setChildPackages($childPackages) {
+        $this->childPackages = $childPackages;
+    }
 
 
 }
