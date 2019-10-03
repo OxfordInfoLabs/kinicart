@@ -223,4 +223,23 @@ class PackagedProductServiceTest extends TestBase {
     }
 
 
+    public function testCanDeletePlansOrAddOns() {
+
+        $this->service->deletePackage("virtual-host", "SMALL_BUSINESS");
+
+        $plans = $this->service->getAllPlans("virtual-host");
+        $expected = [
+            Package::fetch(["virtual-host", "BUDGET"]),
+            Package::fetch(["virtual-host", "ENTERPRISE"])
+        ];
+
+        $this->assertEquals($expected, $plans);
+
+
+        $this->service->deletePackage("virtual-host", "ACCOUNT_MANAGER");
+
+        $this->assertEquals([], $this->service->getAllGlobalAddOns("virtual-host"));
+
+    }
+
 }

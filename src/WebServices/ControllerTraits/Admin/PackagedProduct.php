@@ -2,6 +2,7 @@
 
 namespace Kinicart\Webservices\ControllerTraits\Admin;
 
+use Kinicart\Objects\Product\PackagedProduct\Package;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductFeature;
 use Kinicart\Services\Product\PackagedProduct\PackagedProductService;
 
@@ -47,5 +48,55 @@ trait PackagedProduct {
         $this->packagedProductService->saveProductFeatures($productFeatures);
     }
 
+
+    /**
+     * Get all plans for a given product
+     *
+     * @http GET /plans/$productIdentifier
+     *
+     * @param $productIdentifier
+     * @return Package[]
+     */
+    public function getProductPlans($productIdentifier) {
+        return $this->packagedProductService->getAllPlans($productIdentifier);
+    }
+
+
+    /**
+     * Get all global add ons for a given product
+     *
+     * @http GET /addons/$productIdentifier
+     *
+     * @param $productIdentifier
+     * @return Package[]
+     */
+    public function getGlobalAddOns($productIdentifier) {
+        return $this->packagedProductService->getAllGlobalAddOns($productIdentifier);
+    }
+
+
+    /**
+     * Save one or more packages (either Plan or Add on).
+     *
+     * @http PUT /packages
+     *
+     * @param Package[] $packages
+     */
+    public function savePackages($packages) {
+        $this->packagedProductService->savePackages($packages);
+    }
+
+
+    /**
+     * Delete a package using it's primary key (product identifier + package identifier)
+     *
+     * @http DELETE /package/$productIdentifier/$packageIdentifier
+     *
+     * @param string $productIdentifier
+     * @param string $packageIdentifier
+     */
+    public function deletePackage($productIdentifier, $packageIdentifier) {
+        $this->packagedProductService->deletePackage($productIdentifier, $packageIdentifier);
+    }
 
 }

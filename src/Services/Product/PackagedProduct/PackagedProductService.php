@@ -139,4 +139,16 @@ class PackagedProductService {
         $this->orm->save($packages);
     }
 
+
+    /**
+     * Delete a package by primary key
+     *
+     * @param string $productIdentifier
+     * @param string $packageIdentifier
+     */
+    public function deletePackage($productIdentifier, $packageIdentifier) {
+        $package = $this->getPackage($productIdentifier, $packageIdentifier);
+        $package->remove();
+    }
+
 }
