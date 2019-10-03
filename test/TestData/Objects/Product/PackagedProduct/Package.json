@@ -68,6 +68,26 @@
         "description": "Telephone support - office hours only"
       }
     ],
+    "tierPrices": [
+      {
+        "tierId": 1,
+        "pricingRule": "FIXED",
+        "value": "6.99",
+        "currencyCode": "GBP"
+      },
+      {
+        "tierId": 2,
+        "pricingRule": "FIXED",
+        "value": "7.99",
+        "currencyCode": "EUR"
+      },
+      {
+        "tierId": 3,
+        "pricingRule": "FIXED",
+        "value": "8.99",
+        "currencyCode": "USD"
+      }
+    ],
     "childPackages": [
       {
         "productIdentifier": "virtual-host",

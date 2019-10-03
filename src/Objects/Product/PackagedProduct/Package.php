@@ -3,6 +3,7 @@
 
 namespace Kinicart\Objects\Product\PackagedProduct;
 
+use Kinicart\Objects\Pricing\ProductTierPrice;
 use Kinikit\Persistence\ORM\ActiveRecord;
 
 /**
@@ -85,9 +86,30 @@ class Package extends ActiveRecord {
     private $childPackages;
 
 
+    /**
+     * Product prices
+     *
+     * @oneToMany
+     * @childJoinColumns product_identifier,item_identifier
+     *
+     * @var ProductTierPrice[]
+     */
+    private $tierPrices;
+
+
     // Package type constants.
     const TYPE_PLAN = "PLAN";
     const TYPE_ADD_ON = "ADD_ON";
+
+
+    /**
+     * Set up default values for tier prices in particular
+     *
+     * Package constructor.
+     */
+    public function __construct() {
+        $this->tierPrices = [new ProductTierPrice(null, ProductTierPrice::PRICING_ROUND_UP, 0.99)];
+    }
 
 
     /**
@@ -216,6 +238,20 @@ class Package extends ActiveRecord {
      */
     public function setUpgradeOrder($upgradeOrder) {
         $this->upgradeOrder = $upgradeOrder;
+    }
+
+    /**
+     * @return ProductTierPrice[]
+     */
+    public function getTierPrices() {
+        return $this->tierPrices;
+    }
+
+    /**
+     * @param ProductTierPrice[] $tierPrices
+     */
+    public function setTierPrices($tierPrices) {
+        $this->tierPrices = $tierPrices;
     }
 
 
