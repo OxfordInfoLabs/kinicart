@@ -3,26 +3,32 @@
 
 namespace Kinicart\Objects\Product\PackagedProduct;
 
+use Kinikit\Persistence\ORM\ActiveRecord;
+
 /**
  * Class Package
  * @package Kinicart\Objects\Product
  *
  * @table kc_pp_package
+ * @interceptor Kinicart\Objects\Product\PackagedProduct\PackageInterceptor
  */
-class Package {
-
-    /**
-     * @var integer
-     */
-    private $id;
+class Package extends ActiveRecord {
 
 
     /**
      * The unique product identifier for the related packaged product.
      *
      * @var string
+     * @primaryKey
      */
     private $productIdentifier;
+
+
+    /**
+     * @var string
+     * @primaryKey
+     */
+    private $identifier;
 
 
     /**
@@ -33,17 +39,6 @@ class Package {
      */
     private $type;
 
-
-    /**
-     * Child packages - these are for e.g. Add ons which may be tightly
-     * scoped to a plan.
-     *
-     * @oneToMany
-     * @childJoinColumns parent_package_id
-     *
-     * @var Package[]
-     */
-    private $childPackages;
 
     /**
      * The descriptive title for this package
@@ -63,11 +58,31 @@ class Package {
 
     /**
      * @oneToMany
-     * @childJoinColumns package_id
+     * @childJoinColumns product_identifier,package_identifier
      *
      * @var PackageFeature[]
      */
     private $features;
+
+
+    /**
+     * The order in which this package fits in the upgrade hierarchy for this product (used for plans).
+     *
+     * @var integer
+     */
+    private $upgradeOrder;
+
+
+    /**
+     * Child packages - these are for e.g. Add ons which may be tightly
+     * scoped to a plan.
+     *
+     * @oneToMany
+     * @childJoinColumns parent_product_identifier,parent_identifier
+     *
+     * @var Package[]
+     */
+    private $childPackages;
 
 
     // Package type constants.
@@ -88,6 +103,21 @@ class Package {
     public function setId($id) {
         $this->id = $id;
     }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier() {
+        return $this->identifier;
+    }
+
+    /**
+     * @param string $identifier
+     */
+    public function setIdentifier($identifier) {
+        $this->identifier = $identifier;
+    }
+
 
     /**
      * @return string
@@ -172,6 +202,20 @@ class Package {
      */
     public function setChildPackages($childPackages) {
         $this->childPackages = $childPackages;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUpgradeOrder() {
+        return $this->upgradeOrder;
+    }
+
+    /**
+     * @param int $upgradeOrder
+     */
+    public function setUpgradeOrder($upgradeOrder) {
+        $this->upgradeOrder = $upgradeOrder;
     }
 
 

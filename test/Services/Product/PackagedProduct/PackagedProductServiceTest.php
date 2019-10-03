@@ -4,10 +4,13 @@ namespace Kinicart\Services\Product\PackagedProduct;
 
 use Kinicart\Objects\Product\PackagedProduct\Email;
 use Kinicart\Objects\Product\PackagedProduct\Feature;
+use Kinicart\Objects\Product\PackagedProduct\Package;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductFeature;
+use Kinicart\Objects\Product\PackagedProduct\PackageFeature;
 use Kinicart\Objects\Product\PackagedProduct\VirtualHost;
 use Kinicart\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
+use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
 
 include_once __DIR__ . "/../../../autoloader.php";
 
@@ -136,8 +139,88 @@ class PackagedProductServiceTest extends TestBase {
     }
 
 
+    public function testCanGetSinglePackageByIdentifier() {
+
+        $plan = $this->service->getPackage("virtual-host", "BUDGET");
+        $this->assertEquals(Package::fetch(["virtual-host", "BUDGET"]), $plan);
+
+        $this->assertEquals(Package::TYPE_PLAN, $plan->getType());
+        $this->assertEquals("Budget Server", $plan->getTitle());
+        $this->assertEquals("Rock bottom budget server - lean and mean", $plan->getDescription());
+        $this->assertEquals(4, sizeof($plan->getFeatures()));
+        $this->assertEquals(1, sizeof($plan->getChildPackages()));
+        $this->assertEquals(Package::fetch(["virtual-host", "BUDGET_5GB"]), $plan->getChildPackages()[0]);
+
+        // Check that each nested feature has a feature object attached to it.
+        $feature = $plan->getFeatures()[0];
+        $this->assertEquals("memory", $feature->getFeatureIdentifier());
+        $this->assertEquals(0.5, $feature->getQuantity());
+        $this->assertEquals(new Feature("memory", "Memory (GB)", "The amount of memory allocated to this VM"), $feature->getFeature());
 
 
+        $plan = $this->service->getPackage("virtual-host", "ENTERPRISE");
+        $this->assertEquals(Package::fetch(["virtual-host", "ENTERPRISE"]), $plan);
+
+
+        // Check we can get nested packages
+        $addOn = $this->service->getPackage("virtual-host", "BUDGET_5GB");
+        $this->assertEquals(Package::fetch(["virtual-host", "BUDGET_5GB"]), $addOn);
+
+
+        // Check we can get global add ons
+        $addOn = $this->service->getPackage("virtual-host", "ACCOUNT_MANAGER");
+        $this->assertEquals(Package::fetch(["virtual-host", "ACCOUNT_MANAGER"]), $addOn);
+
+        $this->assertEquals("ADD_ON", $addOn->getType());
+        $this->assertEquals("Account Manager", $addOn->getTitle());
+        $this->assertEquals("Dedicated Account Manager", $addOn->getDescription());
+
+    }
+
+
+    public function testCanGetAllPlansForProduct() {
+
+        $plans = $this->service->getAllPlans("virtual-host");
+        $expected = [
+            Package::fetch(["virtual-host", "BUDGET"]),
+            Package::fetch(["virtual-host", "SMALL_BUSINESS"]),
+            Package::fetch(["virtual-host", "ENTERPRISE"])
+        ];
+
+        $this->assertEquals($expected, $plans);
+
+    }
+
+    public function testCanGetAllAddOnsForProduct() {
+
+        $addOns = $this->service->getAllGlobalAddOns("virtual-host");
+        $this->assertEquals([Package::fetch(["virtual-host", "ACCOUNT_MANAGER"])], $addOns);
+
+    }
+
+
+    public function testCanSavePackages() {
+
+        $packages = $this->service->getAllPlans("virtual-host");
+
+        $packages[0]->setTitle("Biggles");
+
+        $features = $packages[0]->getFeatures();
+        $features[] = new PackageFeature(null, "My Favourite Feature", "Fav Man", 15);
+        $packages[0]->setFeatures($features);
+
+        $this->service->savePackages($packages);
+
+
+        $rePackages = $this->service->getAllPlans("virtual-host");
+        $this->assertEquals("Biggles", $rePackages[0]->getTitle());
+        $this->assertEquals(5, sizeof($rePackages[0]->getFeatures()));
+        $this->assertEquals("My Favourite Feature", $rePackages[0]->getFeatures()[4]->getTitle());
+        $this->assertEquals("Fav Man", $rePackages[0]->getFeatures()[4]->getDescription());
+        $this->assertEquals(15, $rePackages[0]->getFeatures()[4]->getQuantity());
+
+
+    }
 
 
 }

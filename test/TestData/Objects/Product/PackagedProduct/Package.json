@@ -2,7 +2,149 @@
   {
     "productIdentifier": "virtual-host",
     "type": "PLAN",
+    "identifier": "BUDGET",
     "title": "Budget Server",
-    "description": "Rock bottom budget server - lean and mean"
+    "description": "Rock bottom budget server - lean and mean",
+    "features": [
+      {
+        "featureIdentifier": "memory",
+        "quantity": 0.5
+      },
+      {
+        "featureIdentifier": "diskSpace",
+        "quantity": 10
+      },
+      {
+        "featureIdentifier": "includedBandwidth",
+        "quantity": 5
+      },
+      {
+        "title": "Email support",
+        "description": "Email support - response within 48hrs"
+      }
+    ],
+    "childPackages": [
+      {
+        "productIdentifier": "virtual-host",
+        "identifier": "BUDGET_5GB",
+        "type": "ADD_ON",
+        "title": "Extra 5GB Bandwidth",
+        "description": "Extra 5GB bandwidth",
+        "features": [
+          {
+            "featureIdentifier": "additionalBandwidth",
+            "quantity": 5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "productIdentifier": "virtual-host",
+    "type": "PLAN",
+    "identifier": "SMALL_BUSINESS",
+    "title": "Small Business Server",
+    "description": "Small Business Server - suitable for managing medium traffic volumes",
+    "upgradeOrder": 2,
+    "features": [
+      {
+        "featureIdentifier": "memory",
+        "quantity": 2
+      },
+      {
+        "featureIdentifier": "diskSpace",
+        "quantity": 50
+      },
+      {
+        "featureIdentifier": "includedBandwidth",
+        "quantity": 20
+      },
+      {
+        "title": "Email support",
+        "description": "Email support - response within 24hrs"
+      },
+      {
+        "title": "Business Telephone support",
+        "description": "Telephone support - office hours only"
+      }
+    ],
+    "childPackages": [
+      {
+        "productIdentifier": "virtual-host",
+        "identifier": "SMALL_BUSINESS_10GB",
+        "type": "ADD_ON",
+        "title": "Extra 10GB Bandwidth",
+        "description": "Extra 10GB bandwidth",
+        "features": [
+          {
+            "featureIdentifier": "additionalBandwidth",
+            "quantity": 10
+          }
+        ]
+      },
+      {
+        "productIdentifier": "virtual-host",
+        "identifier": "SMALL_BUSINESS_20GB",
+        "type": "ADD_ON",
+        "title": "Extra 20GB Bandwidth",
+        "description": "Extra 20GB bandwidth",
+        "features": [
+          {
+            "featureIdentifier": "additionalBandwidth",
+            "quantity": 20
+          }
+        ]
+      },
+      {
+        "productIdentifier": "virtual-host",
+        "identifier": "SMALL_BUSINESS_247_TELEPHONE",
+        "type": "ADD_ON",
+        "title": "24/7 Telephone Support",
+        "description": "24/7 Telephone Support",
+        "features": [
+          {
+            "title": "24/7 Telephone support",
+            "description": "24/7 Telephone support"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "productIdentifier": "virtual-host",
+    "type": "PLAN",
+    "identifier": "ENTERPRISE",
+    "title": "Enterprise Server",
+    "description": "Enterprise Server - suitable for managing heavy workloads",
+    "upgradeOrder": 3,
+    "features": [
+      {
+        "featureIdentifier": "memory",
+        "quantity": 8
+      },
+      {
+        "featureIdentifier": "diskSpace",
+        "quantity": 500
+      },
+      {
+        "featureIdentifier": "includedBandwidth",
+        "quantity": 200
+      },
+      {
+        "title": "Email support",
+        "description": "Email support - response within 3hrs"
+      },
+      {
+        "title": "24/7 Telephone support",
+        "description": "Telephone support 24/7"
+      }
+    ]
+  },
+  {
+    "productIdentifier": "virtual-host",
+    "type": "ADD_ON",
+    "identifier": "ACCOUNT_MANAGER",
+    "title": "Account Manager",
+    "description": "Dedicated Account Manager"
   }
 ]

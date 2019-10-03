@@ -4,6 +4,7 @@
 namespace Kinicart\Services\Product\PackagedProduct;
 
 use Kinicart\Objects\Product\PackagedProduct\Feature;
+use Kinicart\Objects\Product\PackagedProduct\Package;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProduct;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductFeature;
 use Kinicart\Services\Product\ProductService;
@@ -92,5 +93,50 @@ class PackagedProductService {
         $this->orm->save($productFeatures);
     }
 
+
+    /**
+     * Get a package by product identifier and package identifier (either numerical id or string identifier).
+     *
+     * @param string $productIdentifier
+     * @param string $packageIdentifier
+     *
+     * @return Package
+     */
+    public function getPackage($productIdentifier, $packageIdentifier) {
+        return Package::fetch([$productIdentifier, $packageIdentifier]);
+    }
+
+
+    /**
+     * Get all top level plans
+     *
+     * @param $productIdentifier
+     * @return Package[]
+     */
+    public function getAllPlans($productIdentifier) {
+        return Package::filter("WHERE productIdentifier = ? AND type = 'PLAN' AND parent_identifier IS NULL ORDER BY upgradeOrder,features.id", $productIdentifier);
+    }
+
+
+    /**
+     * Get all global add ons (i.e. not ones associated with a plan).
+     *
+     * @param $productIdentifier
+     * @return Package[]
+     */
+    public function getAllGlobalAddOns($productIdentifier) {
+        return Package::filter("WHERE productIdentifier = ? AND type = 'ADD_ON' AND parent_identifier IS NULL ORDER BY upgradeOrder,features.id", $productIdentifier);
+
+    }
+
+
+    /**
+     * Save an array of package objects
+     *
+     * @param Package|Package[] $packages
+     */
+    public function savePackages($packages) {
+        $this->orm->save($packages);
+    }
 
 }

@@ -47,9 +47,33 @@ class PackageFeature {
     /**
      * The quantity of this feature which is being utilised in the package.
      *
-     * @var integer
+     * @var float
      */
     private $quantity = 1;
+
+
+    /**
+     * Unmapped temporal member, added in on retrieval for convenience
+     *
+     * @var Feature
+     * @unmapped
+     */
+    private $feature;
+
+    /**
+     * PackageFeature constructor.
+     * @param string $featureIdentifier
+     * @param string $title
+     * @param string $description
+     * @param float $quantity
+     */
+    public function __construct($featureIdentifier, $title, $description, $quantity) {
+        $this->featureIdentifier = $featureIdentifier;
+        $this->title = $title;
+        $this->description = $description;
+        $this->quantity = $quantity;
+    }
+
 
     /**
      * @return int
@@ -108,17 +132,31 @@ class PackageFeature {
     }
 
     /**
-     * @return int
+     * @return float
      */
     public function getQuantity() {
         return $this->quantity;
     }
 
     /**
-     * @param int $quantity
+     * @param float $quantity
      */
     public function setQuantity($quantity) {
         $this->quantity = $quantity;
+    }
+
+    /**
+     * @return Feature
+     */
+    public function getFeature() {
+        return $this->feature;
+    }
+
+    /**
+     * @param Feature $feature
+     */
+    public function setFeature($feature) {
+        $this->feature = $feature;
     }
 
 
