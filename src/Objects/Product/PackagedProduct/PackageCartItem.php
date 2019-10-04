@@ -5,6 +5,7 @@ namespace Kinicart\Objects\Product\PackagedProduct;
 
 
 use Kinicart\Objects\Cart\CartItem;
+use Kinicart\Objects\Cart\SimpleCartItem;
 
 class PackageCartItem extends CartItem {
 
@@ -30,7 +31,7 @@ class PackageCartItem extends CartItem {
      * @return string
      */
     public function getTitle() {
-
+        return $this->package->getTitle();
     }
 
     /**
@@ -39,7 +40,7 @@ class PackageCartItem extends CartItem {
      * @return string
      */
     public function getDescription() {
-
+        return $this->package->getDescription();
     }
 
     /**
@@ -51,4 +52,21 @@ class PackageCartItem extends CartItem {
     public function getUnitPrice($currency) {
 
     }
+
+    /**
+     * Get sub items for this package cart item
+     *
+     * @return CartItem[]
+     */
+    public function getSubItems() {
+        $subItems = [];
+        foreach ($this->package->getFeatures() ?? [] as $feature) {
+            $subItems[] = new SimpleCartItem($feature->getFeatureIdentifier() ? $feature->getFeature()->getTitle() : $feature->getTitle(),
+                $feature->getFeatureIdentifier() ? $feature->getFeature()->getDescription() : $feature->getDescription());
+        }
+
+        return $subItems;
+    }
+
+
 }
