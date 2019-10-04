@@ -15,15 +15,7 @@ abstract class CartItem {
     /**
      * @var integer
      */
-    private $quantity;
-
-
-    /**
-     * Array of sub cart items.
-     *
-     * @var CartItem[]
-     */
-    private $subItems;
+    private $quantity = 1;
 
 
     /**
@@ -45,9 +37,20 @@ abstract class CartItem {
     /**
      * Get the unit price for this Cart Item.
      *
+     * @param $currency
      * @return string
      */
-    public abstract function getUnitPrice();
+    public abstract function getUnitPrice($currency);
+
+
+    /**
+     * Return any sub items if required.
+     *
+     * @return CartItem[]
+     */
+    public function getSubItems() {
+        return [];
+    }
 
 
     /**
@@ -62,20 +65,6 @@ abstract class CartItem {
      */
     public function setQuantity($quantity) {
         $this->quantity = $quantity;
-    }
-
-    /**
-     * @return CartItem[]
-     */
-    public function getSubItems() {
-        return $this->subItems;
-    }
-
-    /**
-     * @param CartItem[] $subItems
-     */
-    public function setSubItems($subItems) {
-        $this->subItems = $subItems;
     }
 
 

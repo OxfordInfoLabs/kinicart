@@ -97,6 +97,14 @@ class Package extends ActiveRecord {
     private $tierPrices;
 
 
+    /**
+     * Reference to the parent identifier if this child is a sub package.
+     *
+     * @var string
+     */
+    private $parentIdentifier;
+
+
     // Package type constants.
     const TYPE_PLAN = "PLAN";
     const TYPE_ADD_ON = "ADD_ON";
@@ -252,6 +260,13 @@ class Package extends ActiveRecord {
      */
     public function setTierPrices($tierPrices) {
         $this->tierPrices = $tierPrices;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParentIdentifier() {
+        return $this->parentIdentifier;
     }
 
 
