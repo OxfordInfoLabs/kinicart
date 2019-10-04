@@ -24,4 +24,22 @@ class Email extends PackagedProduct {
             new Feature("excessStorage", "Excess Storage (GB)", "Excess storage charges - additional GBs", Feature::TYPE_EXCESS)
         ];
     }
+
+    /**
+     * Get the title for this product
+     *
+     * @return string
+     */
+    public function getTitle() {
+        return "Email";
+    }
+
+    /**
+     * Get the description for this product
+     *
+     * @return string
+     */
+    public function getDescription() {
+        return "Email Service";
+    }
 }

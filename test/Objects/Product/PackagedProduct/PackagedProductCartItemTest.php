@@ -30,10 +30,20 @@ class PackagedProductCartItemTest extends TestBase {
     }
 
 
+    public function testTitleAndDescriptionAreGarneredFromTheProduct() {
+
+        // Create cart item
+        $cartItem = new PackagedProductCartItem("virtual-host");
+        $this->assertEquals("Virtual Host", $cartItem->getTitle());
+        $this->assertEquals("Virtual hosts rented on a monthly basis", $cartItem->getDescription());
+
+
+    }
+
     public function testCanCreateCartItemAndSetPlanProvidedItIsValid() {
 
         // Create cart item
-        $cartItem = new ConcretePackagedProductCartItem("virtual-host");
+        $cartItem = new PackagedProductCartItem("virtual-host");
 
 
         // Invalid
@@ -68,7 +78,7 @@ class PackagedProductCartItemTest extends TestBase {
 
 
         // Create cart item
-        $cartItem = new ConcretePackagedProductCartItem("virtual-host");
+        $cartItem = new PackagedProductCartItem("virtual-host");
 
 
         // Invalid

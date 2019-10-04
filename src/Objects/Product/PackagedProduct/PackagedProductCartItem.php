@@ -8,6 +8,7 @@ use Kinicart\Exception\Product\PackagedProduct\InvalidCartAddOnException;
 use Kinicart\Exception\Product\PackagedProduct\NoSuchProductPlanException;
 use Kinicart\Objects\Cart\CartItem;
 use Kinicart\Services\Product\PackagedProduct\PackagedProductService;
+use Kinicart\Services\Product\ProductService;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
 
@@ -17,7 +18,7 @@ use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
  *
  * @noGenerate
  */
-abstract class PackagedProductCartItem extends CartItem {
+class PackagedProductCartItem extends CartItem {
 
     /**
      * String product identifier.
@@ -25,6 +26,17 @@ abstract class PackagedProductCartItem extends CartItem {
      * @var string
      */
     private $productIdentifier;
+
+
+    /**
+     * @var string
+     */
+    private $title;
+
+    /**
+     * @var string
+     */
+    private $description;
 
     /**
      * The main plan forming this product instance.
@@ -49,6 +61,16 @@ abstract class PackagedProductCartItem extends CartItem {
     public function __construct($productIdentifier, $plan = null, $addOns = []) {
         $this->productIdentifier = $productIdentifier;
 
+        /**
+         * Lookup product and store title and description for later use.
+         *
+         * @var ProductService $productService
+         */
+        $productService = Container::instance()->get(ProductService::class);
+        $product = $productService->getProduct($productIdentifier);
+        $this->title = $product->getTitle();
+        $this->description = $product->getDescription();
+
         if ($plan)
             $this->setPlan($plan);
 
@@ -57,6 +79,24 @@ abstract class PackagedProductCartItem extends CartItem {
                 $this->addAddOn($addOn);
             }
         }
+    }
+
+    /**
+     * Get title for this product cart item
+     *
+     * @return string|void
+     */
+    public function getTitle() {
+        return $this->title;
+    }
+
+    /**
+     * Get description for this product cart item.
+     *
+     * @return string|void
+     */
+    public function getDescription() {
+        return $this->description;
     }
 
 

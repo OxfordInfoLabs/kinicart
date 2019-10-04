@@ -21,4 +21,22 @@ class VirtualHost extends PackagedProduct {
             new Feature("excessBandwidth", "Excess Bandwidth (GB/month)", "Excess bandwidth charges - additional GBs", Feature::TYPE_EXCESS)
         ];
     }
+
+    /**
+     * Get the title for this product
+     *
+     * @return string
+     */
+    public function getTitle() {
+        return "Virtual Host";
+    }
+
+    /**
+     * Get the description for this product
+     *
+     * @return string
+     */
+    public function getDescription() {
+        return "Virtual hosts rented on a monthly basis";
+    }
 }
