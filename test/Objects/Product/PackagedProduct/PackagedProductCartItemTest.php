@@ -4,6 +4,7 @@
 namespace Kinicart\Objects\Product\PackagedProduct;
 
 
+use Kinicart\Exception\Product\PackagedProduct\CartItemAddOnDoesNotExistException;
 use Kinicart\Exception\Product\PackagedProduct\InvalidCartAddOnException;
 use Kinicart\Exception\Product\PackagedProduct\NoSuchProductPlanException;
 use Kinicart\Services\Product\PackagedProduct\PackagedProductService;
@@ -152,6 +153,50 @@ class PackagedProductCartItemTest extends TestBase {
 
 
         $this->assertEquals([new PackageCartItem($planProduct), new PackageCartItem($accountManager), new PackageCartItem($budget5GB)], $cartItem->getSubItems());
+
+
+    }
+
+
+    public function testCanUpdatePlanAndDoingSoRemovesAnyInvalidAddOns() {
+
+        // Create cart item
+        $cartItem = new PackagedProductCartItem("virtual-host");
+
+        $cartItem->setPlan("BUDGET");
+        $cartItem->addAddOn("BUDGET_5GB");
+        $cartItem->addAddOn("ACCOUNT_MANAGER");
+
+
+        // Now update plan
+        $cartItem->setPlan("ENTERPRISE");
+
+        // Check add ons.
+        $this->assertEquals($this->service->getPackage("virtual-host", "ENTERPRISE"), $cartItem->getPlan());
+        $this->assertEquals([$this->service->getPackage("virtual-host", "ACCOUNT_MANAGER")], $cartItem->getAddOns());
+
+
+    }
+
+
+    public function testCanRemoveAddOnAtIndexProvidedItExists() {
+
+        // Create cart item
+        $cartItem = new PackagedProductCartItem("virtual-host");
+
+        $cartItem->setPlan("BUDGET");
+        $cartItem->addAddOn("BUDGET_5GB");
+        $cartItem->addAddOn("ACCOUNT_MANAGER");
+
+        try {
+            $cartItem->removeAddOn(3);
+            $this->fail("Should have thrown here");
+        } catch (CartItemAddOnDoesNotExistException $e) {
+        }
+
+        $cartItem->removeAddOn(1);
+
+        $this->assertEquals([$this->service->getPackage("virtual-host", "BUDGET_5GB")], $cartItem->getAddOns());
 
 
     }

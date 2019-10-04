@@ -1,6 +1,6 @@
 <?php
 
-namespace Kinicart\Controllers\Admin;
+namespace Kinicart\Controllers\Guest;
 
 /**
  * Main controller for managing packaged products as Admin.

@@ -4,6 +4,7 @@
 namespace Kinicart\Objects\Product\PackagedProduct;
 
 
+use Kinicart\Exception\Product\PackagedProduct\CartItemAddOnDoesNotExistException;
 use Kinicart\Exception\Product\PackagedProduct\InvalidCartAddOnException;
 use Kinicart\Exception\Product\PackagedProduct\NoSuchProductPlanException;
 use Kinicart\Objects\Cart\CartItem;
@@ -50,15 +51,15 @@ class PackagedProductCartItem extends CartItem {
      *
      * @var Package[]
      */
-    private $addOns;
+    private $addOns = [];
 
     /**
      * PackagedProductCartItem constructor.
      *
-     * @param Package $plan
-     * @param Package[] $addOns
+     * @param Package $planIdentifier
+     * @param Package[] $addOnIdentifiers
      */
-    public function __construct($productIdentifier, $plan = null, $addOns = []) {
+    public function __construct($productIdentifier, $planIdentifier = null, $addOnIdentifiers = []) {
         $this->productIdentifier = $productIdentifier;
 
         /**
@@ -71,11 +72,11 @@ class PackagedProductCartItem extends CartItem {
         $this->title = $product->getTitle();
         $this->description = $product->getDescription();
 
-        if ($plan)
-            $this->setPlan($plan);
+        if ($planIdentifier)
+            $this->setPlan($planIdentifier);
 
-        if ($addOns) {
-            foreach ($addOns as $addOn) {
+        if ($addOnIdentifiers) {
+            foreach ($addOnIdentifiers as $addOn) {
                 $this->addAddOn($addOn);
             }
         }
@@ -99,6 +100,20 @@ class PackagedProductCartItem extends CartItem {
         return $this->description;
     }
 
+    /**
+     * @return Package
+     */
+    public function getPlan() {
+        return $this->plan;
+    }
+
+    /**
+     * @return Package[]
+     */
+    public function getAddOns() {
+        return $this->addOns;
+    }
+
 
     /**
      * Set the plan for this cart item.
@@ -118,6 +133,14 @@ class PackagedProductCartItem extends CartItem {
                 throw new NoSuchProductPlanException($planIdentifier, $this->productIdentifier);
 
             $this->plan = $plan;
+
+            for ($i = sizeof($this->addOns) - 1; $i >= 0; $i--) {
+                $addOn = $this->addOns[$i];
+                if ($addOn->getParentIdentifier() && $addOn->getParentIdentifier() != $plan->getIdentifier()) {
+                    array_splice($this->addOns, $i, 1);
+                }
+            }
+
             return $plan;
         } catch (ObjectNotFoundException $e) {
             throw new NoSuchProductPlanException($planIdentifier, $this->productIdentifier);
@@ -130,7 +153,7 @@ class PackagedProductCartItem extends CartItem {
     /**
      * Add an add on to this cart item.
      *
-     * @param Package $addOnIdentifier
+     * @param string $addOnIdentifier
      */
     public function addAddOn($addOnIdentifier) {
         /**
@@ -157,6 +180,20 @@ class PackagedProductCartItem extends CartItem {
             throw new InvalidCartAddOnException($addOnIdentifier, $this->productIdentifier, $this->plan->getIdentifier());
         }
     }
+
+    /**
+     * Remove the specified add on at the supplied index.
+     *
+     * @param $addOnIndex
+     */
+    public function removeAddOn($addOnIndex) {
+        if (isset($this->addOns[$addOnIndex])) {
+            array_splice($this->addOns, $addOnIndex, 1);
+        } else {
+            throw new CartItemAddOnDoesNotExistException($addOnIndex);
+        }
+    }
+
 
     /**
      * Get the unit price for this cart item.

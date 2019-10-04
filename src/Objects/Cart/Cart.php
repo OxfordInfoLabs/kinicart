@@ -37,16 +37,27 @@ class Cart {
 
 
     /**
+     * Get the cart item at the passed index or throw exception.
+     *
+     * @param $index
+     * @return CartItem
+     */
+    public function getItem($index) {
+        if (!isset($this->items[$index]))
+            throw new CartItemDoesNotExistsException($index);
+
+        return $this->items[$index];
+
+    }
+
+    /**
      * Update / Replace a cart item at the passed index
      *
      * @param integer $index
      * @param CartItem $updatedCartItem
      */
     public function updateItem($index, $updatedCartItem) {
-
-        if (!isset($this->items[$index]))
-            throw new CartItemDoesNotExistsException($index);
-
+        $this->getItem($index);
         array_splice($this->items, $index, 1, [$updatedCartItem]);
     }
 
@@ -58,10 +69,7 @@ class Cart {
      * @param CartItem $updatedCartItem
      */
     public function removeItem($index) {
-
-        if (!isset($this->items[$index]))
-            throw new CartItemDoesNotExistsException($index);
-
+        $this->getItem($index);
         array_splice($this->items, $index, 1);
     }
 

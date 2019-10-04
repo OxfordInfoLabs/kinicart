@@ -64,6 +64,26 @@ class SessionCartTest extends TestBase {
     }
 
 
+    public function testCanGetItemsByIndexInSessionCartProvidedTheyExist() {
+
+        $this->sessionCart->addItem(new SimpleCartItem("Mark", "Bingo"));
+        $this->sessionCart->addItem(new SimpleCartItem("Dave", "Bongo"));
+
+        try {
+            $this->sessionCart->getItem(2);
+            $this->fail("Should have thrown here");
+        } catch (CartItemDoesNotExistsException $e) {
+            // Success
+        }
+
+
+        $this->assertEquals($this->sessionCart->get()->getItems()[0], $this->sessionCart->getItem(0));
+        $this->assertEquals($this->sessionCart->get()->getItems()[1], $this->sessionCart->getItem(1));
+
+
+    }
+
+
     public function testCanUpdateItemsInSessionCartProvidedItemExists() {
 
         $this->sessionCart->addItem(new SimpleCartItem("Mark", "Bingo"));

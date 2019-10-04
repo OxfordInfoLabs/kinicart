@@ -46,6 +46,17 @@ class SessionCart {
 
 
     /**
+     * Convenience function for getting an item at an index.
+     *
+     * @param $index
+     */
+    public function getItem($index) {
+        $cart = $this->get();
+        return $cart->getItem($index);
+    }
+
+
+    /**
      * Add an item to the session cart.
      *
      * @param CartItem $cartItem

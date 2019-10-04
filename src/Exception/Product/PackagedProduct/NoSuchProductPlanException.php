@@ -2,7 +2,9 @@
 
 namespace Kinicart\Exception\Product\PackagedProduct;
 
-class NoSuchProductPlanException extends \Exception {
+use Kinikit\Core\Exception\ItemNotFoundException;
+
+class NoSuchProductPlanException extends ItemNotFoundException {
 
     /**
      * NoSuchProductPlanException constructor.
