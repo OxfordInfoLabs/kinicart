@@ -5,5 +5,6 @@ search.paths = ../vendor/oxil/kiniauth/src;
 
 db.provider = sqlite3
 db.filename = DB/kinicart-test.db
+db.logFile = DB/db.log
 
 

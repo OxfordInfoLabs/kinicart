@@ -61,8 +61,8 @@ class PackageCartItem extends CartItem {
     public function getSubItems() {
         $subItems = [];
         foreach ($this->package->getFeatures() ?? [] as $feature) {
-            $subItems[] = new SimpleCartItem($feature->getFeatureIdentifier() ? $feature->getFeature()->getTitle() : $feature->getTitle(),
-                $feature->getFeatureIdentifier() ? $feature->getFeature()->getDescription() : $feature->getDescription());
+            $subItems[] = new SimpleCartItem($feature->getFeatureIdentifier() ? $feature->getProductFeature()->getFeature()->getTitle() : $feature->getTitle(),
+                $feature->getFeatureIdentifier() ? $feature->getProductFeature()->getFeature()->getDescription() : $feature->getDescription());
         }
 
         return $subItems;

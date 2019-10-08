@@ -4,6 +4,7 @@
     "featureIdentifier": "memory",
     "unitSupplierBuyPrice": 0.02,
     "unitBaseMargin": 0.01,
+    "workingPeriod": "MONTHLY",
     "workingCurrency": "USD"
   },
   {
@@ -11,6 +12,7 @@
     "featureIdentifier": "diskSpace",
     "unitSupplierBuyPrice": 0.1,
     "unitBaseMargin": 0.05,
+    "workingPeriod": "MONTHLY",
     "workingCurrency": "USD"
   },
   {
@@ -18,6 +20,7 @@
     "featureIdentifier": "includedBandwidth",
     "unitSupplierBuyPrice": 0.001,
     "unitBaseMargin": 0.001,
+    "workingPeriod": "MONTHLY",
     "workingCurrency": "EUR"
   },
   {
@@ -25,6 +28,7 @@
     "featureIdentifier": "storage",
     "unitSupplierBuyPrice": 0.2,
     "unitBaseMargin": 0.1,
+    "workingPeriod": "MONTHLY",
     "workingCurrency": "USD"
   },
   {
@@ -32,6 +36,7 @@
     "featureIdentifier": "users",
     "unitSupplierBuyPrice": 0,
     "unitBaseMargin": 2,
+    "workingPeriod": "MONTHLY",
     "workingCurrency": "GBP"
   }
 ]

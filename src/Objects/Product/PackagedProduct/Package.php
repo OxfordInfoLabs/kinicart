@@ -11,7 +11,6 @@ use Kinikit\Persistence\ORM\ActiveRecord;
  * @package Kinicart\Objects\Product
  *
  * @table kc_pp_package
- * @interceptor Kinicart\Objects\Product\PackagedProduct\PackageInterceptor
  */
 class Package extends ActiveRecord {
 

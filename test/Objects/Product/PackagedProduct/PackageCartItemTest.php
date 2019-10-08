@@ -52,8 +52,8 @@ class PackageCartItemTest extends TestBase {
 
         // Check one to one mapping of features to sub cart items.
         foreach ($package->getFeatures() as $index => $feature) {
-            $this->assertEquals(new SimpleCartItem($feature->getFeatureIdentifier() ? $feature->getFeature()->getTitle() : $feature->getTitle(),
-                $feature->getFeatureIdentifier() ? $feature->getFeature()->getDescription() : $feature->getDescription()), $subItems[$index]);
+            $this->assertEquals(new SimpleCartItem($feature->getFeatureIdentifier() ? $feature->getProductFeature()->getFeature()->getTitle() : $feature->getTitle(),
+                $feature->getFeatureIdentifier() ? $feature->getProductFeature()->getFeature()->getDescription() : $feature->getDescription()), $subItems[$index]);
         }
 
 

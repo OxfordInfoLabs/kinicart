@@ -72,9 +72,7 @@ class PackagedProductService {
         $returnedProductFeatures = [];
         foreach ($features as $feature) {
             if (isset($productFeatures[$feature->getIdentifier()])) {
-                $productFeature = $productFeatures[$feature->getIdentifier()];
-                $productFeature->setFeature($feature);
-                $returnedProductFeatures[] = $productFeature;
+                $returnedProductFeatures[] = $productFeatures[$feature->getIdentifier()];
             } else {
                 $returnedProductFeatures[] = new PackagedProductFeature($productIdentifier, $feature);
             }
@@ -150,8 +148,6 @@ class PackagedProductService {
         $package = $this->getPackage($productIdentifier, $packageIdentifier);
         $package->remove();
     }
-
-
 
 
 }

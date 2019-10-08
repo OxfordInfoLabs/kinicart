@@ -53,12 +53,15 @@ class PackageFeature {
 
 
     /**
-     * Unmapped temporal member, added in on retrieval for convenience
+     * Linked product feature for this package feature.
      *
-     * @var Feature
-     * @unmapped
+     * @manyToOne
+     * @readOnly
+     * @parentJoinColumns product_identifier,feature_identifier
+     *
+     * @var PackagedProductFeature
      */
-    private $feature;
+    private $productFeature;
 
     /**
      * PackageFeature constructor.
@@ -146,17 +149,17 @@ class PackageFeature {
     }
 
     /**
-     * @return Feature
+     * @return PackagedProductFeature
      */
-    public function getFeature() {
-        return $this->feature;
+    public function getProductFeature() {
+        return $this->productFeature;
     }
 
     /**
-     * @param Feature $feature
+     * @param PackagedProductFeature $feature
      */
-    public function setFeature($feature) {
-        $this->feature = $feature;
+    public function setProductFeature($feature) {
+        $this->productFeature = $feature;
     }
 
 

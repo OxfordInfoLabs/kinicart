@@ -12,6 +12,7 @@ use Kinikit\Persistence\ORM\ActiveRecord;
  * Class ProductFeature
  * @package Kinicart\Objects\Product\PackagedProduct
  *
+ * @interceptor Kinicart\Objects\Product\PackagedProduct\PackagedProductFeatureInterceptor
  * @table kc_pp_product_feature
  */
 class PackagedProductFeature extends ActiveRecord {
@@ -50,6 +51,14 @@ class PackagedProductFeature extends ActiveRecord {
 
 
     /**
+     * The working period for which the unit supplier price applies (either MONTHLY or ANNUAL)
+     *
+     * @var string
+     */
+    private $workingPeriod;
+
+
+    /**
      * The currency for which the unit supplier price and base margin are defined
      * as a 3 character currency code.
      *
@@ -75,12 +84,13 @@ class PackagedProductFeature extends ActiveRecord {
      *
      * PackagedProductFeature constructor.
      */
-    public function __construct($productIdentifier, $feature, $unitSupplierBuyPrice = null, $unitBaseMargin = null, $workingCurrency = null) {
+    public function __construct($productIdentifier, $feature, $unitSupplierBuyPrice = null, $unitBaseMargin = null, $workingPeriod = null, $workingCurrency = null) {
         $this->productIdentifier = $productIdentifier;
         $this->featureIdentifier = $feature ? $feature->getIdentifier() : null;
         $this->feature = $feature;
         $this->unitSupplierBuyPrice = $unitSupplierBuyPrice;
         $this->unitBaseMargin = $unitBaseMargin;
+        $this->workingPeriod = $workingPeriod;
         $this->workingCurrency = $workingCurrency;
     }
 
@@ -140,6 +150,21 @@ class PackagedProductFeature extends ActiveRecord {
     public function setUnitBaseMargin($unitBaseMargin) {
         $this->unitBaseMargin = $unitBaseMargin;
     }
+
+    /**
+     * @return string
+     */
+    public function getWorkingPeriod() {
+        return $this->workingPeriod;
+    }
+
+    /**
+     * @param string $workingPeriod
+     */
+    public function setWorkingPeriod($workingPeriod) {
+        $this->workingPeriod = $workingPeriod;
+    }
+
 
     /**
      * @return string
