@@ -70,7 +70,8 @@ trait PackagedProduct {
      * @param PackagedProductCartItemDescriptor $packagedProductCartItemDescriptor
      */
     public function addProductToCart($productIdentifier, $packagedProductCartItemDescriptor) {
-        $cartItem = new PackagedProductCartItem($productIdentifier, $packagedProductCartItemDescriptor->getPlanIdentifier(), $packagedProductCartItemDescriptor->getAddOnIdentifiers());
+        $cartItem = new PackagedProductCartItem($productIdentifier, $packagedProductCartItemDescriptor->getPlanIdentifier(),
+            $packagedProductCartItemDescriptor->getAddOnIdentifiers(), $packagedProductCartItemDescriptor->getRecurrenceType());
         $this->sessionCart->addItem($cartItem);
     }
 

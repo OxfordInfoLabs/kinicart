@@ -11,27 +11,18 @@ namespace Kinicart\Objects\Pricing;
  */
 class ProductTierPrice {
 
+
     /**
-     * The product identifier for this product
+     * The parent base price for which this tier price is defined.
      *
-     * @var string
+     * @var integer
      * @primaryKey
      */
-    private $productIdentifier;
+    private $basePriceId;
 
 
     /**
-     * The item identifier for this product - this
-     * is specific to the implementation for the given product.
-     *
-     * @var string
-     * @primaryKey
-     */
-    private $itemIdentifier;
-
-
-    /**
-     * If this price is scoped to a tier, this will be used.
+     * The tier for which this price is defined.
      *
      * @var integer
      * @primaryKey
@@ -40,35 +31,22 @@ class ProductTierPrice {
 
 
     /**
-     * Which pricing rule is in place for this product price.
+     * The currency code for which this price is being defined
      *
      * @var string
-     * @required
-     */
-    private $pricingRule;
-
-
-    /**
-     * Decimal value qualifying the pricing rule in place for this product price.
-     *
-     * @var float
-     */
-    private $value;
-
-
-    /**
-     * An optional currency code (used when pricing rule is FIXED)
-     * to allow fixed prices in all currencies.
-     *
-     * @var string
+     * @primaryKey
      */
     private $currencyCode;
 
 
-    // Pricing rules for the system
-    const PRICING_RULE = "RAW";
-    const PRICING_ROUND_UP = "ROUND_UP";
-    const PRICING_FIXED = "FIXED";
+    /**
+     * The price for this product for this tier
+     *
+     * @var float
+     * @required
+     */
+    private $tierPrice;
+
 
     /**
      * ProductTierPrice constructor.
@@ -86,33 +64,18 @@ class ProductTierPrice {
         $this->currencyCode = $currencyCode;
     }
 
-
     /**
-     * @return string
+     * @return int
      */
-    public function getProductIdentifier() {
-        return $this->productIdentifier;
+    public function getBasePriceId() {
+        return $this->basePriceId;
     }
 
     /**
-     * @param string $productIdentifier
+     * @param int $basePriceId
      */
-    public function setProductIdentifier($productIdentifier) {
-        $this->productIdentifier = $productIdentifier;
-    }
-
-    /**
-     * @return string
-     */
-    public function getItemIdentifier() {
-        return $this->itemIdentifier;
-    }
-
-    /**
-     * @param string $itemIdentifier
-     */
-    public function setItemIdentifier($itemIdentifier) {
-        $this->itemIdentifier = $itemIdentifier;
+    public function setBasePriceId($basePriceId) {
+        $this->basePriceId = $basePriceId;
     }
 
     /**
@@ -129,33 +92,18 @@ class ProductTierPrice {
         $this->tierId = $tierId;
     }
 
-
-    /**
-     * @return string
-     */
-    public function getPricingRule() {
-        return $this->pricingRule;
-    }
-
-    /**
-     * @param string $pricingRule
-     */
-    public function setPricingRule($pricingRule) {
-        $this->pricingRule = $pricingRule;
-    }
-
     /**
      * @return float
      */
-    public function getValue() {
-        return $this->value;
+    public function getTierPrice() {
+        return $this->tierPrice;
     }
 
     /**
-     * @param float $value
+     * @param float $tierPrice
      */
-    public function setValue($value) {
-        $this->value = $value;
+    public function setTierPrice($tierPrice) {
+        $this->tierPrice = $tierPrice;
     }
 
     /**

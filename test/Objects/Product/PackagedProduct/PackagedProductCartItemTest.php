@@ -7,6 +7,7 @@ namespace Kinicart\Objects\Product\PackagedProduct;
 use Kinicart\Exception\Product\PackagedProduct\CartItemAddOnDoesNotExistException;
 use Kinicart\Exception\Product\PackagedProduct\InvalidCartAddOnException;
 use Kinicart\Exception\Product\PackagedProduct\NoSuchProductPlanException;
+use Kinicart\Objects\Pricing\ProductBasePrice;
 use Kinicart\Services\Product\PackagedProduct\PackagedProductService;
 use Kinicart\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
@@ -198,6 +199,29 @@ class PackagedProductCartItemTest extends TestBase {
 
         $this->assertEquals([$this->service->getPackage("virtual-host", "BUDGET_5GB")], $cartItem->getAddOns());
 
+
+    }
+
+
+    public function testUnitPriceIsCalculatedAsSumOfPackageComponents() {
+
+
+        // Create cart item
+        $cartItem = new PackagedProductCartItem("virtual-host");
+
+        $cartItem->setPlan("BUDGET");
+        $cartItem->addAddOn("BUDGET_5GB");
+        $cartItem->addAddOn("ACCOUNT_MANAGER");
+
+        // Grab the unit price
+        $unitPrice = $cartItem->getUnitPrice("GBP", 1);
+
+        // Now grab the prices for each package
+        $packagePrice = $this->service->getPackage("virtual-host", "BUDGET")->getTierPrice(1, ProductBasePrice::RECURRENCE_MONTHLY, "GBP") +
+            $this->service->getPackage("virtual-host", "BUDGET_5GB")->getTierPrice(1, ProductBasePrice::RECURRENCE_MONTHLY, "GBP") +
+            $this->service->getPackage("virtual-host", "ACCOUNT_MANAGER")->getTierPrice(1, ProductBasePrice::RECURRENCE_MONTHLY, "GBP");
+
+        $this->assertEquals($packagePrice, $unitPrice);
 
     }
 

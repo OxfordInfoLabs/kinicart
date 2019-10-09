@@ -8,6 +8,7 @@ use Kinicart\Exception\Product\PackagedProduct\CartItemAddOnDoesNotExistExceptio
 use Kinicart\Exception\Product\PackagedProduct\InvalidCartAddOnException;
 use Kinicart\Exception\Product\PackagedProduct\NoSuchProductPlanException;
 use Kinicart\Objects\Cart\CartItem;
+use Kinicart\Objects\Pricing\ProductBasePrice;
 use Kinicart\Services\Product\PackagedProduct\PackagedProductService;
 use Kinicart\Services\Product\ProductService;
 use Kinikit\Core\DependencyInjection\Container;
@@ -39,6 +40,14 @@ class PackagedProductCartItem extends CartItem {
      */
     private $description;
 
+
+    /**
+     * The recurrence type for this product instance
+     *
+     * @var string
+     */
+    private $recurrenceType;
+
     /**
      * The main plan forming this product instance.
      *
@@ -59,8 +68,10 @@ class PackagedProductCartItem extends CartItem {
      * @param Package $planIdentifier
      * @param Package[] $addOnIdentifiers
      */
-    public function __construct($productIdentifier, $planIdentifier = null, $addOnIdentifiers = []) {
+    public function __construct($productIdentifier, $planIdentifier = null, $addOnIdentifiers = [],
+                                $recurrenceType = ProductBasePrice::RECURRENCE_MONTHLY) {
         $this->productIdentifier = $productIdentifier;
+        $this->recurrenceType = $recurrenceType;
 
         /**
          * Lookup product and store title and description for later use.
@@ -199,9 +210,23 @@ class PackagedProductCartItem extends CartItem {
      * Get the unit price for this cart item.
      *
      * @param $currency
+     * @param null $tierId
      * @return string|void
      */
-    public function getUnitPrice($currency) {
+    public function getUnitPrice($currency, $tierId = null) {
+        $price = 0;
+
+        if ($this->plan) {
+            $price += $this->plan->getTierPrice($tierId, $this->recurrenceType, $currency);
+        }
+
+        if ($this->addOns) {
+            foreach ($this->addOns as $addOn) {
+                $price += $addOn->getTierPrice($tierId, $this->recurrenceType, $currency);
+            }
+        }
+
+        return $price;
 
     }
 

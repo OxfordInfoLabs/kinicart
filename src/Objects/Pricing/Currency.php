@@ -1,6 +1,6 @@
 <?php
 
-namespace Kinicart\Objects\Payment;
+namespace Kinicart\Objects\Pricing;
 
 use Kinikit\Persistence\ORM\ActiveRecord;
 

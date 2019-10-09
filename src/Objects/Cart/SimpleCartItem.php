@@ -82,9 +82,10 @@ class SimpleCartItem extends CartItem {
      * Get the unit price for this Cart Item.
      *
      * @param $currency
+     * @param null $tierId
      * @return string
      */
-    public function getUnitPrice($currency) {
+    public function getUnitPrice($currency, $tierId = null) {
         return isset($this->prices[$currency]) ? $this->prices[$currency] : 0;
     }
 

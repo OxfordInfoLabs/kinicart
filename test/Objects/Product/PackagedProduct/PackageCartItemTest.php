@@ -5,6 +5,7 @@ namespace Kinicart\Objects\Product\PackagedProduct;
 
 
 use Kinicart\Objects\Cart\SimpleCartItem;
+use Kinicart\Objects\Pricing\ProductBasePrice;
 use Kinicart\Services\Product\PackagedProduct\PackagedProductService;
 use Kinicart\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
@@ -58,5 +59,24 @@ class PackageCartItemTest extends TestBase {
 
 
     }
+
+
+    public function testUnitPriceIsCalculatedFromPackage() {
+
+        $package = $this->service->getPackage("virtual-host", "SMALL_BUSINESS");
+
+        $cartItem = new PackageCartItem($package);
+
+        $unitPrice = $cartItem->getUnitPrice("GBP", 1);
+        $this->assertEquals($package->getTierPrice(1, ProductBasePrice::RECURRENCE_MONTHLY, "GBP"), $unitPrice);
+
+
+        $cartItem = new PackageCartItem($package, ProductBasePrice::RECURRENCE_ANNUAL);
+
+        $unitPrice = $cartItem->getUnitPrice("USD", 2);
+        $this->assertEquals($package->getTierPrice(2, ProductBasePrice::RECURRENCE_ANNUAL, "USD"), $unitPrice);
+
+    }
+
 
 }

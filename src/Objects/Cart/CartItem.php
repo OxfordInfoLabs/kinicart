@@ -38,9 +38,10 @@ abstract class CartItem {
      * Get the unit price for this Cart Item.
      *
      * @param $currency
+     * @param null $tierId
      * @return string
      */
-    public abstract function getUnitPrice($currency);
+    public abstract function getUnitPrice($currency, $tierId = null);
 
 
     /**

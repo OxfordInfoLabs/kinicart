@@ -23,7 +23,6 @@ class PackagedProductServiceTest extends TestBase {
     private $service;
 
 
-
     public function setUp(): void {
         parent::setUp();
         $this->service = Container::instance()->get(PackagedProductService::class);
@@ -99,7 +98,7 @@ class PackagedProductServiceTest extends TestBase {
 
         $vhostFeatures = $this->service->getAllProductFeatures("virtual-host");
 
-       $vhostFeatures[3]->setUnitSupplierBuyPrice(0.002);
+        $vhostFeatures[3]->setUnitSupplierBuyPrice(0.002);
         $vhostFeatures[3]->setUnitBaseMargin(0.002);
         $vhostFeatures[3]->setWorkingCurrency("GBP");
         $vhostFeatures[3]->setWorkingPeriod("MONTHLY");
@@ -161,7 +160,6 @@ class PackagedProductServiceTest extends TestBase {
         $this->assertEquals("memory", $feature->getFeatureIdentifier());
         $this->assertEquals(0.5, $feature->getQuantity());
         $this->assertEquals(PackagedProductFeature::fetch(["virtual-host", "memory"]), $feature->getProductFeature());
-
 
         $plan = $this->service->getPackage("virtual-host", "ENTERPRISE");
         $this->assertEquals(Package::fetch(["virtual-host", "ENTERPRISE"]), $plan);

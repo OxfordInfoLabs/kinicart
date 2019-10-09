@@ -6,6 +6,7 @@ namespace Kinicart\Objects\Product\PackagedProduct;
 
 use Kinicart\Objects\Cart\CartItem;
 use Kinicart\Objects\Cart\SimpleCartItem;
+use Kinicart\Objects\Pricing\ProductBasePrice;
 
 class PackageCartItem extends CartItem {
 
@@ -14,14 +15,25 @@ class PackageCartItem extends CartItem {
      */
     private $package;
 
+
+    /**
+     * Recurrence type
+     *
+     * @var string
+     */
+    private $recurrenceType;
+
+
     /**
      * Construct a package cart item with a package.
      *
      * PackageCartItem constructor.
      * @param $package
      */
-    public function __construct($package) {
+    public function __construct($package, $recurrenceType = ProductBasePrice::RECURRENCE_MONTHLY) {
         $this->package = $package;
+        $this->recurrenceType = $recurrenceType;
+
     }
 
 
@@ -47,10 +59,11 @@ class PackageCartItem extends CartItem {
      * Get the unit price for this Cart Item in supplied currency.
      *
      * @param $currency
+     * @param null $tierId
      * @return string
      */
-    public function getUnitPrice($currency) {
-
+    public function getUnitPrice($currency, $tierId = null) {
+        return $this->package->getTierPrice($tierId, $this->recurrenceType, $currency);
     }
 
     /**

@@ -3,7 +3,11 @@
 
 namespace Kinicart\Objects\Product\PackagedProduct;
 
+use Kinicart\Exception\Pricing\MissingProductPriceException;
+use Kinicart\Objects\Pricing\ProductBasePrice;
 use Kinicart\Objects\Pricing\ProductTierPrice;
+use Kinicart\Services\Pricing\PricingService;
+use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Persistence\ORM\ActiveRecord;
 
 /**
@@ -79,6 +83,7 @@ class Package extends ActiveRecord {
      *
      * @oneToMany
      * @childJoinColumns parent_product_identifier,parent_identifier
+     * @maxDepth 2
      *
      * @var Package[]
      */
@@ -86,14 +91,14 @@ class Package extends ActiveRecord {
 
 
     /**
-     * Product prices
+     * Product base prices
      *
      * @oneToMany
      * @childJoinColumns product_identifier,item_identifier
      *
-     * @var ProductTierPrice[]
+     * @var ProductBasePrice[]
      */
-    private $tierPrices;
+    private $prices;
 
 
     /**
@@ -107,16 +112,6 @@ class Package extends ActiveRecord {
     // Package type constants.
     const TYPE_PLAN = "PLAN";
     const TYPE_ADD_ON = "ADD_ON";
-
-
-    /**
-     * Set up default values for tier prices in particular
-     *
-     * Package constructor.
-     */
-    public function __construct() {
-        $this->tierPrices = [new ProductTierPrice(null, ProductTierPrice::PRICING_ROUND_UP, 0.99)];
-    }
 
 
     /**
@@ -248,18 +243,83 @@ class Package extends ActiveRecord {
     }
 
     /**
-     * @return ProductTierPrice[]
+     * @return ProductBasePrice[]
      */
-    public function getTierPrices() {
-        return $this->tierPrices;
+    public function getPrices() {
+        return $this->prices;
     }
 
     /**
-     * @param ProductTierPrice[] $tierPrices
+     * @param ProductBasePrice[] $prices
      */
-    public function setTierPrices($tierPrices) {
-        $this->tierPrices = $tierPrices;
+    public function setPrices($prices) {
+        $this->prices = $prices;
     }
+
+
+    /**
+     * Get a tier price for this package in the supplied currency for the supplied recurrence type.
+     * - If no base pricing has been set this will return 0.
+     * - If no tier prices have been defined, they will be calculated using base pricing with multipliers and round-ups and currency conversions if required.
+     * - If tier prices have been explicitly defined they will be used and currency converted if required.
+     * @param $tierId
+     * @param $recurrenceType
+     * @param $currency
+     * @return float
+     */
+    public function getTierPrice($tierId, $recurrenceType, $currency) {
+
+        // If we have prices, continue
+        if ($this->prices) {
+            foreach ($this->prices as $price) {
+                if ($price->getRecurrenceType() == $recurrenceType) {
+                    return $price->getTierPrice($currency, $tierId);
+                }
+            }
+        } else {
+            throw new MissingProductPriceException("No prices have been defined for the package $this->title of type $this->productIdentifier");
+        }
+
+        return 0;
+
+
+    }
+
+
+    /**
+     * Get all tier prices - if just a currency is supplied this will be an array indexed by
+     * recurrence type and then tierId.  If either of the other two are supplied this will become
+     * a single array indexed by the other one - else it will be a single float value
+     *
+     * @param $currencyCode
+     * @param string $recurrenceType
+     * @param integer $tierId
+     *
+     * @return mixed
+     */
+    public function getAllTierPrices($currencyCode) {
+
+        // Ensure we have prices.
+        if (!$this->prices) {
+            throw new MissingProductPriceException("No prices have been defined for the package $this->title of type $this->productIdentifier");
+        }
+
+        $allTiers = Container::instance()->get(PricingService::class)->getTiers();
+
+        /**
+         * Now loop through each price we get back.
+         */
+        $returnedPrices = [];
+        foreach ($this->prices as $price) {
+            $returnedPrices[$price->getRecurrenceType()] = [];
+            foreach ($allTiers as $tier) {
+                $returnedPrices[$price->getRecurrenceType()][$tier->getId()] = $price->getTierPrice($currencyCode, $tier->getId());
+            }
+        }
+
+        return $returnedPrices;
+    }
+
 
     /**
      * @return string

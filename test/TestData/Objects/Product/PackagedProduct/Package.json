@@ -23,6 +23,18 @@
         "description": "Email support - response within 48hrs"
       }
     ],
+    "prices": [
+      {
+        "recurrenceType": "MONTHLY",
+        "basePrice": "3",
+        "currencyCode": "USD"
+      },
+      {
+        "recurrenceType": "ANNUAL",
+        "basePrice": "30",
+        "currencyCode": "USD"
+      }
+    ],
     "childPackages": [
       {
         "productIdentifier": "virtual-host",
@@ -34,6 +46,13 @@
           {
             "featureIdentifier": "additionalBandwidth",
             "quantity": 5
+          }
+        ],
+        "prices": [
+          {
+            "recurrenceType": "MONTHLY",
+            "basePrice": 1,
+            "currencyCode": "USD"
           }
         ]
       }
@@ -68,24 +87,70 @@
         "description": "Telephone support - office hours only"
       }
     ],
-    "tierPrices": [
+    "prices": [
       {
-        "tierId": 1,
-        "pricingRule": "FIXED",
-        "value": "6.99",
-        "currencyCode": "GBP"
+        "recurrenceType": "MONTHLY",
+        "basePrice": "5.99",
+        "currencyCode": "GBP",
+        "tierPrices": [
+          {
+            "tierId": 1,
+            "currencyCode": "GBP",
+            "tierPrice": "6.99"
+          },
+          {
+            "tierId": 1,
+            "tierPrice": "6.99",
+            "currencyCode": "USD"
+          },
+          {
+            "tierId": 1,
+            "tierPrice": "6.99",
+            "currencyCode": "EUR"
+          },
+          {
+            "tierId": 2,
+            "tierPrice": "7.99",
+            "currencyCode": "GBP"
+          },
+          {
+            "tierId": 3,
+            "tierPrice": "8.99",
+            "currencyCode": "GBP"
+          }
+        ]
       },
       {
-        "tierId": 2,
-        "pricingRule": "FIXED",
-        "value": "7.99",
-        "currencyCode": "EUR"
-      },
-      {
-        "tierId": 3,
-        "pricingRule": "FIXED",
-        "value": "8.99",
-        "currencyCode": "USD"
+        "recurrenceType": "ANNUAL",
+        "basePrice": "45",
+        "currencyCode": "GBP",
+        "tierPrices": [
+          {
+            "tierId": 1,
+            "currencyCode": "GBP",
+            "tierPrice": "50"
+          },
+          {
+            "tierId": 1,
+            "tierPrice": "50",
+            "currencyCode": "USD"
+          },
+          {
+            "tierId": 1,
+            "tierPrice": "50",
+            "currencyCode": "EUR"
+          },
+          {
+            "tierId": 2,
+            "tierPrice": "60",
+            "currencyCode": "GBP"
+          },
+          {
+            "tierId": 3,
+            "tierPrice": "70",
+            "currencyCode": "GBP"
+          }
+        ]
       }
     ],
     "childPackages": [
@@ -165,6 +230,13 @@
     "type": "ADD_ON",
     "identifier": "ACCOUNT_MANAGER",
     "title": "Account Manager",
-    "description": "Dedicated Account Manager"
+    "description": "Dedicated Account Manager",
+    "prices": [
+      {
+        "recurrenceType": "MONTHLY",
+        "basePrice": 50,
+        "currencyCode": "GBP"
+      }
+    ]
   }
 ]
