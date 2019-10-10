@@ -113,6 +113,17 @@ class Package extends ActiveRecord {
     const TYPE_PLAN = "PLAN";
     const TYPE_ADD_ON = "ADD_ON";
 
+    /**
+     * Package constructor.
+     *
+     * @param string $productIdentifier
+     * @param string $identifier
+     */
+    public function __construct($productIdentifier = null, $identifier = null) {
+        $this->productIdentifier = $productIdentifier;
+        $this->identifier = $identifier;
+    }
+
 
     /**
      * @return int

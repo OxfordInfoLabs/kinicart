@@ -3,6 +3,7 @@
 namespace Kinicart\Objects\Cart;
 
 use Kinicart\Exception\Cart\CartItemDoesNotExistsException;
+use Kinicart\Objects\Account\AccountProvider;
 
 /**
  * Class Cart
@@ -15,6 +16,27 @@ class Cart {
      * @var CartItem[]
      */
     private $items = [];
+
+
+    /**
+     * An account provider for the account.  This enables
+     * the underlying data to change as users log in / out etc.
+     *
+     * @var AccountProvider
+     */
+    private $accountProvider;
+
+    /**
+     * Cart constructor.
+     *
+     * Pass an account provider
+     *
+     * @param AccountProvider $accountProvider
+     */
+    public function __construct($accountProvider) {
+        $this->accountProvider = $accountProvider;
+    }
+
 
     /**
      * Get the array of cart items in use by this cart.

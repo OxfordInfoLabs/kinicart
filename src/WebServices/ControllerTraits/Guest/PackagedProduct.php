@@ -4,9 +4,11 @@ namespace Kinicart\Webservices\ControllerTraits\Guest;
 
 use Kinicart\Objects\Product\PackagedProduct\Package;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductCartItem;
+use Kinicart\Services\Account\SessionAccountProvider;
 use Kinicart\Services\Cart\SessionCart;
 use Kinicart\Services\Product\PackagedProduct\PackagedProductService;
 use Kinicart\WebServices\ValueObjects\Product\PackagedProduct\PackagedProductCartItemDescriptor;
+use Kinicart\WebServices\ValueObjects\Product\PackagedProduct\PackageSummary;
 
 trait PackagedProduct {
 
@@ -22,15 +24,23 @@ trait PackagedProduct {
 
 
     /**
+     * @var SessionAccountProvider
+     */
+    private $sessionAccountProvider;
+
+
+    /**
      * Constructor for auto-wiring
      *
      * PackagedProduct constructor.
      * @param PackagedProductService $packagedProductService
      * @param SessionCart $sessionCart
+     * @param SessionAccountProvider $sessionAccountProvider
      */
-    public function __construct($packagedProductService, $sessionCart) {
+    public function __construct($packagedProductService, $sessionCart, $sessionAccountProvider) {
         $this->packagedProductService = $packagedProductService;
         $this->sessionCart = $sessionCart;
+        $this->sessionAccountProvider = $sessionAccountProvider;
     }
 
 
@@ -43,7 +53,13 @@ trait PackagedProduct {
      * @return Package[]
      */
     public function getProductPlans($productIdentifier) {
-        return $this->packagedProductService->getAllPlans($productIdentifier);
+        $productPlans = $this->packagedProductService->getAllPlans($productIdentifier);
+        $summaries = [];
+        foreach ($productPlans as $productPlan) {
+            $summaries[] = new PackageSummary($productPlan, $this->sessionAccountProvider);
+        }
+
+        return $summaries;
     }
 
 
@@ -56,7 +72,13 @@ trait PackagedProduct {
      * @return Package[]
      */
     public function getGlobalAddOns($productIdentifier) {
-        return $this->packagedProductService->getAllGlobalAddOns($productIdentifier);
+        $addOns = $this->packagedProductService->getAllGlobalAddOns($productIdentifier);
+        $summaries = [];
+        foreach ($addOns as $addOn) {
+            $summaries[] = new PackageSummary($addOn, $this->sessionAccountProvider);
+        }
+
+        return $summaries;
     }
 
 

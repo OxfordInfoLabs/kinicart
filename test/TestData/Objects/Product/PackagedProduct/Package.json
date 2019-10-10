@@ -165,6 +165,13 @@
             "featureIdentifier": "additionalBandwidth",
             "quantity": 10
           }
+        ],
+        "prices": [
+          {
+            "recurrenceType": "MONTHLY",
+            "basePrice": 1,
+            "currencyCode": "USD"
+          }
         ]
       },
       {
@@ -178,6 +185,13 @@
             "featureIdentifier": "additionalBandwidth",
             "quantity": 20
           }
+        ],
+        "prices": [
+          {
+            "recurrenceType": "MONTHLY",
+            "basePrice": 2,
+            "currencyCode": "USD"
+          }
         ]
       },
       {
@@ -190,6 +204,13 @@
           {
             "title": "24/7 Telephone support",
             "description": "24/7 Telephone support"
+          }
+        ],
+        "prices": [
+          {
+            "recurrenceType": "MONTHLY",
+            "basePrice": 25,
+            "currencyCode": "USD"
           }
         ]
       }
@@ -222,6 +243,13 @@
       {
         "title": "24/7 Telephone support",
         "description": "Telephone support 24/7"
+      }
+    ],
+    "prices": [
+      {
+        "recurrenceType": "MONTHLY",
+        "basePrice": 30,
+        "currencyCode": "GBP"
       }
     ]
   },

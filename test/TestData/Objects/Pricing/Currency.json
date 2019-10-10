@@ -2,7 +2,8 @@
   {
     "code": "GBP",
     "description": "British Pounds",
-    "exchangeRateFromBase": 1
+    "exchangeRateFromBase": 1,
+    "defaultCurrency": true
   },
   {
     "code": "USD",

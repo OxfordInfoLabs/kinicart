@@ -8,6 +8,7 @@ use Kinicart\Exception\Pricing\InvalidTierException;
 use Kinicart\Exception\Pricing\MissingProductPriceException;
 use Kinicart\Objects\Pricing\ProductBasePrice;
 use Kinicart\TestBase;
+use Kinicart\WebServices\ValueObjects\Product\PackagedProduct\PackageSummary;
 
 include_once __DIR__ . "/../../../autoloader.php";
 
@@ -93,10 +94,13 @@ class PackageTest extends TestBase {
 
     public function testIfNoPricesSetMissingPriceExceptionRaised() {
 
+        $package = new Package("virtual-host", "BADPRODUCT");
+        $package->save();
+
         /**
          * @var Package $package
          */
-        $package = Package::fetch(["virtual-host", "ENTERPRISE"]);
+        $package = Package::fetch(["virtual-host", "BADPRODUCT"]);
 
         try {
             $package->getTierPrice(1, ProductBasePrice::RECURRENCE_MONTHLY, "GBP");

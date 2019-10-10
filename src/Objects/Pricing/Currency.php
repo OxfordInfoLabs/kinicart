@@ -39,6 +39,14 @@ class Currency extends ActiveRecord {
 
 
     /**
+     * Default currency
+     *
+     * @var boolean
+     */
+    private $defaultCurrency;
+
+
+    /**
      * @return string
      */
     public function getCode() {
@@ -78,6 +86,20 @@ class Currency extends ActiveRecord {
      */
     public function setExchangeRateFromBase($exchangeRateFromBase) {
         $this->exchangeRateFromBase = $exchangeRateFromBase;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDefaultCurrency() {
+        return $this->defaultCurrency;
+    }
+
+    /**
+     * @param bool $defaultCurrency
+     */
+    public function setDefaultCurrency($defaultCurrency) {
+        $this->defaultCurrency = $defaultCurrency;
     }
 
 

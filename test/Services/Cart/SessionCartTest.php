@@ -6,6 +6,7 @@ use Kiniauth\Services\Application\Session;
 use Kinicart\Exception\Cart\CartItemDoesNotExistsException;
 use Kinicart\Objects\Cart\Cart;
 use Kinicart\Objects\Cart\SimpleCartItem;
+use Kinicart\Services\Account\SessionAccountProvider;
 use Kinicart\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
 
@@ -23,10 +24,18 @@ class SessionCartTest extends TestBase {
      */
     private $sessionCart;
 
+
+    /**
+     * @var SessionAccountProvider
+     */
+    private $sessionAccountProvider;
+
+
     public function setUp(): void {
         $this->session = Container::instance()->get(Session::class);
         $this->sessionCart = Container::instance()->get(SessionCart::class);
         $this->session->setValue(SessionCart::CART_SESSION_NAME, null);
+        $this->sessionAccountProvider = Container::instance()->get(SessionAccountProvider::class);
     }
 
     public function testIfNoSessionCartExistsGetCreatesANewOne() {
@@ -34,9 +43,8 @@ class SessionCartTest extends TestBase {
         $this->assertNull($this->session->getValue(SessionCart::CART_SESSION_NAME));
 
         $cart = $this->sessionCart->get();
-        $this->assertEquals(new Cart(), $cart);
-
-        $this->assertEquals(new Cart(), $this->session->getValue(SessionCart::CART_SESSION_NAME));
+        $this->assertEquals(new Cart($this->sessionAccountProvider), $cart);
+        $this->assertEquals(new Cart($this->sessionAccountProvider), $this->session->getValue(SessionCart::CART_SESSION_NAME));
 
 
     }
@@ -149,7 +157,7 @@ class SessionCartTest extends TestBase {
         $this->sessionCart->clear();
 
         $cart = $this->sessionCart->get();
-        $this->assertEquals(new Cart(), $cart);
+        $this->assertEquals(new Cart($this->sessionAccountProvider), $cart);
 
     }
 }

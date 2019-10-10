@@ -5,6 +5,8 @@ namespace Kinicart\Services\Cart;
 use Kiniauth\Services\Application\Session;
 use Kinicart\Objects\Cart\Cart;
 use Kinicart\Objects\Cart\CartItem;
+use Kinicart\Services\Account\SessionAccountProvider;
+use Kinicart\Services\Pricing\PricingService;
 
 /**
  * Process cart operations including
@@ -20,14 +22,30 @@ class SessionCart {
     private $session;
 
 
+    /**
+     * @var PricingService
+     */
+    private $pricingService;
+
+
+    /**
+     * @var SessionAccountProvider
+     */
+    private $sessionAccountProvider;
+
+
     const CART_SESSION_NAME = "__kinicart_cart";
 
     /**
      * SessionCart constructor.
      * @param Session $session
+     * @param PricingService $pricingService
+     * @param SessionAccountProvider $sessionAccountProvider
      */
-    public function __construct($session) {
+    public function __construct($session, $pricingService, $sessionAccountProvider) {
         $this->session = $session;
+        $this->pricingService = $pricingService;
+        $this->sessionAccountProvider = $sessionAccountProvider;
     }
 
     /**
@@ -38,7 +56,7 @@ class SessionCart {
     public function get() {
         $cart = $this->session->getValue(self::CART_SESSION_NAME);
         if (!$cart) {
-            $cart = new Cart();
+            $cart = new Cart($this->sessionAccountProvider);
             $this->session->setValue(self::CART_SESSION_NAME, $cart);
         }
         return $cart;

@@ -2,7 +2,9 @@
 
 namespace Kinicart;
 
+use Kiniauth\Objects\Account\Account;
 use Kinikit\Core\ApplicationBootstrap;
+use Kinikit\Core\DependencyInjection\Container;
 
 class Bootstrap implements ApplicationBootstrap {
 
@@ -12,6 +14,10 @@ class Bootstrap implements ApplicationBootstrap {
      *
      */
     public function setup() {
-       
+
+        // Map the core account class to the kinicart one with extra data.
+        Container::instance()->addClassMapping(Account::class, \Kinicart\Objects\Account\Account::class);
+
+
     }
 }

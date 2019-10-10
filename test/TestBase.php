@@ -12,6 +12,9 @@ class TestBase extends \PHPUnit\Framework\TestCase {
 
     public static function setUpBeforeClass(): void {
 
+        $bootstrap = new Bootstrap();
+        $bootstrap->setup();
+
         if (!self::$run) {
             $testDataInstaller = Container::instance()->get(TestDataInstaller::class);
             $testDataInstaller->run(true);

@@ -1,0 +1,11 @@
+[
+  {
+    "accountId": 1,
+    "tier": {
+      "id": 3
+    },
+    "currency": {
+      "code": "USD"
+    }
+  }
+]
