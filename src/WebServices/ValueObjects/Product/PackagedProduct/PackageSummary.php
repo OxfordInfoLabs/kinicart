@@ -59,6 +59,13 @@ class PackageSummary {
     private $allTierPrices;
 
     /**
+     * The working currency for convenience.
+     *
+     * @var string
+     */
+    private $workingCurrency;
+
+    /**
      * Construct with a package object
      *
      * @param Package $package
@@ -84,8 +91,10 @@ class PackageSummary {
         // Get the account object to use for pricing this package
         $account = $accountProvider->provideAccount();
 
+        $this->workingCurrency = $account->getAccountData()->getCurrencyCode();
+
         // Grab all prices for the passed currency
-        $this->allTierPrices = $package->getAllTierPrices("GBP");
+        $this->allTierPrices = $package->getAllTierPrices($this->workingCurrency);
 
         $this->activePrices = [];
         foreach ($this->allTierPrices as $recurrenceType => $tiers) {
@@ -142,6 +151,13 @@ class PackageSummary {
      */
     public function getAllTierPrices() {
         return $this->allTierPrices;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWorkingCurrency() {
+        return $this->workingCurrency;
     }
 
 

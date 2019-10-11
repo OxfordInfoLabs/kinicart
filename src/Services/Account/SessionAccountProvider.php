@@ -32,6 +32,6 @@ class SessionAccountProvider implements AccountProvider {
      * @return Account
      */
     public function provideAccount() {
-        return $this->session->__getLoggedInUser() ?? new Account();
+        return $this->session->__getLoggedInAccount() ?? new Account();
     }
 }

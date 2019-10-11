@@ -3,7 +3,7 @@
 namespace Kinicart\Objects\Cart;
 
 use Kinicart\Exception\Cart\CartItemDoesNotExistsException;
-use Kinicart\Objects\Account\AccountProvider;
+use Kinicart\Services\Account\AccountProvider;
 
 /**
  * Class Cart
@@ -93,6 +93,25 @@ class Cart {
     public function removeItem($index) {
         $this->getItem($index);
         array_splice($this->items, $index, 1);
+    }
+
+
+    /**
+     * Get the cart total based upon the constructed Account Provider
+     *
+     * @return float
+     */
+    public function getTotal() {
+
+        $account = $this->accountProvider->provideAccount();
+
+        $total = 0;
+        foreach ($this->items as $item) {
+            $total += $item->getUnitPrice($account->getAccountData()->getCurrencyCode(), $account->getAccountData()->getTierId());
+        }
+
+        return $total;
+
     }
 
 }

@@ -39,7 +39,7 @@ abstract class CartItem {
      *
      * @param $currency
      * @param null $tierId
-     * @return string
+     * @return float
      */
     public abstract function getUnitPrice($currency, $tierId = null);
 
