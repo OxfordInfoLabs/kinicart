@@ -12,7 +12,7 @@
   "type": "library",
   "require": {
     "oxil/kiniauth": "dev-master",
-    "stripe/stripe-php": "^2.0@dev"
+    "stripe/stripe-php": "7.3.1"
   },
   "autoload": {
     "psr-4": {
