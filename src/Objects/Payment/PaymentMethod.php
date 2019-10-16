@@ -45,6 +45,13 @@ class PaymentMethod extends ActiveRecord {
      */
     private $defaultMethod;
 
+    public function __construct($accountId = null, $type = null, $data = null, $defaultMethod = null) {
+        $this->accountId = $accountId;
+        $this->type = $type;
+        $this->data = $data;
+        $this->defaultMethod = $defaultMethod;
+    }
+
     /**
      * @return int
      */

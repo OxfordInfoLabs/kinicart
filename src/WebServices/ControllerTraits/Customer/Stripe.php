@@ -19,10 +19,26 @@ trait Stripe {
     }
 
     /**
-     * @http GET /createSetupIntent
+     * Return the publishable key from settings
+     *
+     * @http GET /publishableKey
+     *
+     * @return string|null
      */
-    public function createSetupIntent() {
-        return $this->stripeService->createSetupIntent();
+    public function getPublishableKey() {
+        return $this->stripeService->getPublishableKey();
+    }
+
+    /**
+     * @http GET /createSetupIntent
+     *
+     * @param $returnURL string
+     * @param $customer string
+     *
+     * @return array
+     */
+    public function createSetupIntent($returnURL, $customer = null) {
+        return $this->stripeService->createSetupIntent($returnURL, $customer);
     }
 
 }

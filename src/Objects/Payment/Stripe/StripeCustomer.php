@@ -27,6 +27,12 @@ class StripeCustomer extends ActiveRecord {
      */
     private $customerId;
 
+    
+    public function __construct($accountId = null, $customerId = null) { 
+        $this->accountId = $accountId;
+        $this->customerId = $customerId;
+    }
+
     /**
      * @return string
      */

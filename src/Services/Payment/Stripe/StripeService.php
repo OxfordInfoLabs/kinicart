@@ -16,8 +16,12 @@ class StripeService {
         $this->stripeProvider = $stripeProvider;
     }
 
-    public function createSetupIntent() {
-        return $this->stripeProvider->createSetupIntent();
+    public function getPublishableKey() {
+        return $this->stripeProvider->getPublishableKey();
+    }
+    
+    public function createSetupIntent($returnURL, $customer = null) {
+        return $this->stripeProvider->createSetupIntent($returnURL, $customer);
     }
 
 }

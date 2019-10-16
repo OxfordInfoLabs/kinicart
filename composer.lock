@@ -428,12 +428,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/OxfordInfoLabs/kiniauth.git",
-                "reference": "b39ef88bb0e396a688a874febb117d11ad526bb6"
+                "reference": "b03cb95576d397e6a65b435e04189e6c983f9592"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OxfordInfoLabs/kiniauth/zipball/b39ef88bb0e396a688a874febb117d11ad526bb6",
-                "reference": "b39ef88bb0e396a688a874febb117d11ad526bb6",
+                "url": "https://api.github.com/repos/OxfordInfoLabs/kiniauth/zipball/b03cb95576d397e6a65b435e04189e6c983f9592",
+                "reference": "b03cb95576d397e6a65b435e04189e6c983f9592",
                 "shasum": ""
             },
             "require": {
@@ -441,8 +441,7 @@
                 "dolondro/google-authenticator": "^2.0",
                 "oxil/kinikit-core": "dev-master",
                 "oxil/kinikit-mvc": "dev-master",
-                "oxil/kinikit-persistence": "dev-master",
-                "phpmailer/phpmailer": "^6.0"
+                "oxil/kinikit-persistence": "dev-master"
             },
             "type": "library",
             "autoload": {
@@ -459,7 +458,7 @@
                 "cart",
                 "php"
             ],
-            "time": "2019-10-15T09:54:42+00:00"
+            "time": "2019-10-15T13:23:49+00:00"
         },
         {
             "name": "oxil/kinikit-core",
@@ -467,12 +466,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/OxfordInfoLabs/kinikit-core.git",
-                "reference": "ed440b9b774f586ca38a903407cf8a28b2c4fb81"
+                "reference": "3f18c4cf5abd045bd737b4e77406aae8a50c2766"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OxfordInfoLabs/kinikit-core/zipball/ed440b9b774f586ca38a903407cf8a28b2c4fb81",
-                "reference": "ed440b9b774f586ca38a903407cf8a28b2c4fb81",
+                "url": "https://api.github.com/repos/OxfordInfoLabs/kinikit-core/zipball/3f18c4cf5abd045bd737b4e77406aae8a50c2766",
+                "reference": "3f18c4cf5abd045bd737b4e77406aae8a50c2766",
                 "shasum": ""
             },
             "require": {
@@ -502,7 +501,7 @@
                 "php",
                 "webservices"
             ],
-            "time": "2019-10-11T16:16:33+00:00"
+            "time": "2019-10-15T13:23:27+00:00"
         },
         {
             "name": "oxil/kinikit-mvc",
