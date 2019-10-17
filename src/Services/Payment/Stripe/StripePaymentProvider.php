@@ -81,12 +81,20 @@ class StripePaymentProvider implements PaymentProvider {
     public function removePaymentMethod($id, $accountId = Account::LOGGED_IN_ACCOUNT) {
         /** @var PaymentMethod $paymentMethod */
         $paymentMethod = PaymentMethod::fetch($id);
+        $wasDefault = $paymentMethod->isDefaultMethod();
 
         $payment_method = \Stripe\PaymentMethod::retrieve($paymentMethod->getData()["id"]);
         $payment_method->detach();
 
         $paymentMethod->remove();
 
+        if ($wasDefault) {
+            $methods = PaymentMethod::filter("WHERE account_id = ?", $accountId);
+            if (sizeof($methods) > 0) {
+                $methods[0]->setDefaultMethod(true);
+                $methods[0]->save();
+            }
+        }
     }
 
     /**
