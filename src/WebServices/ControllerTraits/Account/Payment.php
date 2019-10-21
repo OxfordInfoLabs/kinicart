@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Kinicart\WebServices\ControllerTraits\Customer;
+namespace Kinicart\WebServices\ControllerTraits\Account;
 
 
 use Kinicart\Objects\Account\Account;

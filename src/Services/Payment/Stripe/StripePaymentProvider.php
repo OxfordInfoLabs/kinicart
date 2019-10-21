@@ -104,8 +104,8 @@ class StripePaymentProvider implements PaymentProvider {
      */
     public function getPublishableKey() {
         $parentAccountId = $this->securityService->getParentAccountId();
-        $settings = Setting::filter("WHERE parent_account_id = ? OR parent_account_id IS NULL AND setting_key = ?",
-            $parentAccountId, 'publishableStripeKey');
+        $settings = Setting::filter("WHERE (parent_account_id = ? OR parent_account_id = 0) AND setting_key = 'publishableStripeKey'",
+            $parentAccountId);
         if (sizeof($settings) === 1) {
             return $settings[0]->getValue();
         } else if (sizeof($settings) > 1) {
@@ -150,7 +150,7 @@ class StripePaymentProvider implements PaymentProvider {
      */
     private function getSecretKey() {
         $parentAccountId = $this->securityService->getParentAccountId();
-        $settings = Setting::filter("WHERE parent_account_id = ? OR parent_account_id IS NULL AND setting_key = ?",
+        $settings = Setting::filter("WHERE (parent_account_id = ? OR parent_account_id = 0) AND setting_key = ?",
             $parentAccountId, 'secretStripeKey');
         if (sizeof($settings) === 1) {
             return $settings[0]->getValue();
