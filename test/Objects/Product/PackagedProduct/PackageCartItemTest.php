@@ -9,6 +9,7 @@ use Kinicart\Objects\Pricing\ProductBasePrice;
 use Kinicart\Services\Product\PackagedProduct\PackagedProductService;
 use Kinicart\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
+use Kinikit\Core\Logging\Logger;
 
 include_once __DIR__ . "/../../../autoloader.php";
 
