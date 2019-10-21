@@ -2,7 +2,12 @@
 
 namespace Kinicart\Objects\Product\PackagedProduct;
 
-
+/**
+ * Class VirtualHost
+ * @package Kinicart\Objects\Product\PackagedProduct
+ *
+ * @noGenerate
+ */
 class VirtualHost extends PackagedProduct {
 
 
