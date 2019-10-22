@@ -1,6 +1,6 @@
 <?php
 
-namespace Kinicart\Webservices\ControllerTraits\Guest;
+namespace Kinicart\WebServices\ControllerTraits\Guest;
 
 use Kinicart\Objects\Product\PackagedProduct\Package;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductCartItem;

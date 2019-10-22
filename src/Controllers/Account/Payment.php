@@ -6,6 +6,6 @@ namespace Kinicart\Controllers\Account;
 
 class Payment {
 
-    use \Kinicart\Webservices\ControllerTraits\Account\Payment;
+    use \Kinicart\WebServices\ControllerTraits\Account\Payment;
 
 }

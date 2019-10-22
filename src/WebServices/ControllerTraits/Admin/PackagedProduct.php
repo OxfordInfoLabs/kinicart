@@ -1,6 +1,6 @@
 <?php
 
-namespace Kinicart\Webservices\ControllerTraits\Admin;
+namespace Kinicart\WebServices\ControllerTraits\Admin;
 
 use Kinicart\Objects\Product\PackagedProduct\Package;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductFeature;
