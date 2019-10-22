@@ -10,6 +10,7 @@ use Kinikit\Persistence\ORM\ActiveRecord;
  * Class Currency
  *
  * @table kc_currency
+ * @generate
  */
 class Currency extends ActiveRecord {
 

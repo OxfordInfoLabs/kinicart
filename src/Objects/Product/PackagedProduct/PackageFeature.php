@@ -10,6 +10,7 @@ namespace Kinicart\Objects\Product\PackagedProduct;
  * @package Kinicart\Objects\Product\PackagedProduct
  *
  * @table kc_pp_package_feature
+ * @generate
  */
 class PackageFeature {
 

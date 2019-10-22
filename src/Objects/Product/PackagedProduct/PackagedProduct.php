@@ -7,8 +7,6 @@ use Kinicart\Objects\Product\Product;
 /**
  * Base class for a product, should be extended to make concrete application products.
  *
- * @noGenerate
- *
  * Class Product
  */
 abstract class PackagedProduct extends Product {

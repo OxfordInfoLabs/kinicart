@@ -9,7 +9,6 @@ use Kinicart\Objects\Cart\SimpleCartItem;
 use Kinicart\Objects\Pricing\ProductBasePrice;
 
 /**
- * @noGenerate
  */
 class PackageCartItem extends CartItem {
 

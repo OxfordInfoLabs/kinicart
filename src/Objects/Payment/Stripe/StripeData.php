@@ -9,7 +9,6 @@ namespace Kinicart\Objects\Payment\Stripe;
  * Class StripeData
  * @package Kinicart\Objects\Payment\Stripe
  *
- * @noGenerate
  */
 class StripeData {
 

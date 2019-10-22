@@ -12,7 +12,6 @@ use Kinikit\Persistence\ORM\Interceptor\DefaultORMInterceptor;
  * Class PackagedProductFeatureInterceptor
  * @package Kinicart\Objects\Product\PackagedProduct
  *
- * @noGenerate
  */
 class PackagedProductFeatureInterceptor extends DefaultORMInterceptor {
 

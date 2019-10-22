@@ -11,6 +11,7 @@ use Kinikit\Persistence\ORM\ActiveRecord;
  * @package Kinicart\Objects\Payment\Stripe
  *
  * @table kc_stripe_customer
+ * @generate
  */
 class StripeCustomer extends ActiveRecord {
 
@@ -27,8 +28,8 @@ class StripeCustomer extends ActiveRecord {
      */
     private $customerId;
 
-    
-    public function __construct($accountId = null, $customerId = null) { 
+
+    public function __construct($accountId = null, $customerId = null) {
         $this->accountId = $accountId;
         $this->customerId = $customerId;
     }

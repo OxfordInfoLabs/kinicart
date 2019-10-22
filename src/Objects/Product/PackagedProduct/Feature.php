@@ -5,7 +5,6 @@ namespace Kinicart\Objects\Product\PackagedProduct;
 /**
  * Features are used to build packages for products.
  *
- * @noGenerate
  *
  * Class Feature
  */

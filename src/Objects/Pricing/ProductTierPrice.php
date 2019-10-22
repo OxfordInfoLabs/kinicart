@@ -7,6 +7,7 @@ namespace Kinicart\Objects\Pricing;
  * Tier price for a product.
  *
  * @table kc_product_tier_price
+ * @generate
  *
  */
 class ProductTierPrice {

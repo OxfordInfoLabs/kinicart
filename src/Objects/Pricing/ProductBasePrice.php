@@ -15,6 +15,7 @@ use Kinikit\Core\DependencyInjection\Container;
  * @package Kinicart\Objects\Pricing
  *
  * @table kc_product_base_price
+ * @generate
  */
 class ProductBasePrice {
 

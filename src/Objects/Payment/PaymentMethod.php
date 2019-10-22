@@ -10,6 +10,7 @@ use Kinikit\Persistence\ORM\ActiveRecord;
  * @package Kinicart\Objects\Payment
  *
  * @table kc_payment_method
+ * @generate
  */
 class PaymentMethod extends ActiveRecord {
 

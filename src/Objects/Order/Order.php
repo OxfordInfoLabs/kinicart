@@ -11,6 +11,7 @@ use Kinikit\Persistence\ORM\ActiveRecord;
  * @package Kinicart\Objects\Order
  *
  * @table kc_order
+ * @generate
  */
 class Order extends ActiveRecord {
 

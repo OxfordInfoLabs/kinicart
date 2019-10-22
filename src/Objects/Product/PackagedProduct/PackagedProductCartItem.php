@@ -18,7 +18,6 @@ use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
  * Class PackagedProductCartItem
  * @package Kinicart\Objects\Product\PackagedProduct
  *
- * @noGenerate
  */
 class PackagedProductCartItem extends CartItem {
 

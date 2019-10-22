@@ -4,7 +4,6 @@
 namespace Kinicart\Objects\Cart;
 
 /**
- * @noGenerate
  *
  * Class SimpleCartItem
  * @package Kinicart\Objects\Cart
