@@ -19,9 +19,13 @@ class StripeService {
     public function getPublishableKey() {
         return $this->stripeProvider->getPublishableKey();
     }
-    
-    public function createSetupIntent($returnURL, $customer = null) {
+
+    public function createSetupIntent($returnURL = null, $customer = null) {
         return $this->stripeProvider->createSetupIntent($returnURL, $customer);
+    }
+
+    public function createPaymentIntent($amount, $currency = "gbp", $customer = null, $paymentMethod = null) {
+        return $this->stripeProvider->createPaymentIntent($amount, $currency, $customer, $paymentMethod);
     }
 
 }

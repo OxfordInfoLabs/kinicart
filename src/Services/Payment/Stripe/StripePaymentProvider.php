@@ -12,6 +12,10 @@ use Kinicart\Services\Payment\PaymentProvider;
 use Kinikit\Core\Logging\Logger;
 use Kinikit\Persistence\Database\Connection\DatabaseConnection;
 use Stripe\Customer;
+use Stripe\Exception\ApiErrorException;
+use Stripe\PaymentIntent;
+use Stripe\SetupIntent;
+use Stripe\Stripe;
 
 class StripePaymentProvider implements PaymentProvider {
 
@@ -31,17 +35,51 @@ class StripePaymentProvider implements PaymentProvider {
         $this->databaseConnection = $databaseConnection;
 
         $secretKey = $this->getSecretKey();
-        \Stripe\Stripe::setApiKey($secretKey);
+        Stripe::setApiKey($secretKey);
     }
 
     public function createSetupIntent($confirm = false, $returnURL = null, $customer = null) {
-        $setup_intent = \Stripe\SetupIntent::create([
+        $setupIntent = SetupIntent::create([
             'usage' => 'off_session',
             'confirm' => $confirm,
             'return_url' => $returnURL,
             'customer' => $customer
         ]);
-        return $setup_intent->toArray();
+        return $setupIntent->toArray();
+    }
+
+    /**
+     * When a customer and payment method are supplied, the amount specified will be charged to the payment method.
+     *
+     * When confirm=true is used during creation, it is equivalent to creating and confirming the PaymentIntent in the same call.
+     *
+     * If no payment method supplied, the status of the payment intent will be "requires_payment_method"
+     * and can be attached later.
+     *
+     * When the capture method is "automatic", Stripe automatically captures funds when the customer authorizes the payment.
+     * Change capture_method to "manual" if you wish to separate authorization and capture for payment methods that support this.
+     *
+     * @param $amount
+     * @param string $currency
+     * @param null $customer
+     * @param null $paymentMethod
+     * @param bool $confirm
+     * @param string $captureMethod
+     * @return array
+     * @throws ApiErrorException
+     */
+    public function createPaymentIntent($amount, $currency = "gbp", $customer = null, $paymentMethod = null, $confirm = true, $captureMethod = "automatic") {
+        $params = [
+            "amount" => $amount,
+            "currency" => $currency,
+            "customer" => $customer,
+            "payment_method" => $paymentMethod,
+            "confirm" => !!$confirm,
+            "capture_method" => $captureMethod
+        ];
+        Logger::log($params);
+        $paymentIntent = PaymentIntent::create($params);
+        return $paymentIntent->toArray();
     }
 
     /**
@@ -61,10 +99,20 @@ class StripePaymentProvider implements PaymentProvider {
                 $this->databaseConnection->execute("UPDATE kc_payment_method SET default_method = 0 WHERE account_id = ? AND default_method = 1", $accountId);
             }
 
+            $paymentData = [];
+            $paymentMethodData = $payment_method->toArray();
+            foreach ($paymentMethodData as $key => $value) {
+                if ($key !== "billing_details") {
+                    $paymentData[$key] = $value;
+                } else {
+                    $paymentData["billingDetails"] = $value;
+                }
+            }
+
             $paymentMethod = new PaymentMethod(
                 $customer->getAccountId(),
                 PaymentMethod::STRIPE_PAYMENT_METHOD,
-                $payment_method->toArray(),
+                $paymentData,
                 $defaultMethod
             );
 
@@ -83,7 +131,7 @@ class StripePaymentProvider implements PaymentProvider {
         $paymentMethod = PaymentMethod::fetch($id);
         $wasDefault = $paymentMethod->isDefaultMethod();
 
-        $payment_method = \Stripe\PaymentMethod::retrieve($paymentMethod->getData()["id"]);
+        $payment_method = \Stripe\PaymentMethod::retrieve($paymentMethod->getPayment()["id"]);
         $payment_method->detach();
 
         $paymentMethod->remove();
@@ -123,7 +171,7 @@ class StripePaymentProvider implements PaymentProvider {
      * @param string $accountId
      *
      * @return StripeCustomer|mixed|null
-     * @throws \Stripe\Exception\ApiErrorException
+     * @throws ApiErrorException
      */
     private function getStripeCustomer($createNew = false, $accountId = Account::LOGGED_IN_ACCOUNT) {
         try {
@@ -150,7 +198,7 @@ class StripePaymentProvider implements PaymentProvider {
      */
     private function getSecretKey() {
         $parentAccountId = $this->securityService->getParentAccountId();
-        $settings = Setting::filter("WHERE (parent_account_id = ? OR parent_account_id = 0) AND setting_key = ?",
+        $settings = Setting::filter("WHERE (parent_account_id = ? OR parent_account_id = 0 OR parent_account_id IS NULL) AND setting_key = ?",
             $parentAccountId, 'secretStripeKey');
         if (sizeof($settings) === 1) {
             return $settings[0]->getValue();

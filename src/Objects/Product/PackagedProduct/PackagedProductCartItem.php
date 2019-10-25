@@ -253,4 +253,7 @@ class PackagedProductCartItem extends CartItem {
     }
 
 
+    public function process() {
+        // TODO: Implement process() method.
+    }
 }
