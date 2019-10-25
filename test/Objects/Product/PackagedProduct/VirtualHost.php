@@ -8,7 +8,7 @@ namespace Kinicart\Objects\Product\PackagedProduct;
  *
  * @noGenerate
  */
-class VirtualHost extends PackagedProduct {
+class VirtualHost implements PackagedProduct {
 
 
     /**

@@ -9,7 +9,7 @@ namespace Kinicart\Objects\Product\PackagedProduct;
  *
  * @noGenerate
  */
-class Email extends PackagedProduct {
+class Email implements PackagedProduct {
 
 
     /**

@@ -9,7 +9,7 @@ use Kinicart\Objects\Product\Product;
  *
  * Class Product
  */
-abstract class PackagedProduct extends Product {
+interface PackagedProduct extends Product {
 
     /**
      * Get a list of features which this product makes available.  Features are combined
@@ -17,7 +17,7 @@ abstract class PackagedProduct extends Product {
      *
      * @return Feature[]
      */
-    public abstract function getFeatures();
+    public function getFeatures();
 
 
 }
