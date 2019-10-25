@@ -13,6 +13,7 @@ use Kinikit\Core\DependencyInjection\Container;
  * Class AccountData
  *
  * @table kc_account_data
+ * @generate
  */
 class AccountData {
 

@@ -8,7 +8,6 @@ use Kinicart\Services\Account\AccountProvider;
 /**
  * Class Cart
  *
- * @noGenerate
  */
 class Cart {
 

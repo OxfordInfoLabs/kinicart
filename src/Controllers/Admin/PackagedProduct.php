@@ -9,6 +9,6 @@ namespace Kinicart\Controllers\Admin;
  */
 class PackagedProduct {
 
-    use \Kinicart\Webservices\ControllerTraits\Admin\PackagedProduct;
+    use \Kinicart\WebServices\ControllerTraits\Admin\PackagedProduct;
 
 }

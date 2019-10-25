@@ -3,7 +3,7 @@
 namespace Kinicart;
 
 use Kinikit\Core\DependencyInjection\Container;
-use Kinikit\Core\Init;
+use Kinikit\Core\Bootstrapper;
 use Kinikit\Persistence\Tools\TestDataInstaller;
 
 class TestBase extends \PHPUnit\Framework\TestCase {
@@ -19,7 +19,7 @@ class TestBase extends \PHPUnit\Framework\TestCase {
             $testDataInstaller = Container::instance()->get(TestDataInstaller::class);
             $testDataInstaller->run(true);
 
-            Container::instance()->get(Init::class);
+            Container::instance()->get(Bootstrapper::class);
 
             self::$run = true;
         }

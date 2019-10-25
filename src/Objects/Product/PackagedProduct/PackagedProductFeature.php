@@ -14,6 +14,7 @@ use Kinikit\Persistence\ORM\ActiveRecord;
  *
  * @interceptor Kinicart\Objects\Product\PackagedProduct\PackagedProductFeatureInterceptor
  * @table kc_pp_product_feature
+ * @generate
  */
 class PackagedProductFeature extends ActiveRecord {
 

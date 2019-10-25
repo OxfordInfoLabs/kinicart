@@ -9,7 +9,7 @@ namespace Kinicart\Controllers\Guest;
  */
 class PackagedProduct {
 
-    use \Kinicart\Webservices\ControllerTraits\Guest\PackagedProduct;
+    use \Kinicart\WebServices\ControllerTraits\Guest\PackagedProduct;
 
 
 

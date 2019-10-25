@@ -15,6 +15,7 @@ use Kinikit\Persistence\ORM\ActiveRecord;
  * @package Kinicart\Objects\Product
  *
  * @table kc_pp_package
+ * @generate
  */
 class Package extends ActiveRecord {
 

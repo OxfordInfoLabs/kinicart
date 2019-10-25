@@ -3,7 +3,12 @@
 
 namespace Kinicart\Objects\Product\PackagedProduct;
 
-
+/**
+ * Class Email
+ * @package Kinicart\Objects\Product\PackagedProduct
+ *
+ * @noGenerate
+ */
 class Email extends PackagedProduct {
 
 

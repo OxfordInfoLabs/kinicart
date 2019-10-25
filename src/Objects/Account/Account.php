@@ -7,7 +7,6 @@ namespace Kinicart\Objects\Account;
  * Extension of the core account class with cart functionality.
  *
  * @table ka_account
- * @noGenerate
  */
 class Account extends \Kiniauth\Objects\Account\Account {
 

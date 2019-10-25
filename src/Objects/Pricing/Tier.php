@@ -12,6 +12,7 @@ use Kinikit\Persistence\ORM\ActiveRecord;
  * @package Kinicart\Objects\Pricing
  *
  * @table kc_tier
+ * @generate
  */
 class Tier extends ActiveRecord {
 
