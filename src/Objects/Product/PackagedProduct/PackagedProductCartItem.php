@@ -9,6 +9,7 @@ use Kinicart\Exception\Product\PackagedProduct\InvalidCartAddOnException;
 use Kinicart\Exception\Product\PackagedProduct\NoSuchProductPlanException;
 use Kinicart\Objects\Cart\CartItem;
 use Kinicart\Objects\Pricing\ProductBasePrice;
+use Kinicart\Objects\Subscription\SubscriptionCartItem;
 use Kinicart\Services\Product\PackagedProduct\PackagedProductService;
 use Kinicart\Services\Product\ProductService;
 use Kinikit\Core\DependencyInjection\Container;
@@ -19,14 +20,7 @@ use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
  * @package Kinicart\Objects\Product\PackagedProduct
  *
  */
-class PackagedProductCartItem extends CartItem {
-
-    /**
-     * String product identifier.
-     *
-     * @var string
-     */
-    private $productIdentifier;
+class PackagedProductCartItem extends SubscriptionCartItem {
 
 
     /**
@@ -39,13 +33,6 @@ class PackagedProductCartItem extends CartItem {
      */
     private $description;
 
-
-    /**
-     * The recurrence type for this product instance
-     *
-     * @var string
-     */
-    private $recurrenceType;
 
     /**
      * The main plan forming this product instance.
@@ -61,6 +48,7 @@ class PackagedProductCartItem extends CartItem {
      */
     private $addOns = [];
 
+
     /**
      * PackagedProductCartItem constructor.
      *
@@ -69,8 +57,9 @@ class PackagedProductCartItem extends CartItem {
      */
     public function __construct($productIdentifier, $planIdentifier = null, $addOnIdentifiers = [],
                                 $recurrenceType = ProductBasePrice::RECURRENCE_MONTHLY) {
-        $this->productIdentifier = $productIdentifier;
-        $this->recurrenceType = $recurrenceType;
+
+        // Construct the parent subscription cart item with required logic.
+        parent::__construct($productIdentifier, $recurrenceType);
 
         /**
          * Lookup product and store title and description for later use.

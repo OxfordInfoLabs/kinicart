@@ -51,7 +51,7 @@ class OrderService {
 
         // Process each cart item.
         foreach ($cart->getItems() as $cartItem) {
-            $cartItem->process();
+            $cartItem->processAll();
         }
 
         $order = new Order($contact, $cart, $paymentData, $account->getAccountData()->getCurrencyCode());

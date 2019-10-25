@@ -73,8 +73,8 @@ class OrderServiceTest extends TestBase {
         /** @var Order $order */
         $order = $this->service->processOrder(1, 1);
 
-        $this->assertTrue($cartItem1->methodWasCalled("process",[]));
-        $this->assertTrue($cartItem2->methodWasCalled("process",[]));
+        $this->assertTrue($cartItem1->methodWasCalled("processAll",[]));
+        $this->assertTrue($cartItem2->methodWasCalled("processAll",[]));
 
 //        $this->assertTrue(stripos($order->getPaymentData()));
 

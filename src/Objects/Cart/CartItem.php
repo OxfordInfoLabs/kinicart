@@ -47,7 +47,7 @@ abstract class CartItem {
      */
     public function processAll() {
         $this->process();
-        
+
         foreach ($this->getSubItems() as $subItem) {
             $subItem->processAll();
         }

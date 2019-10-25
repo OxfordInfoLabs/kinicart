@@ -1,0 +1,10 @@
+[
+  {
+    "key": "publishableStripeKey",
+    "value": "pk_test_on0KHyFr1PpeKwEw9neqHK8C00TQJzNru9"
+  },
+  {
+    "key": "secretStripeKey",
+    "value": "sk_test_9FzyYytXLsOXEHBRVMVIQbTH000YI2Guvv"
+  }
+]

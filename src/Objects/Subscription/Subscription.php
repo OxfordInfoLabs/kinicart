@@ -2,6 +2,10 @@
 
 namespace Kinicart\Objects\Subscription;
 
+use DateTime;
+use Kinicart\Objects\Pricing\ProductBasePrice;
+use Kinikit\Persistence\ORM\ActiveRecord;
+
 /**
  * Generic Subscription
  *
@@ -10,7 +14,7 @@ namespace Kinicart\Objects\Subscription;
  * @generate
  * @table kc_subscription
  */
-class Subscription {
+class Subscription extends ActiveRecord {
 
     /**
      * @var integer
@@ -69,7 +73,7 @@ class Subscription {
     /**
      * The start date for this subscription
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $startDate;
 
@@ -77,7 +81,7 @@ class Subscription {
     /**
      * The next renewal date for this subscription
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $nextRenewalDate;
 
@@ -89,6 +93,40 @@ class Subscription {
      * @var integer
      */
     private $numberOfRenewals;
+
+
+    /**
+     * Construct with required fields
+     *
+     * Subscription constructor.
+     * @param $accountId
+     * @param $description
+     * @param $productIdentifier
+     * @param $relatedObjectId
+     * @param string $recurrenceType
+     * @param int $recurrence
+     * @param null $numberOfRenewals
+     */
+    public function __construct($accountId, $description, $productIdentifier, $relatedObjectId, $recurrenceType = ProductBasePrice::RECURRENCE_MONTHLY,
+                                $recurrence = 1, $numberOfRenewals = null) {
+
+        $this->accountId = $accountId;
+        $this->description = $description;
+        $this->productIdentifier = $productIdentifier;
+        $this->relatedObjectId = $relatedObjectId;
+        $this->recurrenceType = $recurrenceType;
+        $this->recurrence = $recurrence;
+        $this->numberOfRenewals = $numberOfRenewals;
+
+        $this->startDate = new DateTime();
+
+        // Add the correct period to the dates
+        $renewalDate = new DateTime();
+        $renewalDate->add(new \DateInterval("P" . $recurrence . ($recurrenceType == ProductBasePrice::RECURRENCE_MONTHLY ? "M" : "Y")));
+        $this->nextRenewalDate = $renewalDate;
+
+    }
+
 
     /**
      * @return int
