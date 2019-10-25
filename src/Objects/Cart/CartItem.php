@@ -41,6 +41,23 @@ abstract class CartItem {
      */
     public abstract function getUnitPrice($currency, $tierId = null);
 
+
+    /**
+     * Recursively process any cart items which need attention.
+     */
+    public function processAll() {
+        $this->process();
+        
+        foreach ($this->getSubItems() as $subItem) {
+            $subItem->processAll();
+        }
+    }
+
+    /**
+     * Process
+     *
+     * @return mixed
+     */
     public abstract function process();
 
     /**
