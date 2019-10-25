@@ -3,6 +3,9 @@
 
 namespace Kinicart\Objects\Payment;
 
+use Kinicart\Objects\Payment\Stripe\StripePayment;
+use Kinikit\Core\Binding\ObjectBinder;
+use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Persistence\ORM\ActiveRecord;
 
 /**
@@ -15,6 +18,9 @@ class PaymentMethod extends ActiveRecord {
 
     const STRIPE_PAYMENT_METHOD = 'stripe';
     const PAYPAL_PAYMENT_METHOD = 'paypal';
+
+    const METHOD_CLASSES = ['stripe' => StripePayment::class];
+
 
     /**
      * @primaryKey
@@ -38,17 +44,17 @@ class PaymentMethod extends ActiveRecord {
      * @json
      * @sqlType LONGTEXT
      */
-    private $data;
+    private $payment;
 
     /**
      * @var boolean
      */
     private $defaultMethod;
 
-    public function __construct($accountId = null, $type = null, $data = null, $defaultMethod = null) {
+    public function __construct($accountId = null, $type = null, $payment = null, $defaultMethod = null) {
         $this->accountId = $accountId;
         $this->type = $type;
-        $this->data = $data;
+        $this->payment = $payment;
         $this->defaultMethod = $defaultMethod;
     }
 
@@ -95,17 +101,18 @@ class PaymentMethod extends ActiveRecord {
     }
 
     /**
-     * @return array
+     * @return Payment
      */
-    public function getData() {
-        return $this->data;
-    }
+    public function getPayment() {
 
-    /**
-     * @param array $data
-     */
-    public function setData($data) {
-        $this->data = $data;
+        $mappedClass = self::METHOD_CLASSES[$this->type];
+
+        /**
+         * @var $binder ObjectBinder
+         */
+        $binder = Container::instance()->get(ObjectBinder::class);
+        return $binder->bindFromArray($this->payment, $mappedClass);
+
     }
 
     /**

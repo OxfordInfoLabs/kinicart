@@ -43,6 +43,7 @@ abstract class CartItem {
      */
     public abstract function getUnitPrice($currency, $tierId = null);
 
+    public abstract function process();
 
     /**
      * Return any sub items if required.

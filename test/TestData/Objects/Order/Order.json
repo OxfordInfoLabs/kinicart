@@ -3,13 +3,7 @@
     "id": 1,
     "accountId": 1,
     "date": "2019-10-15 10:00:00",
-    "currency": {
-      "code": "GBP",
-      "description": "British Pounds",
-      "exchangeRateFromBase": 1,
-      "defaultCurrency": true,
-      "htmlSymbol": "&pound;"
-    },
+    "currency": "GBP",
     "subtotal": 3.50,
     "taxes": 0.70,
     "total": 4.20,
@@ -66,13 +60,7 @@
     "id": 2,
     "accountId": 1,
     "date": "2019-10-17 12:30:00",
-    "currency": {
-      "code": "GBP",
-      "description": "British Pounds",
-      "exchangeRateFromBase": 1,
-      "defaultCurrency": true,
-      "htmlSymbol": "&pound;"
-    },
+    "currency": "GBP",
     "subtotal": 10,
     "taxes": 2,
     "total": 12,

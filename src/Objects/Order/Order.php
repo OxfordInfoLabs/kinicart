@@ -4,6 +4,9 @@
 namespace Kinicart\Objects\Order;
 
 
+use Kiniauth\Objects\Account\Contact;
+use Kinicart\Objects\Cart\Cart;
+use Kinicart\Objects\Cart\CartItem;
 use Kinikit\Persistence\ORM\ActiveRecord;
 
 /**
@@ -13,6 +16,9 @@ use Kinikit\Persistence\ORM\ActiveRecord;
  * @table kc_order
  */
 class Order extends ActiveRecord {
+
+    const ORDER_STATUS_COMPLETED = 'completed';
+    const ORDER_STATUS_FAILED = 'failed';
 
     /**
      * @primaryKey
@@ -31,9 +37,7 @@ class Order extends ActiveRecord {
     private $date;
 
     /**
-     * @var string[]
-     * @json
-     * @sqlType TEXT
+     * @var string
      */
     private $currency;
 
@@ -82,6 +86,46 @@ class Order extends ActiveRecord {
     private $orderLines;
 
     /**
+     * Order constructor.
+     * @param Contact $contact
+     * @param Cart $cart
+     * @param mixed $paymentData
+     * @param mixed $currency
+     */
+    public function __construct($contact = null, $cart = null, $paymentData = null, $currency = null) {
+        if ($contact) {
+            $this->accountId = $contact->getAccountId();
+            $this->address = $contact->getHtmlAddressLinesString();
+            $this->buyerName = $contact->getName();
+
+        }
+        // process the cart
+        if ($cart) {
+            $this->orderLines = [];
+            /** @var CartItem $cartItem */
+            foreach ($cart->getItems() as $cartItem) {
+                $this->orderLines[] = [
+                    "title" => $cartItem->getTitle(),
+                    "description" => $cartItem->getDescription(),
+                    "quantity" => $cartItem->getQuantity(),
+                    "amount" => $cartItem->getUnitPrice($currency),
+                    "subItems" => $cartItem->getSubItems()
+                ];
+            }
+
+//            $this->subtotal = $subtotal;
+            $this->taxes = 0.20;
+            $this->total = $cart->getTotal();
+        }
+
+        $this->date = date("Y-m-d H:i:s");
+        $this->currency = $currency;
+
+        $this->paymentData = $paymentData;
+        $this->status = ($paymentData && isset($paymentData["reference"])) ? self::ORDER_STATUS_COMPLETED : self::ORDER_STATUS_FAILED;
+    }
+
+    /**
      * @return int
      */
     public function getId() {
@@ -124,14 +168,14 @@ class Order extends ActiveRecord {
     }
 
     /**
-     * @return string[]
+     * @return string
      */
     public function getCurrency() {
         return $this->currency;
     }
 
     /**
-     * @param string[] $currency
+     * @param string $currency
      */
     public function setCurrency($currency) {
         $this->currency = $currency;
@@ -248,7 +292,6 @@ class Order extends ActiveRecord {
     public function setStatus($status) {
         $this->status = $status;
     }
-
 
 
 }

@@ -1,0 +1,96 @@
+[
+  {
+    "id": 1,
+    "accountId": 1,
+    "type": "stripe",
+    "payment": {
+      "id": "pm_1FW18FGasdWafjSk9jvDY94f",
+      "object": "payment_method",
+      "billing_details": {
+        "address": {
+          "city": null,
+          "country": null,
+          "line1": null,
+          "line2": null,
+          "postal_code": "22222",
+          "state": null
+        },
+        "email": null,
+        "name": null,
+        "phone": null
+      },
+      "card": {
+        "brand": "visa",
+        "checks": {
+          "address_line1_check": null,
+          "address_postal_code_check": "pass",
+          "cvc_check": "pass"
+        },
+        "country": "US",
+        "exp_month": 4,
+        "exp_year": 2022,
+        "fingerprint": "5Rpbwku24Td0Y4zY",
+        "funding": "credit",
+        "generated_from": null,
+        "last4": "4242",
+        "three_d_secure_usage": {
+          "supported": true
+        },
+        "wallet": null
+      },
+      "created": 1571665271,
+      "customer": "cus_G25IqsgowezuA7",
+      "livemode": false,
+      "metadata": [],
+      "type": "card"
+    },
+    "defaultMethod": 0
+  },
+  {
+    "id": 2,
+    "accountId": 1,
+    "type": "stripe",
+    "payment": {
+      "id": "pm_1FWJJYGasdWafjSkETkVKT3r",
+      "object": "payment_method",
+      "billingDetails": {
+        "address": {
+          "city": null,
+          "country": null,
+          "line1": null,
+          "line2": null,
+          "postal_code": "22222",
+          "state": null
+        },
+        "email": null,
+        "name": null,
+        "phone": null
+      },
+      "card": {
+        "brand": "visa",
+        "checks": {
+          "address_line1_check": null,
+          "address_postal_code_check": "pass",
+          "cvc_check": "pass"
+        },
+        "country": "US",
+        "exp_month": 4,
+        "exp_year": 2022,
+        "fingerprint": "5Rpbwku24Td0Y4zY",
+        "funding": "credit",
+        "generated_from": null,
+        "last4": "4242",
+        "three_d_secure_usage": {
+          "supported": true
+        },
+        "wallet": null
+      },
+      "created": 1571735164,
+      "customer": "cus_G25IqsgowezuA7",
+      "livemode": false,
+      "metadata": [],
+      "type": "card"
+    },
+    "defaultMethod": 1
+  }
+]
