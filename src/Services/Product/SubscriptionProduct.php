@@ -11,7 +11,7 @@ use Kinicart\Services\Subscription\SubscriptionService;
 /**
  * Extension of product interface for subscription based products.
  */
-abstract class SubscriptionProduct implements Product {
+abstract class SubscriptionProduct extends Product {
 
     /**
      * @var SubscriptionService
