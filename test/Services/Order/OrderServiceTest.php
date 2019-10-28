@@ -5,6 +5,7 @@ namespace Kinicart\Test\Services\Order;
 
 
 use Kiniauth\Services\Security\AuthenticationService;
+use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Cart\CartItem;
 use Kinicart\Objects\Cart\ProductCartItem;
 use Kinicart\Objects\Order\Order;
@@ -87,9 +88,10 @@ class OrderServiceTest extends TestBase {
         /** @var Order $order */
         $order = $this->service->processOrder(1, 1);
 
+        $account = Account::fetch(1);
 
-        $this->assertTrue($this->productService->methodWasCalled("processCartItem", [1, $cartItem1]));
-        $this->assertTrue($this->productService->methodWasCalled("processCartItem", [1, $cartItem2]));
+        $this->assertTrue($this->productService->methodWasCalled("processCartItem", [$account, $cartItem1]));
+        $this->assertTrue($this->productService->methodWasCalled("processCartItem", [$account, $cartItem2]));
 
 //        $this->assertTrue(stripos($order->getPaymentData()));
 

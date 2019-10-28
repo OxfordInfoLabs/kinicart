@@ -59,7 +59,7 @@ class OrderService {
         // Process each cart item.
         foreach ($cart->getItems() as $cartItem) {
             if ($cartItem instanceof ProductCartItem) {
-                $this->productService->processCartItem($contact->getAccountId(), $cartItem);
+                $this->productService->processCartItem($account, $cartItem);
             }
         }
 

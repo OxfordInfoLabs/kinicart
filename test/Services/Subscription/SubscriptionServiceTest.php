@@ -3,6 +3,7 @@
 namespace Kinicart\Services\Subscription;
 
 
+use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Cart\SimpleSubscriptionCartItem;
 use Kinicart\Objects\Pricing\ProductBasePrice;
 use Kinicart\Objects\Subscription\Subscription;
@@ -32,11 +33,13 @@ class SubscriptionServiceTest extends TestBase {
 
         $newCartItem = new SimpleSubscriptionCartItem("virtual-host");
 
-        $id = $this->subscriptionService->createNewSubscription(1, $newCartItem, 1);
+        $account = Account::fetch(1);
+
+        $id = $this->subscriptionService->createNewSubscription($account, $newCartItem, 1);
 
         $subscription = Subscription::fetch($id);
 
-        $this->assertEquals(1, $subscription->getId());
+        $this->assertNotNull($subscription->getId());
         $this->assertEquals("Test Subscription", $subscription->getDescription());
         $this->assertEquals("virtual-host", $subscription->getProductIdentifier());
         $this->assertEquals(1, $subscription->getRelatedObjectId());
@@ -52,11 +55,11 @@ class SubscriptionServiceTest extends TestBase {
 
         $newCartItem = new SimpleSubscriptionCartItem("virtual-host", Recurrence::ANNUAL, 2);
 
-        $id = $this->subscriptionService->createNewSubscription(1, $newCartItem, 1);
+        $id = $this->subscriptionService->createNewSubscription($account, $newCartItem, 1);
 
         $subscription = Subscription::fetch($id);
 
-        $this->assertEquals(2, $subscription->getId());
+        $this->assertNotNull($subscription->getId());
         $this->assertEquals("Test Subscription", $subscription->getDescription());
         $this->assertEquals("virtual-host", $subscription->getProductIdentifier());
         $this->assertEquals(1, $subscription->getRelatedObjectId());

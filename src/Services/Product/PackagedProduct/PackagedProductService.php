@@ -4,7 +4,9 @@
 namespace Kinicart\Services\Product\PackagedProduct;
 
 use Kinicart\Objects\Product\PackagedProduct\Package;
+use Kinicart\Objects\Product\PackagedProduct\PackagedProductCartItem;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductFeature;
+use Kinicart\Objects\Product\PackagedProduct\PackagedProductSubscriptionPackage;
 use Kinicart\Services\Product\ProductService;
 use Kinikit\Core\Util\ObjectArrayUtils;
 use Kinikit\Persistence\ORM\ORM;
@@ -145,6 +147,33 @@ class PackagedProductService {
     public function deletePackage($productIdentifier, $packageIdentifier) {
         $package = $this->getPackage($productIdentifier, $packageIdentifier);
         $package->remove();
+    }
+
+
+    /**
+     * Save subscription packages for a subscription id and a packaged product cart item.
+     *
+     * @param integer $subscriptionId
+     * @param PackagedProductCartItem $packagedProductCartItem
+     */
+    public function saveSubscriptionPackages($subscriptionId, $packagedProductCartItem) {
+
+
+        // Remove any previous packages
+        $previousSubPackages = PackagedProductSubscriptionPackage::filter("WHERE subscriptionId = ?", $subscriptionId);
+        $this->orm->delete($previousSubPackages);
+
+
+        $packages = [];
+        $packages[] = $packagedProductCartItem->getPlan();
+        $packages = array_merge($packages, $packagedProductCartItem->getAddOns());
+
+        $subscriptionPackages = [];
+        foreach ($packages as $package) {
+            $subscriptionPackages[] = new PackagedProductSubscriptionPackage($subscriptionId, $package->getProductIdentifier(), $package->getIdentifier());
+        }
+
+        $this->orm->save($subscriptionPackages);
     }
 
 

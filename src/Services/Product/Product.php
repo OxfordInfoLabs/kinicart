@@ -2,6 +2,7 @@
 
 namespace Kinicart\Services\Product;
 
+use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Cart\ProductCartItem;
 
 /**
@@ -28,11 +29,11 @@ interface Product {
     /**
      * Process a cart item - called during checkout.
      *
-     * @param $accountId
+     * @param Account $account
      * @param ProductCartItem $cartItem
      * @return mixed
      */
-    public function processCartItem($accountId, $cartItem);
+    public function processCartItem($account, $cartItem);
 
 
 }

@@ -77,5 +77,19 @@ abstract class SubscriptionCartItem extends ProductCartItem {
         return $this->recurrence;
     }
 
+    /**
+     * @return string
+     */
+    public function getOperation() {
+        return $this->operation;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSubscriptionId() {
+        return $this->subscriptionId;
+    }
+
 
 }

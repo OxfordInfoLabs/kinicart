@@ -2,6 +2,7 @@
 
 namespace Kinicart\Services\Subscription;
 
+use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Cart\SubscriptionCartItem;
 use Kinicart\Objects\Pricing\ProductBasePrice;
 use Kinicart\Objects\Subscription\Subscription;
@@ -18,12 +19,12 @@ class SubscriptionService {
     /**
      * Create a brand new subscription for an account holder using a supplied cart item
      *
-     * @param integer $accountId
+     * @param Account $account
      * @param SubscriptionCartItem $subscriptionCartItem
      */
-    public function createNewSubscription($accountId, $subscriptionCartItem, $relatedObjectId = null) {
+    public function createNewSubscription($account, $subscriptionCartItem, $relatedObjectId = null) {
 
-        $subscription = new Subscription($accountId, $subscriptionCartItem, $relatedObjectId);
+        $subscription = new Subscription($account, $subscriptionCartItem, $relatedObjectId);
 
         $subscription->save();
 

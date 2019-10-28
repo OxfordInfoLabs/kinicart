@@ -3,6 +3,7 @@
 namespace Kinicart\Objects\Subscription;
 
 use DateTime;
+use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Cart\SubscriptionCartItem;
 use Kinicart\Objects\Pricing\ProductBasePrice;
 use Kinicart\Types\Recurrence;
@@ -109,7 +110,7 @@ class Subscription extends ActiveRecord {
      *
      * @var string
      */
-    private $status;
+    private $status = self::STATUS_ACTIVE;
 
 
     /**
@@ -138,14 +139,16 @@ class Subscription extends ActiveRecord {
     /**
      * Subscription constructor.
      *
-     * @param integer $accountId
+     * @param Account $account
      * @param SubscriptionCartItem $cartItem
      *
      * @throws \Exception
      */
-    public function __construct($accountId, $cartItem, $relatedObjectId) {
+    public function __construct($account, $cartItem, $relatedObjectId) {
 
-        $this->accountId = $accountId;
+        if ($account) {
+            $this->accountId = $account->getAccountId();
+        }
         $this->relatedObjectId = $relatedObjectId;
 
         if ($cartItem) {
@@ -160,6 +163,12 @@ class Subscription extends ActiveRecord {
             $renewalDate = new DateTime();
             $renewalDate->add(new \DateInterval("P" . $this->recurrence . ($this->recurrenceType == Recurrence::MONTHLY ? "M" : "Y")));
             $this->nextRenewalDate = $renewalDate;
+
+            if ($account) {
+                $this->lastPaymentAmount = $cartItem->getUnitPrice($account->getAccountData()->getCurrencyCode(), $account->getAccountData()->getTierId());
+                $this->lastPaymentCurrency = $account->getAccountData()->getCurrencyCode();
+            }
+
 
         }
 

@@ -3,24 +3,47 @@
 
 namespace Kinicart\Services\Product;
 
+use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Cart\SubscriptionCartItem;
 use Kinicart\Objects\Subscription\Subscription;
+use Kinicart\Services\Subscription\SubscriptionService;
 
 /**
  * Extension of product interface for subscription based products.
  */
 abstract class SubscriptionProduct implements Product {
 
+    /**
+     * @var SubscriptionService
+     */
+    private $subscriptionService;
+
+
+    /**
+     * SubscriptionProduct constructor.
+     *
+     * @param SubscriptionService $subscriptionService
+     */
+    public function __construct($subscriptionService) {
+        $this->subscriptionService = $subscriptionService;
+    }
+
 
     /**
      * Process a cart item - call the appropriate method below according to
      * the type of cart item being passed.
      *
-     * @param $accountId
+     * @param Account $account
      * @param SubscriptionCartItem $cartItem
-     * @return mixed|void
+     * @return integer
      */
-    public function processCartItem($accountId, $cartItem) {
+    public function processCartItem($account, $cartItem) {
+
+        // If a brand new subscription, call activation and then create a new sub
+        if ($cartItem->getOperation() == SubscriptionCartItem::OPERATION_NEW) {
+            $relatedObjectId = $this->subscriptionActivation($cartItem);
+            return $this->subscriptionService->createNewSubscription($account, $cartItem, $relatedObjectId);
+        }
 
     }
 

@@ -4,7 +4,9 @@ namespace Kinicart\Services\Product\PackagedProduct;
 
 use Kinicart\Objects\Product\PackagedProduct\Feature;
 use Kinicart\Objects\Product\PackagedProduct\Package;
+use Kinicart\Objects\Product\PackagedProduct\PackagedProductCartItem;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductFeature;
+use Kinicart\Objects\Product\PackagedProduct\PackagedProductSubscriptionPackage;
 use Kinicart\Objects\Product\PackagedProduct\PackageFeature;
 use Kinicart\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
@@ -240,6 +242,42 @@ class PackagedProductServiceTest extends TestBase {
         $this->service->deletePackage("virtual-host", "ACCOUNT_MANAGER");
 
         $this->assertEquals([], $this->service->getAllGlobalAddOns("virtual-host"));
+
+    }
+
+
+    public function testCanSaveSubscriptionPackagesUsingSubscriptionIdAndPackagedProductCartItem() {
+
+        $cartItem = new PackagedProductCartItem("virtual-host", "BUDGET");
+
+        $this->service->saveSubscriptionPackages(10, $cartItem);
+
+        // Check we have what we expect
+        $entries = PackagedProductSubscriptionPackage::filter("WHERE subscriptionId = 10");
+        $this->assertEquals(1, sizeof($entries));
+        $this->assertEquals($this->service->getPackage("virtual-host", "BUDGET"), $entries[0]->getPackage());
+
+
+        $cartItem = new PackagedProductCartItem("virtual-host", "BUDGET", ["BUDGET_5GB"]);
+
+        $this->service->saveSubscriptionPackages(10, $cartItem);
+
+        $entries = PackagedProductSubscriptionPackage::filter("WHERE subscriptionId = 10");
+        $this->assertEquals(2, sizeof($entries));
+        $this->assertEquals($this->service->getPackage("virtual-host", "BUDGET"), $entries[0]->getPackage());
+        $this->assertEquals($this->service->getPackage("virtual-host", "BUDGET_5GB"), $entries[1]->getPackage());
+
+
+        $cartItem = new PackagedProductCartItem("virtual-host", "ENTERPRISE");
+
+        $this->service->saveSubscriptionPackages(10, $cartItem);
+
+        // Check we have what we expect
+        $entries = PackagedProductSubscriptionPackage::filter("WHERE subscriptionId = 10");
+        $this->assertEquals(1, sizeof($entries));
+        $this->assertEquals($this->service->getPackage("virtual-host", "ENTERPRISE"), $entries[0]->getPackage());
+
+
 
     }
 
