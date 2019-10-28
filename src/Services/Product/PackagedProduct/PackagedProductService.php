@@ -3,9 +3,7 @@
 
 namespace Kinicart\Services\Product\PackagedProduct;
 
-use Kinicart\Objects\Product\PackagedProduct\Feature;
 use Kinicart\Objects\Product\PackagedProduct\Package;
-use Kinicart\Objects\Product\PackagedProduct\PackagedProduct;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductFeature;
 use Kinicart\Services\Product\ProductService;
 use Kinikit\Core\Util\ObjectArrayUtils;

@@ -7,6 +7,7 @@ namespace Kinicart\Objects\Product\PackagedProduct;
 use Kinicart\Objects\Cart\CartItem;
 use Kinicart\Objects\Cart\SimpleCartItem;
 use Kinicart\Objects\Pricing\ProductBasePrice;
+use Kinicart\Types\Recurrence;
 
 /**
  */
@@ -32,7 +33,7 @@ class PackageCartItem extends CartItem {
      * PackageCartItem constructor.
      * @param $package
      */
-    public function __construct($package, $recurrenceType = ProductBasePrice::RECURRENCE_MONTHLY) {
+    public function __construct($package, $recurrenceType = Recurrence::MONTHLY) {
         $this->package = $package;
         $this->recurrenceType = $recurrenceType;
 

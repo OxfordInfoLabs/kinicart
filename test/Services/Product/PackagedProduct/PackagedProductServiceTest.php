@@ -2,12 +2,10 @@
 
 namespace Kinicart\Services\Product\PackagedProduct;
 
-use Kinicart\Objects\Product\PackagedProduct\Email;
 use Kinicart\Objects\Product\PackagedProduct\Feature;
 use Kinicart\Objects\Product\PackagedProduct\Package;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductFeature;
 use Kinicart\Objects\Product\PackagedProduct\PackageFeature;
-use Kinicart\Objects\Product\PackagedProduct\VirtualHost;
 use Kinicart\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;

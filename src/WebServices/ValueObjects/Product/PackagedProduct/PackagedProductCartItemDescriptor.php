@@ -2,7 +2,7 @@
 
 namespace Kinicart\WebServices\ValueObjects\Product\PackagedProduct;
 
-use Kinicart\Objects\Pricing\ProductBasePrice;
+use Kinicart\Types\Recurrence;
 
 /**
  * Descriptor object used as payload when creating a new packaged product cart item.
@@ -17,7 +17,7 @@ class PackagedProductCartItemDescriptor {
      *
      * @var string
      */
-    private $recurrenceType = ProductBasePrice::RECURRENCE_MONTHLY;
+    private $recurrenceType = Recurrence::MONTHLY;
 
     /**
      * @var string

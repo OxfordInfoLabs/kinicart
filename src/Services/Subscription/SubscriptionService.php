@@ -2,8 +2,10 @@
 
 namespace Kinicart\Services\Subscription;
 
+use Kinicart\Objects\Cart\SubscriptionCartItem;
 use Kinicart\Objects\Pricing\ProductBasePrice;
 use Kinicart\Objects\Subscription\Subscription;
+use Kinicart\Types\Recurrence;
 
 /**
  * Handle persistence and workflow functions for subscriptions.
@@ -14,19 +16,14 @@ class SubscriptionService {
 
 
     /**
-     * Create a brand new subscription for an account holder.
+     * Create a brand new subscription for an account holder using a supplied cart item
      *
-     * @param $accountId
-     * @param $description
-     * @param $productIdentifier
-     * @param $relatedObjectId
-     * @param $recurrenceType
+     * @param integer $accountId
+     * @param SubscriptionCartItem $subscriptionCartItem
      */
-    public function createNewSubscription($accountId, $description, $productIdentifier, $relatedObjectId, $recurrenceType = ProductBasePrice::RECURRENCE_MONTHLY,
-                                          $recurrence = 1, $numberOfRenewals = null) {
+    public function createNewSubscription($accountId, $subscriptionCartItem, $relatedObjectId = null) {
 
-        $subscription = new Subscription($accountId, $description, $productIdentifier, $relatedObjectId, $recurrenceType,
-            $recurrence, $numberOfRenewals);
+        $subscription = new Subscription($accountId, $subscriptionCartItem, $relatedObjectId);
 
         $subscription->save();
 

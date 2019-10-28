@@ -8,6 +8,7 @@ use Kinicart\Objects\Cart\SimpleCartItem;
 use Kinicart\Objects\Pricing\ProductBasePrice;
 use Kinicart\Services\Product\PackagedProduct\PackagedProductService;
 use Kinicart\TestBase;
+use Kinicart\Types\Recurrence;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Core\Logging\Logger;
 
@@ -69,13 +70,13 @@ class PackageCartItemTest extends TestBase {
         $cartItem = new PackageCartItem($package);
 
         $unitPrice = $cartItem->getUnitPrice("GBP", 1);
-        $this->assertEquals($package->getTierPrice(1, ProductBasePrice::RECURRENCE_MONTHLY, "GBP"), $unitPrice);
+        $this->assertEquals($package->getTierPrice(1, Recurrence::MONTHLY, "GBP"), $unitPrice);
 
 
-        $cartItem = new PackageCartItem($package, ProductBasePrice::RECURRENCE_ANNUAL);
+        $cartItem = new PackageCartItem($package, Recurrence::ANNUAL);
 
         $unitPrice = $cartItem->getUnitPrice("USD", 2);
-        $this->assertEquals($package->getTierPrice(2, ProductBasePrice::RECURRENCE_ANNUAL, "USD"), $unitPrice);
+        $this->assertEquals($package->getTierPrice(2, Recurrence::ANNUAL, "USD"), $unitPrice);
 
     }
 

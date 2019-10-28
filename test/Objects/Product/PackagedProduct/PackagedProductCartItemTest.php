@@ -10,6 +10,7 @@ use Kinicart\Exception\Product\PackagedProduct\NoSuchProductPlanException;
 use Kinicart\Objects\Pricing\ProductBasePrice;
 use Kinicart\Services\Product\PackagedProduct\PackagedProductService;
 use Kinicart\TestBase;
+use Kinicart\Types\Recurrence;
 use Kinikit\Core\DependencyInjection\Container;
 
 
@@ -217,9 +218,9 @@ class PackagedProductCartItemTest extends TestBase {
         $unitPrice = $cartItem->getUnitPrice("GBP", 1);
 
         // Now grab the prices for each package
-        $packagePrice = $this->service->getPackage("virtual-host", "BUDGET")->getTierPrice(1, ProductBasePrice::RECURRENCE_MONTHLY, "GBP") +
-            $this->service->getPackage("virtual-host", "BUDGET_5GB")->getTierPrice(1, ProductBasePrice::RECURRENCE_MONTHLY, "GBP") +
-            $this->service->getPackage("virtual-host", "ACCOUNT_MANAGER")->getTierPrice(1, ProductBasePrice::RECURRENCE_MONTHLY, "GBP");
+        $packagePrice = $this->service->getPackage("virtual-host", "BUDGET")->getTierPrice(1, Recurrence::MONTHLY, "GBP") +
+            $this->service->getPackage("virtual-host", "BUDGET_5GB")->getTierPrice(1, Recurrence::MONTHLY, "GBP") +
+            $this->service->getPackage("virtual-host", "ACCOUNT_MANAGER")->getTierPrice(1, Recurrence::MONTHLY, "GBP");
 
         $this->assertEquals($packagePrice, $unitPrice);
 

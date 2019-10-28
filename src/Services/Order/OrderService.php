@@ -8,21 +8,28 @@ use Kiniauth\Objects\Account\Contact;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Account\AccountData;
 use Kinicart\Objects\Cart\Cart;
+use Kinicart\Objects\Cart\ProductCartItem;
 use Kinicart\Objects\Order\Order;
 use Kinicart\Objects\Payment\PaymentMethod;
 use Kinicart\Services\Cart\SessionCart;
+use Kinicart\Services\Product\ProductService;
 use Kinikit\Core\Logging\Logger;
 
 class OrderService {
+
+    // Product service
+    private $productService;
 
     private $sessionCart;
 
     /**
      * OrderService constructor.
      * @param SessionCart $sessionCart
+     * @param ProductService $productService
      */
-    public function __construct($sessionCart) {
+    public function __construct($sessionCart, $productService) {
         $this->sessionCart = $sessionCart;
+        $this->productService = $productService;
     }
 
 
@@ -51,7 +58,9 @@ class OrderService {
 
         // Process each cart item.
         foreach ($cart->getItems() as $cartItem) {
-            $cartItem->processAll();
+            if ($cartItem instanceof ProductCartItem) {
+                $this->productService->processCartItem($contact->getAccountId(), $cartItem);
+            }
         }
 
         $order = new Order($contact, $cart, $paymentData, $account->getAccountData()->getCurrencyCode());

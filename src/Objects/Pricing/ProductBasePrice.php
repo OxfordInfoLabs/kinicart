@@ -6,6 +6,7 @@ namespace Kinicart\Objects\Pricing;
 use Kinicart\Exception\Pricing\InvalidCurrencyException;
 use Kinicart\Exception\Pricing\InvalidTierException;
 use Kinicart\Services\Pricing\PricingService;
+use Kinicart\Types\Recurrence;
 use Kinikit\Core\DependencyInjection\Container;
 
 /**
@@ -43,7 +44,7 @@ class ProductBasePrice {
      * @var string
      * @required
      */
-    private $recurrenceType = self::RECURRENCE_ONE_OFF;
+    private $recurrenceType = Recurrence::ONE_OFF;
 
 
     /**
@@ -84,10 +85,7 @@ class ProductBasePrice {
     private $tierPrices;
 
 
-    // Recurrence types for this class.
-    const RECURRENCE_ONE_OFF = "ONE_OFF";
-    const RECURRENCE_MONTHLY = "MONTHLY";
-    const RECURRENCE_ANNUAL = "ANNUAL";
+
 
     /**
      * @return int

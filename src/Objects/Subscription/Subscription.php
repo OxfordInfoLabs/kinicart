@@ -3,7 +3,9 @@
 namespace Kinicart\Objects\Subscription;
 
 use DateTime;
+use Kinicart\Objects\Cart\SubscriptionCartItem;
 use Kinicart\Objects\Pricing\ProductBasePrice;
+use Kinicart\Types\Recurrence;
 use Kinikit\Persistence\ORM\ActiveRecord;
 
 /**
@@ -87,6 +89,37 @@ class Subscription extends ActiveRecord {
 
 
     /**
+     * The last payment amount for this subscription ex taxes (used when calculating adjustments)
+     *
+     * @var float
+     */
+    private $lastPaymentAmount;
+
+
+    /**
+     * The currency in which the last payment was made for this subscription
+     *
+     * @var string
+     */
+    private $lastPaymentCurrency;
+
+
+    /**
+     * Status - one of the constants below.
+     *
+     * @var string
+     */
+    private $status;
+
+
+    /**
+     * Boolean indicating whether to renew or not at the next renewal date - otherwise it will be cancelled.
+     *
+     * @var boolean
+     */
+    private $renew = true;
+
+    /**
      * The number of renewals (for fixed term subscriptions).   Set to null
      * for ongoing subs.
      *
@@ -95,35 +128,40 @@ class Subscription extends ActiveRecord {
     private $numberOfRenewals;
 
 
+    // Status constants
+    const STATUS_ACTIVE = "ACTIVE";
+    const STATUS_SUSPENDED = "SUSPENDED";
+    const STATUS_CANCELLED = "CANCELLED";
+    const STATUS_COMPLETED = "COMPLETED";
+
+
     /**
-     * Construct with required fields
-     *
      * Subscription constructor.
-     * @param $accountId
-     * @param $description
-     * @param $productIdentifier
-     * @param $relatedObjectId
-     * @param string $recurrenceType
-     * @param int $recurrence
-     * @param null $numberOfRenewals
+     *
+     * @param integer $accountId
+     * @param SubscriptionCartItem $cartItem
+     *
+     * @throws \Exception
      */
-    public function __construct($accountId, $description, $productIdentifier, $relatedObjectId, $recurrenceType = ProductBasePrice::RECURRENCE_MONTHLY,
-                                $recurrence = 1, $numberOfRenewals = null) {
+    public function __construct($accountId, $cartItem, $relatedObjectId) {
 
         $this->accountId = $accountId;
-        $this->description = $description;
-        $this->productIdentifier = $productIdentifier;
         $this->relatedObjectId = $relatedObjectId;
-        $this->recurrenceType = $recurrenceType;
-        $this->recurrence = $recurrence;
-        $this->numberOfRenewals = $numberOfRenewals;
 
-        $this->startDate = new DateTime();
+        if ($cartItem) {
+            $this->description = $cartItem->getTitle();
+            $this->productIdentifier = $cartItem->getProductIdentifier();
+            $this->recurrenceType = $cartItem->getRecurrenceType();
+            $this->recurrence = $cartItem->getRecurrence();
 
-        // Add the correct period to the dates
-        $renewalDate = new DateTime();
-        $renewalDate->add(new \DateInterval("P" . $recurrence . ($recurrenceType == ProductBasePrice::RECURRENCE_MONTHLY ? "M" : "Y")));
-        $this->nextRenewalDate = $renewalDate;
+            $this->startDate = new DateTime();
+
+            // Add the correct period to the dates
+            $renewalDate = new DateTime();
+            $renewalDate->add(new \DateInterval("P" . $this->recurrence . ($this->recurrenceType == Recurrence::MONTHLY ? "M" : "Y")));
+            $this->nextRenewalDate = $renewalDate;
+
+        }
 
     }
 
@@ -266,6 +304,62 @@ class Subscription extends ActiveRecord {
      */
     public function setNumberOfRenewals($numberOfRenewals) {
         $this->numberOfRenewals = $numberOfRenewals;
+    }
+
+    /**
+     * @return float
+     */
+    public function getLastPaymentAmount() {
+        return $this->lastPaymentAmount;
+    }
+
+    /**
+     * @param float $lastPaymentAmount
+     */
+    public function setLastPaymentAmount($lastPaymentAmount) {
+        $this->lastPaymentAmount = $lastPaymentAmount;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastPaymentCurrency() {
+        return $this->lastPaymentCurrency;
+    }
+
+    /**
+     * @param string $lastPaymentCurrency
+     */
+    public function setLastPaymentCurrency($lastPaymentCurrency) {
+        $this->lastPaymentCurrency = $lastPaymentCurrency;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus() {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus($status) {
+        $this->status = $status;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRenew() {
+        return $this->renew;
+    }
+
+    /**
+     * @param bool $renew
+     */
+    public function setRenew($renew) {
+        $this->renew = $renew;
     }
 
 

@@ -3,7 +3,7 @@
 
 namespace Kinicart\Services\Product;
 
-use Kinicart\Objects\Product\Product;
+use Kinicart\Objects\Cart\ProductCartItem;
 use Kinikit\Core\Configuration\ConfigFile;
 use Kinikit\Core\DependencyInjection\Container;
 
@@ -34,6 +34,18 @@ class ProductService {
     }
 
 
+    /**
+     * Process a product cart item - delegate to the product implementation
+     *
+     * @param $accountId
+     * @param ProductCartItem $cartItem
+     */
+    public function processProductCartItem($accountId, $cartItem) {
+        $product = $this->getProduct($cartItem->getProductIdentifier());
+        $product->processCartItem($accountId, $cartItem);
+    }
+
+
     // Load product classes if required
     private function loadProductClasses() {
         if (!$this->productClasses) {
@@ -41,5 +53,6 @@ class ProductService {
             $this->productClasses = $config->getAllParameters();
         }
     }
+
 
 }

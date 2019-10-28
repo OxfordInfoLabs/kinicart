@@ -2,8 +2,9 @@
 
 namespace Kinicart\Services\Product;
 
-use Kinicart\Objects\Product\PackagedProduct\Email;
-use Kinicart\Objects\Product\PackagedProduct\VirtualHost;
+
+use Kinicart\Services\Product\PackagedProduct\Email;
+use Kinicart\Services\Product\PackagedProduct\VirtualHost;
 use Kinicart\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
 

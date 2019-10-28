@@ -8,10 +8,11 @@ use Kinicart\Exception\Product\PackagedProduct\CartItemAddOnDoesNotExistExceptio
 use Kinicart\Exception\Product\PackagedProduct\InvalidCartAddOnException;
 use Kinicart\Exception\Product\PackagedProduct\NoSuchProductPlanException;
 use Kinicart\Objects\Cart\CartItem;
+use Kinicart\Objects\Cart\SubscriptionCartItem;
 use Kinicart\Objects\Pricing\ProductBasePrice;
-use Kinicart\Objects\Subscription\SubscriptionCartItem;
 use Kinicart\Services\Product\PackagedProduct\PackagedProductService;
 use Kinicart\Services\Product\ProductService;
+use Kinicart\Types\Recurrence;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
 
@@ -56,7 +57,7 @@ class PackagedProductCartItem extends SubscriptionCartItem {
      * @param Package[] $addOnIdentifiers
      */
     public function __construct($productIdentifier, $planIdentifier = null, $addOnIdentifiers = [],
-                                $recurrenceType = ProductBasePrice::RECURRENCE_MONTHLY) {
+                                $recurrenceType = Recurrence::MONTHLY) {
 
         // Construct the parent subscription cart item with required logic.
         parent::__construct($productIdentifier, $recurrenceType);
