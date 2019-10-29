@@ -23,10 +23,14 @@ class PackageSummary {
 
 
     /**
-     * @var Feature[]
+     * @var PackageFeatureSummary[]
      */
-    private $features;
+    private $packageFeatures;
 
+    /**
+     * @var PackageFeatureSummary[]
+     */
+    private $excessFeatures;
 
     /**
      * @var integer
@@ -75,10 +79,18 @@ class PackageSummary {
         $this->title = $package->getTitle();
         $this->description = $package->getDescription();
 
-        $this->features = [];
+        $this->packageFeatures = [];
+        $this->excessFeatures = [];
         foreach ($package->getFeatures() as $feature) {
-            $feature = $feature->getProductFeature() ? $feature->getProductFeature()->getFeature() : new Feature(null, $feature->getTitle(), $feature->getDescription());
-            $this->features[] = $feature;
+            if ($productFeature = $feature->getProductFeature()) {
+                if ($productFeature->getFeature()->getType() === Feature::TYPE_PACKAGE) {
+                    $this->packageFeatures[] = new PackageFeatureSummary($feature);
+                } else if ($productFeature->getFeature()->getType() === Feature::TYPE_EXCESS) {
+                    $this->excessFeatures[] = new PackageFeatureSummary($feature);
+                }
+            } else {
+                $this->packageFeatures[] = new PackageFeatureSummary($feature);
+            }
         }
 
         $this->upgradeOrder = $package->getUpgradeOrder();
@@ -119,11 +131,20 @@ class PackageSummary {
     }
 
     /**
-     * @return Feature[]
+     * @return PackageFeatureSummary[]
      */
-    public function getFeatures() {
-        return $this->features;
+    public function getPackageFeatures() {
+        return $this->packageFeatures;
     }
+
+    /**
+     * @return PackageFeatureSummary[]
+     */
+    public function getExcessFeatures() {
+        return $this->excessFeatures;
+    }
+
+
 
     /**
      * @return int
