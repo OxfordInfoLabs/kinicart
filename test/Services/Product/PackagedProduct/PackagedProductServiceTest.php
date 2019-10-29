@@ -9,6 +9,7 @@ use Kinicart\Objects\Product\PackagedProduct\PackagedProductFeature;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductSubscriptionPackage;
 use Kinicart\Objects\Product\PackagedProduct\PackageFeature;
 use Kinicart\TestBase;
+use Kinicart\ValueObjects\Product\PackagedProduct\PackagedProductCartItemDescriptor;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
 use Kinikit\Persistence\ORM\ORM;
@@ -248,7 +249,7 @@ class PackagedProductServiceTest extends TestBase {
 
     public function testCanSaveSubscriptionPackagesUsingSubscriptionIdAndPackagedProductCartItem() {
 
-        $cartItem = new PackagedProductCartItem("virtual-host", "BUDGET");
+        $cartItem = new PackagedProductCartItem("virtual-host", new PackagedProductCartItemDescriptor("BUDGET"));
 
         $this->service->saveSubscriptionPackages(10, $cartItem);
 
@@ -258,7 +259,7 @@ class PackagedProductServiceTest extends TestBase {
         $this->assertEquals($this->service->getPackage("virtual-host", "BUDGET"), $entries[0]->getPackage());
 
 
-        $cartItem = new PackagedProductCartItem("virtual-host", "BUDGET", ["BUDGET_5GB"]);
+        $cartItem = new PackagedProductCartItem("virtual-host", new PackagedProductCartItemDescriptor("BUDGET", ["BUDGET_5GB"]));
 
         $this->service->saveSubscriptionPackages(10, $cartItem);
 
@@ -268,7 +269,7 @@ class PackagedProductServiceTest extends TestBase {
         $this->assertEquals($this->service->getPackage("virtual-host", "BUDGET_5GB"), $entries[1]->getPackage());
 
 
-        $cartItem = new PackagedProductCartItem("virtual-host", "ENTERPRISE");
+        $cartItem = new PackagedProductCartItem("virtual-host", new PackagedProductCartItemDescriptor("ENTERPRISE"));
 
         $this->service->saveSubscriptionPackages(10, $cartItem);
 

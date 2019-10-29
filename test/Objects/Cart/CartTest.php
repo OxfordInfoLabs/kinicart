@@ -8,6 +8,7 @@ use Kinicart\Objects\Product\PackagedProduct\PackageCartItem;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductCartItem;
 use Kinicart\Services\Account\SessionAccountProvider;
 use Kinicart\TestBase;
+use Kinicart\ValueObjects\Product\PackagedProduct\PackagedProductCartItemDescriptor;
 use Kinikit\Core\DependencyInjection\Container;
 
 include_once __DIR__ . "/../../autoloader.php";
@@ -45,8 +46,8 @@ class CartTest extends TestBase {
         $cart = new Cart($this->sessionAccountProvider);
 
 
-        $item1 = new PackagedProductCartItem("virtual-host", "BUDGET", ["BUDGET_5GB"]);
-        $item2 = new PackagedProductCartItem("virtual-host", "SMALL_BUSINESS", ["SMALL_BUSINESS_10GB"]);
+        $item1 = new PackagedProductCartItem("virtual-host", new PackagedProductCartItemDescriptor("BUDGET", ["BUDGET_5GB"]));
+        $item2 = new PackagedProductCartItem("virtual-host", new PackagedProductCartItemDescriptor("SMALL_BUSINESS", ["SMALL_BUSINESS_10GB"]));
 
         $cart->addItem($item1);
         $cart->addItem($item2);

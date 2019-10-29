@@ -13,6 +13,7 @@ use Kinicart\Objects\Pricing\ProductBasePrice;
 use Kinicart\Services\Product\PackagedProduct\PackagedProductService;
 use Kinicart\Services\Product\ProductService;
 use Kinicart\Types\Recurrence;
+use Kinicart\ValueObjects\Product\PackagedProduct\PackagedProductCartItemDescriptor;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
 
@@ -53,14 +54,16 @@ class PackagedProductCartItem extends SubscriptionCartItem {
     /**
      * PackagedProductCartItem constructor.
      *
-     * @param Package $planIdentifier
-     * @param Package[] $addOnIdentifiers
+     * @param string $productIdentifier
+     * @param PackagedProductCartItemDescriptor $cartItemDescriptor
+     *
+     * @throws InvalidCartAddOnException
+     * @throws NoSuchProductPlanException
      */
-    public function __construct($productIdentifier, $planIdentifier = null, $addOnIdentifiers = [],
-                                $recurrenceType = Recurrence::MONTHLY) {
+    public function __construct($productIdentifier, $cartItemDescriptor = null) {
 
         // Construct the parent subscription cart item with required logic.
-        parent::__construct($productIdentifier, $recurrenceType);
+        parent::__construct($productIdentifier, $cartItemDescriptor ? $cartItemDescriptor->getRecurrenceType() : Recurrence::MONTHLY);
 
         /**
          * Lookup product and store title and description for later use.
@@ -72,12 +75,15 @@ class PackagedProductCartItem extends SubscriptionCartItem {
         $this->title = $product->getTitle();
         $this->description = $product->getDescription();
 
-        if ($planIdentifier)
-            $this->setPlan($planIdentifier);
+        if ($cartItemDescriptor) {
 
-        if ($addOnIdentifiers) {
-            foreach ($addOnIdentifiers as $addOn) {
-                $this->addAddOn($addOn);
+            if ($cartItemDescriptor->getPlanIdentifier())
+                $this->setPlan($cartItemDescriptor->getPlanIdentifier());
+
+            if ($cartItemDescriptor->getAddOnIdentifiers()) {
+                foreach ($cartItemDescriptor->getAddOnIdentifiers() as $addOn) {
+                    $this->addAddOn($addOn);
+                }
             }
         }
     }

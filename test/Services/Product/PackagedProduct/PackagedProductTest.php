@@ -8,6 +8,7 @@ use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductCartItem;
 use Kinicart\Services\Subscription\SubscriptionService;
 use Kinicart\TestBase;
+use Kinicart\ValueObjects\Product\PackagedProduct\PackagedProductCartItemDescriptor;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Core\Testing\MockObject;
 use Kinikit\Core\Testing\MockObjectProvider;
@@ -47,7 +48,7 @@ class PackagedProductTest extends TestBase {
 
     public function testSubscriptionPackageEntriesAreSavedOnProcessCartItem() {
 
-        $cartItem = new PackagedProductCartItem("virtual-host", "ENTERPRISE");
+        $cartItem = new PackagedProductCartItem("virtual-host", new PackagedProductCartItemDescriptor("ENTERPRISE"));
         $account = new Account();
 
         $this->subscriptionService->returnValue("createNewSubscription", 25);

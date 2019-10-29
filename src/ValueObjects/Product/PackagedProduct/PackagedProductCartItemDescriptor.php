@@ -30,6 +30,20 @@ class PackagedProductCartItemDescriptor {
     private $addOnIdentifiers = [];
 
     /**
+     * PackagedProductCartItemDescriptor constructor.
+     *
+     * @param string $recurrenceType
+     * @param string $planIdentifier
+     * @param string[] $addOnIdentifiers
+     */
+    public function __construct($planIdentifier, $addOnIdentifiers = [], $recurrenceType = Recurrence::MONTHLY) {
+        $this->recurrenceType = $recurrenceType;
+        $this->planIdentifier = $planIdentifier;
+        $this->addOnIdentifiers = $addOnIdentifiers;
+    }
+
+
+    /**
      * @return string
      */
     public function getRecurrenceType() {
