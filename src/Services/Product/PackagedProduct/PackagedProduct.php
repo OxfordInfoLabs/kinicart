@@ -5,7 +5,9 @@ namespace Kinicart\Services\Product\PackagedProduct;
 
 use Kinicart\Objects\Cart\SubscriptionCartItem;
 use Kinicart\Objects\Product\PackagedProduct\Feature;
+use Kinicart\Services\Product\ProductService;
 use Kinicart\Services\Product\SubscriptionProduct;
+use Kinicart\Services\Subscription\SubscriptionService;
 
 /**
  * Base class for a product, should be extended to make concrete application products.
@@ -24,11 +26,12 @@ abstract class PackagedProduct extends SubscriptionProduct {
      * Also inject the packaged product service.
      *
      * PackagedProduct constructor.
-     * @param $subscriptionService
-     * @param $packagedProductService
+     * @param ProductService $productService
+     * @param SubscriptionService $subscriptionService
+     * @param PackagedProductService $packagedProductService
      */
-    public function __construct($subscriptionService, $packagedProductService) {
-        parent::__construct($subscriptionService);
+    public function __construct($productService, $subscriptionService, $packagedProductService) {
+        parent::__construct($productService, $subscriptionService);
         $this->packagedProductService = $packagedProductService;
     }
 

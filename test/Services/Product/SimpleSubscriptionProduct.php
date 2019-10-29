@@ -28,10 +28,11 @@ class SimpleSubscriptionProduct extends SubscriptionProduct {
     /**
      * Activate a sub and return a new related object id.
      *
+     * @param $account
      * @param \Kinicart\Objects\Cart\SubscriptionCartItem $cartItem
      * @return int|void
      */
-    public function subscriptionActivation($cartItem) {
+    public function subscriptionActivation($account, $cartItem) {
 
         return 100;
 

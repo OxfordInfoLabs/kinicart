@@ -6,6 +6,7 @@ namespace Kinicart\Services\Product\PackagedProduct;
 
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductCartItem;
+use Kinicart\Services\Product\ProductService;
 use Kinicart\Services\Subscription\SubscriptionService;
 use Kinicart\TestBase;
 use Kinicart\ValueObjects\Product\PackagedProduct\PackagedProductCartItemDescriptor;
@@ -15,6 +16,11 @@ use Kinikit\Core\Testing\MockObjectProvider;
 
 class PackagedProductTest extends TestBase {
 
+
+    /**
+     * @var MockObject
+     */
+    private $productService;
 
     /**
      * @var MockObject
@@ -41,8 +47,9 @@ class PackagedProductTest extends TestBase {
 
         $this->subscriptionService = $mockObjectProvider->getMockInstance(SubscriptionService::class);
         $this->packagedProductService = $mockObjectProvider->getMockInstance(PackagedProductService::class);
+        $this->productService = $mockObjectProvider->getMockInstance(ProductService::class);
 
-        $this->packagedProduct = new VirtualHost($this->subscriptionService, $this->packagedProductService);
+        $this->packagedProduct = new VirtualHost($this->productService, $this->subscriptionService, $this->packagedProductService);
     }
 
 

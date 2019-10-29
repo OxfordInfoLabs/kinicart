@@ -24,7 +24,8 @@ abstract class SubscriptionProduct extends Product {
      *
      * @param SubscriptionService $subscriptionService
      */
-    public function __construct($subscriptionService) {
+    public function __construct($productService, $subscriptionService) {
+        parent::__construct($productService);
         $this->subscriptionService = $subscriptionService;
     }
 
@@ -41,7 +42,7 @@ abstract class SubscriptionProduct extends Product {
 
         // If a brand new subscription, call activation and then create a new sub
         if ($cartItem->getOperation() == SubscriptionCartItem::OPERATION_NEW) {
-            $relatedObjectId = $this->subscriptionActivation($cartItem);
+            $relatedObjectId = $this->subscriptionActivation($account, $cartItem);
             return $this->subscriptionService->createNewSubscription($account, $cartItem, $relatedObjectId);
         }
 
@@ -52,10 +53,11 @@ abstract class SubscriptionProduct extends Product {
      * Product specific activation logic available when a new subscription is about to be activated.
      * This typically returns the id of a related object for this product type to be associated with the subscription.
      *
+     * @param Account $account
      * @param SubscriptionCartItem $cartItem
-     * @return integer
+     * @return void
      */
-    public function subscriptionActivation($cartItem) {
+    public function subscriptionActivation($account, $cartItem) {
 
     }
 
