@@ -6,6 +6,6 @@ namespace Kinicart\Controllers\Account;
 
 class Order {
 
-    use \Kinicart\WebServices\ControllerTraits\Account\Order;
+    use \Kinicart\Traits\Controller\Account\Order;
 
 }

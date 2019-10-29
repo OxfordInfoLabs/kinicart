@@ -6,6 +6,6 @@ namespace Kinicart\Controllers\Account;
 
 class Stripe {
 
-    use \Kinicart\WebServices\ControllerTraits\Account\Stripe;
+    use \Kinicart\Traits\Controller\Account\Stripe;
 
 }

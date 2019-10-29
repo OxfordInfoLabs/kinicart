@@ -93,12 +93,15 @@ class ProductService {
 
     /**
      * Process all deferred product actions - call the process
+     *
+     * @return array
      */
     public function processAllDeferredProductActions() {
 
         $pendingActions = $this->pendingActionService->getAllPendingActionsForType("PRODUCT_DEFERRED");
 
         // Loop through and call the product method.
+        $results = ["processed" => sizeof($pendingActions), "succeeded" => [], "retry" => [], "failed" => []];
         foreach ($pendingActions as $action) {
 
             $product = $this->getProduct($action->getObjectType());
@@ -107,14 +110,19 @@ class ProductService {
                     $success = $product->processDeferredAction($action->getObjectId(), $action->getData());
                     if ($success) {
                         $this->pendingActionService->removePendingAction("PRODUCT_DEFERRED", $action->getIdentifier());
+                        $results["succeeded"][] = $action->getIdentifier();
+                    } else {
+                        $results["retry"][] = $action->getIdentifier();
                     }
                 } catch (\Exception $e) {
-                    // Continue for now.
+                    $results["failed"][$action->getIdentifier()] = $e->getMessage();
                 }
             } else {
                 $this->pendingActionService->removePendingAction("PRODUCT_DEFERRED", $action->getIdentifier());
             }
         }
+
+        return $results;
 
     }
 
