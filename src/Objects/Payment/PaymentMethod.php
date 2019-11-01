@@ -41,7 +41,7 @@ class PaymentMethod extends ActiveRecord {
     private $type;
 
     /**
-     * @var array
+     * @var string[]
      * @json
      * @sqlType LONGTEXT
      */
