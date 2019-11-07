@@ -4,6 +4,7 @@
 namespace Kinicart\Test\Services\Order;
 
 
+use Kiniauth\Services\Communication\Email\EmailService;
 use Kiniauth\Services\Security\AuthenticationService;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Cart\CartItem;
@@ -47,7 +48,10 @@ class OrderServiceTest extends TestBase {
      * @var MockObject
      */
     private $productService;
-
+    /**
+     * @var MockObject
+     */
+    private $emailService;
 
     public function setUp(): void {
         parent::setUp();
@@ -56,8 +60,9 @@ class OrderServiceTest extends TestBase {
         $this->mockObjectProvider = Container::instance()->get(MockObjectProvider::class);
         $this->authenticationService = Container::instance()->get(AuthenticationService::class);
         $this->productService = $this->mockObjectProvider->getMockInstance(ProductService::class);
+        $this->emailService = $this->mockObjectProvider->getMockInstance(EmailService::class);
 
-        $this->service = new OrderService($this->sessionCart, $this->productService);
+        $this->service = new OrderService($this->sessionCart, $this->productService, $this->emailService);
 
 
     }
@@ -90,8 +95,8 @@ class OrderServiceTest extends TestBase {
 
         $account = Account::fetch(1);
 
-        $this->assertTrue($this->productService->methodWasCalled("processCartItem", [$account, $cartItem1]));
-        $this->assertTrue($this->productService->methodWasCalled("processCartItem", [$account, $cartItem2]));
+        $this->assertTrue($this->productService->methodWasCalled("processProductCartItem", [$account, $cartItem1]));
+        $this->assertTrue($this->productService->methodWasCalled("processProductCartItem", [$account, $cartItem2]));
 
 //        $this->assertTrue(stripos($order->getPaymentData()));
 

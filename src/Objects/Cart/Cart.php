@@ -113,4 +113,11 @@ class Cart {
 
     }
 
+    /**
+     * @return AccountProvider
+     */
+    public function getAccountProvider() {
+        return $this->accountProvider;
+    }
+
 }

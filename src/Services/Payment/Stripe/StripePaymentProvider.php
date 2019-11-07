@@ -77,7 +77,6 @@ class StripePaymentProvider implements PaymentProvider {
             "confirm" => !!$confirm,
             "capture_method" => $captureMethod
         ];
-        Logger::log($params);
         $paymentIntent = PaymentIntent::create($params);
         return $paymentIntent->toArray();
     }
@@ -117,6 +116,7 @@ class StripePaymentProvider implements PaymentProvider {
             );
 
             $paymentMethod->save();
+            return $paymentMethod;
         } else {
             throw new Exception("Please supply a payment method string created from the client");
         }

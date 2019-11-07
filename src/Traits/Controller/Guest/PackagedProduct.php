@@ -93,8 +93,7 @@ trait PackagedProduct {
      * @param PackagedProductCartItemDescriptor $packagedProductCartItemDescriptor
      */
     public function addProductToCart($productIdentifier, $packagedProductCartItemDescriptor) {
-        $cartItem = new PackagedProductCartItem($productIdentifier, $packagedProductCartItemDescriptor->getPlanIdentifier(),
-            $packagedProductCartItemDescriptor->getAddOnIdentifiers(), $packagedProductCartItemDescriptor->getRecurrenceType());
+        $cartItem = new PackagedProductCartItem($productIdentifier, $packagedProductCartItemDescriptor);
         $this->sessionCart->addItem($cartItem);
     }
 

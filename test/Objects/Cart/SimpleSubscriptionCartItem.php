@@ -35,4 +35,8 @@ class SimpleSubscriptionCartItem extends SubscriptionCartItem {
     public function getUnitPrice($currency, $tierId = null) {
         return 10;
     }
+
+    public function getType() {
+        return "simplesubscription";
+    }
 }

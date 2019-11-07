@@ -298,12 +298,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "6624f73895103de1b3f558dbb6d6948ac889345b"
+                "reference": "1fb37c6d6418561ddd69d263fad3faafaac39ba9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/6624f73895103de1b3f558dbb6d6948ac889345b",
-                "reference": "6624f73895103de1b3f558dbb6d6948ac889345b",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/1fb37c6d6418561ddd69d263fad3faafaac39ba9",
+                "reference": "1fb37c6d6418561ddd69d263fad3faafaac39ba9",
                 "shasum": ""
             },
             "require": {
@@ -374,7 +374,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2019-10-13T14:34:22+00:00"
+            "time": "2019-10-30T13:22:49+00:00"
         },
         {
             "name": "mustache/mustache",
@@ -428,12 +428,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/OxfordInfoLabs/kiniauth.git",
-                "reference": "b03cb95576d397e6a65b435e04189e6c983f9592"
+                "reference": "06a27e12e045a037b5a00cd55c06d0117215a34d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OxfordInfoLabs/kiniauth/zipball/b03cb95576d397e6a65b435e04189e6c983f9592",
-                "reference": "b03cb95576d397e6a65b435e04189e6c983f9592",
+                "url": "https://api.github.com/repos/OxfordInfoLabs/kiniauth/zipball/06a27e12e045a037b5a00cd55c06d0117215a34d",
+                "reference": "06a27e12e045a037b5a00cd55c06d0117215a34d",
                 "shasum": ""
             },
             "require": {
@@ -458,7 +458,7 @@
                 "cart",
                 "php"
             ],
-            "time": "2019-10-15T13:23:49+00:00"
+            "time": "2019-11-01T13:03:20+00:00"
         },
         {
             "name": "oxil/kinikit-core",
@@ -466,12 +466,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/OxfordInfoLabs/kinikit-core.git",
-                "reference": "3f18c4cf5abd045bd737b4e77406aae8a50c2766"
+                "reference": "7e53bd9d79c1c4f4c25cd7befa041f511f675440"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OxfordInfoLabs/kinikit-core/zipball/3f18c4cf5abd045bd737b4e77406aae8a50c2766",
-                "reference": "3f18c4cf5abd045bd737b4e77406aae8a50c2766",
+                "url": "https://api.github.com/repos/OxfordInfoLabs/kinikit-core/zipball/7e53bd9d79c1c4f4c25cd7befa041f511f675440",
+                "reference": "7e53bd9d79c1c4f4c25cd7befa041f511f675440",
                 "shasum": ""
             },
             "require": {
@@ -501,7 +501,7 @@
                 "php",
                 "webservices"
             ],
-            "time": "2019-10-15T13:23:27+00:00"
+            "time": "2019-11-01T13:03:56+00:00"
         },
         {
             "name": "oxil/kinikit-mvc",
@@ -509,12 +509,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/OxfordInfoLabs/kinikit-mvc.git",
-                "reference": "b80eb86e2cfa0e2cfea303f7c4857718e693b260"
+                "reference": "eefa41ee7ccd54d7bd50b49c9a440d88dac94366"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OxfordInfoLabs/kinikit-mvc/zipball/b80eb86e2cfa0e2cfea303f7c4857718e693b260",
-                "reference": "b80eb86e2cfa0e2cfea303f7c4857718e693b260",
+                "url": "https://api.github.com/repos/OxfordInfoLabs/kinikit-mvc/zipball/eefa41ee7ccd54d7bd50b49c9a440d88dac94366",
+                "reference": "eefa41ee7ccd54d7bd50b49c9a440d88dac94366",
                 "shasum": ""
             },
             "require": {
@@ -538,7 +538,7 @@
                 "php",
                 "webservices"
             ],
-            "time": "2019-10-10T16:26:20+00:00"
+            "time": "2019-11-01T12:33:33+00:00"
         },
         {
             "name": "oxil/kinikit-persistence",
@@ -546,12 +546,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/OxfordInfoLabs/kinikit-persistence.git",
-                "reference": "310954c0d469659d681e5388b13589ba76102aef"
+                "reference": "b066f5c63156af3afe2cf976efea8f288309c3c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OxfordInfoLabs/kinikit-persistence/zipball/310954c0d469659d681e5388b13589ba76102aef",
-                "reference": "310954c0d469659d681e5388b13589ba76102aef",
+                "url": "https://api.github.com/repos/OxfordInfoLabs/kinikit-persistence/zipball/b066f5c63156af3afe2cf976efea8f288309c3c9",
+                "reference": "b066f5c63156af3afe2cf976efea8f288309c3c9",
                 "shasum": ""
             },
             "require": {
@@ -575,7 +575,7 @@
                 "php",
                 "webservices"
             ],
-            "time": "2019-10-11T13:33:50+00:00"
+            "time": "2019-11-01T13:02:54+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -737,12 +737,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "c4421fcac1edd5a324fda73e589a5cf96e52ffd0"
+                "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/c4421fcac1edd5a324fda73e589a5cf96e52ffd0",
-                "reference": "c4421fcac1edd5a324fda73e589a5cf96e52ffd0",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/446d54b4cb6bf489fc9d75f55843658e6f25d801",
+                "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801",
                 "shasum": ""
             },
             "require": {
@@ -776,7 +776,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2018-11-21T13:42:00+00:00"
+            "time": "2019-11-01T11:05:21+00:00"
         },
         {
             "name": "psr/simple-cache",
@@ -1006,12 +1006,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "6a50ca063904a8bf657e95cd0cfa89db138dc7ac"
+                "reference": "083e64f6d31d0ac5d4aff46ec3dd63f7470655f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/6a50ca063904a8bf657e95cd0cfa89db138dc7ac",
-                "reference": "6a50ca063904a8bf657e95cd0cfa89db138dc7ac",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/083e64f6d31d0ac5d4aff46ec3dd63f7470655f3",
+                "reference": "083e64f6d31d0ac5d4aff46ec3dd63f7470655f3",
                 "shasum": ""
             },
             "require": {
@@ -1062,7 +1062,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-10-01T10:35:06+00:00"
+            "time": "2019-11-04T14:21:40+00:00"
         }
     ],
     "packages-dev": [],

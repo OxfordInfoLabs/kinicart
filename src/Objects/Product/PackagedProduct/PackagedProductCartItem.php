@@ -88,6 +88,10 @@ class PackagedProductCartItem extends SubscriptionCartItem {
         }
     }
 
+    public function getType() {
+        return "package";
+    }
+
     /**
      * Get title for this product cart item
      *
@@ -249,7 +253,4 @@ class PackagedProductCartItem extends SubscriptionCartItem {
     }
 
 
-    public function process() {
-        // TODO: Implement process() method.
-    }
 }

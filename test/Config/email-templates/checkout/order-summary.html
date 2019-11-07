@@ -1,0 +1,146 @@
+Subject: Your order
+---
+
+<table bgcolor="#eee" aria-hidden="true" cellspacing="0" cellpadding="0" border="0" align="center" width="100%">
+    <tr>
+        <td valign="top" style="padding: 0 10px;">
+            <table role="presentation" aria-hidden="true" cellspacing="0" cellpadding="0" border="0" align="center"
+                   width="750" class="container">
+                <tr>
+                    <td style="padding: 30px 0 40px; font-family: Helvetica, Arial, sans-serif; font-size: 32px;font-weight: bold; line-height: 1.2; color: #333;text-transform: uppercase;text-align: center;">
+                        Thank you for your order
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 0 0 8px; font-family: Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.3; color: #333;">
+                        Dear {{order.buyerName}},
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 0 0 8px; font-family: Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.3; color: #333;">
+                        Thank you for your order.
+                    </td>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 0 0 20px; font-family: Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.3; color: #333;">
+                        We've charged your chosen payment method {{order.total}}
+
+                        - {{order.date}}.
+                        In case you need it, your reference
+                        number is #{{order.id}}.
+                    </td>
+                </tr>
+
+            </table>
+
+        </td>
+    </tr>
+</table>
+<table role="presentation" aria-hidden="true" cellspacing="0" cellpadding="0" border="0" width="100%">
+    <tr>
+        <td style="padding: 0 10px 20px;">
+            <table role="presentation" aria-hidden="true" cellspacing="0" cellpadding="0" border="0" align="center"
+                   width="750" class="container">
+                <tr>
+                    <td style="border-bottom: 1px solid #999;padding: 30px 0 15px;font-weight: bold;text-transform: uppercase;width: 100%;font-size: 16px;">
+                        Your order details</td>
+                </tr>
+            </table>
+            <table role="presentation" aria-hidden="true" cellspacing="0" cellpadding="0" border="0" align="center"
+                   width="750" class="container">
+                <tr>
+                    <td style="padding: 20px 10px 8px; font-family: Helvetica, Arial, sans-serif; font-size: 16px;font-weight: bold; line-height: 1.5; color: #333;">
+                        Order reference: </td><td style="padding: 20px 10px 8px; font-family: Helvetica, Arial, sans-serif; font-size: 16px;line-height: 1.5; color: #333;">{{order.id}}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 0 10px 8px; font-family: Helvetica, Arial, sans-serif; font-size: 16px;font-weight: bold; line-height: 1.5; color: #333;">
+                        Order date: </td><td style="padding: 0 10px 8px; font-family: Helvetica, Arial, sans-serif; font-size: 16px;line-height: 1.5; color: #333;">
+                    {{order.date}}</td>
+                </tr>
+                <tr>
+                    <td valign="top" style="padding: 0 10px 8px; font-family: Helvetica, Arial, sans-serif; font-size: 16px;font-weight: bold; line-height: 1.5; color: #333;">Account holder: </td><td valign="top" style="padding: 0 10px 8px; font-family: Helvetica, Arial, sans-serif; font-size: 16px;line-height: 1.5; color: #333;">{{accountName}}
+                    <br>{{order.address}}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+<table role="presentation" aria-hidden="true" cellspacing="0" cellpadding="0" border="0" width="100%">
+    <tr>
+        <td style="padding: 0 10px 40px;">
+            <table role="presentation" aria-hidden="true" cellspacing="0" cellpadding="0" border="0" align="center"
+                   width="750" class="container">
+                <tr>
+                    <td style="border-top: 3px solid #ddd;border-bottom: 3px solid #ddd;padding: 1px 10px;width: 100%;">
+                        <table role="presentation" aria-hidden="true" cellspacing="0" cellpadding="0" border="0" align="center"
+                               width="100%">
+                            <tr>
+                                <td style="padding: 3px 0; font-family: Helvetica, Arial, sans-serif; font-size: 14px;line-height: 1.5; color: #333;border-right: 1px solid #ddd; width: 75%;">Items</td>
+                                <td align="right" style="padding: 3px 0; font-family: Helvetica, Arial, sans-serif; font-size: 14px;line-height: 1.5; color: #333; width: 25%;">Price</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                {{#order.orderLines}}
+                <tr>
+                    <td style="border-bottom: 1px dashed #ddd;padding: 1px 10px;width: 100%;">
+                        <table role="presentation" aria-hidden="true" cellspacing="0" cellpadding="0" border="0" align="center"
+                               width="100%">
+                            <tr>
+
+                                <td style="padding: 20px 0 20px; font-family: Helvetica, Arial, sans-serif; font-size: 16px;line-height: 1.3; color: #333;border-right: 1px solid #ddd; width: 75%;">
+
+                                    <p><b>{{title}}</b></p>
+                                    <p>{{description}}</p>
+
+                                </td>
+                                <td align="right" style="padding: 20px 0 0; font-family: Helvetica, Arial, sans-serif; font-size: 16px;line-height: 1.3; vertical-align: top; color: #333; width: 25%;">
+                                {{subtotal}}
+                                </td>
+                            </tr>
+
+                        </table>
+                    </td>
+                </tr>
+                {{/order.orderLines}}
+
+                <tr>
+                    <td style="border-top: 3px solid #ddd;border-bottom: 1px solid #ddd;padding: 20px 10px;width: 100%;">
+                        <table role="presentation" aria-hidden="true" cellspacing="0" cellpadding="0" border="0" align="center"
+                               width="100%">
+                            <tr>
+                                <td style="width: 60%"></td>
+                                <td style="padding: 3px 0; font-family: Helvetica, Arial, sans-serif; font-size: 16px;line-height: 1.5; color: #333;">
+                                    Subtotal</td>
+                                <td align="right" style="padding: 3px 0; font-family: Helvetica, Arial, sans-serif; font-size: 16px;line-height: 1.5; color: #333; ">
+                                {{order.subtotal}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td ></td>
+                                <td style="padding: 3px 0; font-family: Helvetica, Arial, sans-serif; font-size: 16px;line-height: 1.5; color: #333;">
+                                    VAT</td>
+                                <td align="right" style="padding: 3px 0; font-family: Helvetica, Arial, sans-serif; font-size: 16px;line-height: 1.5; color: #333; ">
+                                    {{order.taxes}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="padding: 3px 0; font-family: Helvetica, Arial, sans-serif; font-size: 16px;line-height: 1.5; color: #333; font-weight: bold;">
+                                    Total</td>
+                                <td align="right" style="padding: 3px 0; font-family: Helvetica, Arial, sans-serif; font-size: 16px;line-height: 1.5; color: #333; font-weight: bold;">
+                                    {{order.total}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+            </table>
+
+        </td>
+    </tr>
+</table>
+
