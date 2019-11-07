@@ -84,8 +84,7 @@ class PackageCartItem extends CartItem {
         return $subItems;
     }
 
-
-    public function process() {
-        // TODO: Implement process() method.
+    public function getType() {
+        return "package";
     }
 }

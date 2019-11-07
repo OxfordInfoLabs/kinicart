@@ -90,8 +90,8 @@ class OrderServiceTest extends TestBase {
 
         $account = Account::fetch(1);
 
-        $this->assertTrue($this->productService->methodWasCalled("processCartItem", [$account, $cartItem1]));
-        $this->assertTrue($this->productService->methodWasCalled("processCartItem", [$account, $cartItem2]));
+        $this->assertTrue($this->productService->methodWasCalled("processProductCartItem", [$account, $cartItem1]));
+        $this->assertTrue($this->productService->methodWasCalled("processProductCartItem", [$account, $cartItem2]));
 
 //        $this->assertTrue(stripos($order->getPaymentData()));
 

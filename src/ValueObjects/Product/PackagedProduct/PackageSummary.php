@@ -13,8 +13,12 @@ class PackageSummary {
     /**
      * @var string
      */
-    private $title;
+    private $identifier;
 
+    /**
+     * @var string
+     */
+    private $title;
 
     /**
      * @var string
@@ -76,6 +80,7 @@ class PackageSummary {
      * @param AccountProvider $accountProvider
      */
     public function __construct($package, $accountProvider) {
+        $this->identifier = $package->getIdentifier();
         $this->title = $package->getTitle();
         $this->description = $package->getDescription();
 
@@ -114,6 +119,13 @@ class PackageSummary {
         }
 
 
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier() {
+        return $this->identifier;
     }
 
     /**

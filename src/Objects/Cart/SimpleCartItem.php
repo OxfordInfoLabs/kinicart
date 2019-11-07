@@ -98,4 +98,7 @@ class SimpleCartItem extends CartItem {
     }
 
 
+    public function getType() {
+        return "simple";
+    }
 }

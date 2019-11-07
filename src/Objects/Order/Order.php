@@ -5,6 +5,7 @@ namespace Kinicart\Objects\Order;
 
 
 use Kiniauth\Objects\Account\Contact;
+use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Cart\Cart;
 use Kinicart\Objects\Cart\CartItem;
 use Kinikit\Persistence\ORM\ActiveRecord;
@@ -22,7 +23,6 @@ class Order extends ActiveRecord {
     const ORDER_STATUS_FAILED = 'failed';
 
     /**
-     * @primaryKey
      * @var integer
      */
     private $id;
@@ -91,36 +91,35 @@ class Order extends ActiveRecord {
      * @param Contact $contact
      * @param Cart $cart
      * @param mixed $paymentData
-     * @param mixed $currency
+     * @param Account $account
      */
-    public function __construct($contact = null, $cart = null, $paymentData = null, $currency = null) {
+    public function __construct($contact = null, $cart = null, $paymentData = null, $account = null) {
         if ($contact) {
             $this->accountId = $contact->getAccountId();
             $this->address = $contact->getHtmlAddressLinesString();
             $this->buyerName = $contact->getName();
-
         }
-        // process the cart
-        if ($cart) {
+        if ($account && $cart) {
+            $currency = $account->getAccountData()->getCurrencyCode();
             $this->orderLines = [];
             /** @var CartItem $cartItem */
             foreach ($cart->getItems() as $cartItem) {
+
                 $this->orderLines[] = [
                     "title" => $cartItem->getTitle(),
                     "description" => $cartItem->getDescription(),
                     "quantity" => $cartItem->getQuantity(),
-                    "amount" => $cartItem->getUnitPrice($currency),
+                    "amount" => $cartItem->getUnitPrice($currency, $account->getAccountData()->getTierId()),
                     "subItems" => $cartItem->getSubItems()
                 ];
             }
-
-//            $this->subtotal = $subtotal;
-            $this->taxes = 0.20;
-            $this->total = $cart->getTotal();
+            $this->currency = $currency;
+            $this->subtotal = $cart->getTotal();
+            $this->taxes = number_format(round($this->subtotal * 0.20, 2), 2, ".", "");
+            $this->total = $this->subtotal + $this->taxes;
         }
 
         $this->date = date("Y-m-d H:i:s");
-        $this->currency = $currency;
 
         $this->paymentData = $paymentData;
         $this->status = ($paymentData && isset($paymentData["reference"])) ? self::ORDER_STATUS_COMPLETED : self::ORDER_STATUS_FAILED;

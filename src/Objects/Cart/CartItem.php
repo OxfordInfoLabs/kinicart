@@ -15,6 +15,7 @@ abstract class CartItem {
      */
     private $quantity = 1;
 
+    public abstract function getType();
 
     /**
      * Get the main title for this Cart Item.

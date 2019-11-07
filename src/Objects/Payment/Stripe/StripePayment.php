@@ -13,7 +13,6 @@ use Kinikit\Core\DependencyInjection\Container;
  * Class StripePayment
  * @package Kinicart\Objects\Payment\Stripe
  *
- * @noGenerate
  */
 class StripePayment implements Payment {
 
