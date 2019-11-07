@@ -59,27 +59,4 @@ abstract class Product {
     public abstract function processCartItem($account, $cartItem);
 
 
-    /**
-     * Process a single deferred action passing the objectId and any data.  Return true from
-     * this function to record a successful run and remove the action.
-     *
-     * @param PendingAction $pendingAction
-     *
-     * @return boolean
-     */
-    public function processDeferredAction($objectId, $data) {
-
-    }
-
-
-    /**
-     * Create a product deferred action - This is a convenience function for use in e.g. processCartItem
-     * functions to create a deferred action for this product type.
-     *
-     */
-    protected function createDeferredAction($objectId, $data = []) {
-        return $this->productService->createDeferredProductAction($this->identifier, $objectId, $data);
-    }
-
-
 }
