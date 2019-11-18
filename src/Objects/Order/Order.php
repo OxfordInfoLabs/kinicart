@@ -116,7 +116,7 @@ class Order extends ActiveRecord {
             $this->currency = $currency;
             $this->subtotal = $cart->getTotal();
             $this->taxes = number_format(round($this->subtotal * 0.20, 2), 2, ".", "");
-            $this->total = $this->subtotal + $this->taxes;
+            $this->total = number_format(round($this->subtotal + $this->taxes, 2), 2, ".", "");
         }
 
         $this->date = date("Y-m-d H:i:s");

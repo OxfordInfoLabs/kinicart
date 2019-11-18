@@ -10,6 +10,8 @@ class CartSummary {
      */
     private $items = [];
 
+    private $cartSummary;
+
     private $total;
 
     private $subtotal;
@@ -24,9 +26,19 @@ class CartSummary {
      */
     public function __construct($cart) {
         $accountProvider = $cart->getAccountProvider();
+
+        $itemSummary = [];
+
         foreach ($cart->getItems() as $cartItem) {
             $this->items[] = new CartItemSummary($cartItem, $accountProvider);
+            $itemSummary[$cartItem->getTitle()][] = $cartItem;
         }
+
+        $cartSummary = [];
+        foreach ($itemSummary as $title => $cartItems) {
+            $cartSummary[] = sizeof($cartItems) . " " . $title;
+        }
+        $this->cartSummary = join("<br>", $cartSummary);
 
         $account = $accountProvider->provideAccount();
         $this->currencyString = "";
@@ -52,6 +64,13 @@ class CartSummary {
      */
     public function getItems() {
         return $this->items;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCartSummary() {
+        return $this->cartSummary;
     }
 
     /**
