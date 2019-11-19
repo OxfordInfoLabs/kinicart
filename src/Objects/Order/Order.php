@@ -115,8 +115,8 @@ class Order extends ActiveRecord {
             }
             $this->currency = $currency;
             $this->subtotal = $cart->getTotal();
-            $this->taxes = number_format(round($this->subtotal * 0.20, 2), 2, ".", "");
-            $this->total = number_format(round($this->subtotal + $this->taxes, 2), 2, ".", "");
+            $this->taxes = round($this->subtotal * 0.20, 2);
+            $this->total = round($this->subtotal + $this->taxes, 2);
         }
 
         $this->date = date("Y-m-d H:i:s");
@@ -185,7 +185,7 @@ class Order extends ActiveRecord {
      * @return float
      */
     public function getSubtotal() {
-        return $this->subtotal;
+        return number_format($this->subtotal, 2, ".", "");
     }
 
     /**
@@ -199,7 +199,7 @@ class Order extends ActiveRecord {
      * @return float
      */
     public function getTaxes() {
-        return $this->taxes;
+        return number_format($this->taxes, 2, ".", "");
     }
 
     /**
@@ -213,7 +213,7 @@ class Order extends ActiveRecord {
      * @return float
      */
     public function getTotal() {
-        return $this->total;
+        return number_format($this->total, 2, ".", "");
     }
 
     /**

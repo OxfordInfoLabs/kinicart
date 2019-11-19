@@ -24,7 +24,6 @@ class PaymentMethod extends ActiveRecord {
 
 
     /**
-     * @primaryKey
      *
      * @var integer
      */
