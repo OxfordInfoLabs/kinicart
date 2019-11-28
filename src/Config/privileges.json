@@ -1,0 +1,12 @@
+[
+  {
+    "key": "managePaymentMethods",
+    "description": "Allow access to manage account payment methods.",
+    "scope": "ACCOUNT"
+  },
+  {
+    "key": "viewOrders",
+    "description": "Allow access to view orders made on account",
+    "scope": "ACCOUNT"
+  }
+]
