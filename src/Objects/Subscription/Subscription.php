@@ -22,7 +22,7 @@ class Subscription extends ActiveRecord {
     /**
      * @var integer
      */
-    private $id;
+    protected $id;
 
 
     /**
@@ -30,14 +30,14 @@ class Subscription extends ActiveRecord {
      *
      * @var integer
      */
-    private $accountId;
+    protected $accountId;
 
     /**
      * A helpful textual description for generic listings of subs.
      *
      * @var string
      */
-    private $description;
+    protected $description;
 
 
     /**
@@ -45,7 +45,7 @@ class Subscription extends ActiveRecord {
      *
      * @var string
      */
-    private $productIdentifier;
+    protected $productIdentifier;
 
 
     /**
@@ -54,7 +54,7 @@ class Subscription extends ActiveRecord {
      *
      * @var integer
      */
-    private $relatedObjectId;
+    protected $relatedObjectId;
 
 
     /**
@@ -62,7 +62,7 @@ class Subscription extends ActiveRecord {
      *
      * @var string
      */
-    private $recurrenceType;
+    protected $recurrenceType;
 
 
     /**
@@ -70,7 +70,7 @@ class Subscription extends ActiveRecord {
      *
      * @var integer
      */
-    private $recurrence = 1;
+    protected $recurrence = 1;
 
 
     /**
@@ -78,7 +78,7 @@ class Subscription extends ActiveRecord {
      *
      * @var DateTime
      */
-    private $startDate;
+    protected $startDate;
 
 
     /**
@@ -86,7 +86,7 @@ class Subscription extends ActiveRecord {
      *
      * @var DateTime
      */
-    private $nextRenewalDate;
+    protected $nextRenewalDate;
 
 
     /**
@@ -94,7 +94,7 @@ class Subscription extends ActiveRecord {
      *
      * @var float
      */
-    private $lastPaymentAmount;
+    protected $lastPaymentAmount;
 
 
     /**
@@ -102,7 +102,7 @@ class Subscription extends ActiveRecord {
      *
      * @var string
      */
-    private $lastPaymentCurrency;
+    protected $lastPaymentCurrency;
 
 
     /**
@@ -110,7 +110,7 @@ class Subscription extends ActiveRecord {
      *
      * @var string
      */
-    private $status = self::STATUS_ACTIVE;
+    protected $status = self::STATUS_ACTIVE;
 
 
     /**
@@ -118,7 +118,7 @@ class Subscription extends ActiveRecord {
      *
      * @var boolean
      */
-    private $renew = true;
+    protected $renew = true;
 
     /**
      * The number of renewals (for fixed term subscriptions).   Set to null
@@ -126,7 +126,7 @@ class Subscription extends ActiveRecord {
      *
      * @var integer
      */
-    private $numberOfRenewals;
+    protected $numberOfRenewals;
 
 
     // Status constants
