@@ -16,6 +16,11 @@ class SimpleSubscriptionCartItem extends SubscriptionCartItem {
         return "Test Subscription";
     }
 
+
+    public function getSubtitle() {
+        // TODO: Implement getSubtitle() method.
+    }
+
     /**
      * Get the description for this Cart Item.
      *

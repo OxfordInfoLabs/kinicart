@@ -28,12 +28,7 @@ class PackagedProductCartItem extends SubscriptionCartItem {
     /**
      * @var string
      */
-    private $title;
-
-    /**
-     * @var string
-     */
-    private $description;
+    private $productTitle;
 
 
     /**
@@ -72,8 +67,7 @@ class PackagedProductCartItem extends SubscriptionCartItem {
          */
         $productService = Container::instance()->get(ProductService::class);
         $product = $productService->getProduct($productIdentifier);
-        $this->title = $product->getTitle();
-        $this->description = $product->getDescription();
+        $this->productTitle = $product->getTitle();
 
         if ($cartItemDescriptor) {
 
@@ -98,7 +92,17 @@ class PackagedProductCartItem extends SubscriptionCartItem {
      * @return string|void
      */
     public function getTitle() {
-        return $this->title;
+        return $this->productTitle;
+    }
+
+
+    /**
+     * Get subtitle
+     *
+     * @return mixed|string
+     */
+    public function getSubtitle() {
+        return $this->plan ? $this->plan->getTitle() : "";
     }
 
     /**
@@ -107,7 +111,7 @@ class PackagedProductCartItem extends SubscriptionCartItem {
      * @return string|void
      */
     public function getDescription() {
-        return $this->description;
+        return $this->plan ? $this->plan->getDescription() : "";
     }
 
     /**

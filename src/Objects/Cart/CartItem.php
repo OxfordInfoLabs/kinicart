@@ -26,6 +26,14 @@ abstract class CartItem {
 
 
     /**
+     * Get the subtitle for this cart item.
+     *
+     * @return mixed
+     */
+    public abstract function getSubtitle();
+
+
+    /**
      * Get the description for this Cart Item.
      *
      * @return string

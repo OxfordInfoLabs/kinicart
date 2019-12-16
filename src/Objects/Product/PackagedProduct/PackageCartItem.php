@@ -50,6 +50,15 @@ class PackageCartItem extends CartItem {
     }
 
     /**
+     * No subtitle required here.
+     *
+     * @return mixed|string
+     */
+    public function getSubtitle() {
+        return "";
+    }
+
+    /**
      * Get the description for this Cart Item.
      *
      * @return string

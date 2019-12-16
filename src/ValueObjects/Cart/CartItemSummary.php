@@ -11,9 +11,9 @@ class CartItemSummary {
 
     private $title;
 
-    private $description;
+    private $subtitle;
 
-    private $subDescription;
+    private $description;
 
     private $total;
 
@@ -25,18 +25,16 @@ class CartItemSummary {
     public function __construct($cartItem, $accountProvider) {
         $this->type = $cartItem->getType();
         $this->title = $cartItem->getTitle();
+        $this->subtitle = $cartItem->getSubtitle();
         $this->description = $cartItem->getDescription();
 
-        if (sizeof($cartItem->getSubItems()) > 0) {
-            $this->subDescription = $cartItem->getSubItems()[0]->getDescription();
-        }
 
         $account = $accountProvider->provideAccount();
         $total = $cartItem->getUnitPrice($account->getAccountData()->getCurrencyCode(), $account->getAccountData()->getTierId());
 
         $account = $accountProvider->provideAccount();
         $currencyString = "";
-        switch($account->getAccountData()->getCurrencyCode()) {
+        switch ($account->getAccountData()->getCurrencyCode()) {
             case "USD":
                 $currencyString = "$";
                 break;
@@ -69,15 +67,15 @@ class CartItemSummary {
     /**
      * @return string
      */
-    public function getDescription() {
-        return $this->description;
+    public function getSubtitle() {
+        return $this->subtitle;
     }
 
     /**
      * @return string
      */
-    public function getSubDescription() {
-        return $this->subDescription;
+    public function getDescription() {
+        return $this->description;
     }
 
     /**

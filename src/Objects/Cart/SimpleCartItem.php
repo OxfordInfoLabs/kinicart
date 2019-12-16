@@ -17,6 +17,14 @@ class SimpleCartItem extends CartItem {
      */
     private $title;
 
+
+    /**
+     * The subtitle for this cart item.
+     *
+     * @var string
+     */
+    private $subtitle;
+
     /**
      * Optional full description for this cart item.
      *
@@ -52,8 +60,9 @@ class SimpleCartItem extends CartItem {
      * @param float[string] $prices
      * @param CartItem[] $subItems
      */
-    public function __construct($title, $description = null, $prices = [], $subItems = []) {
+    public function __construct($title, $subtitle = null, $description = null, $prices = [], $subItems = []) {
         $this->title = $title;
+        $this->subtitle = $subtitle;
         $this->description = $description;
         $this->prices = $prices;
         $this->subItems = $subItems;
@@ -67,6 +76,14 @@ class SimpleCartItem extends CartItem {
     public function getTitle() {
         return $this->title;
     }
+
+    /**
+     * @return string
+     */
+    public function getSubtitle() {
+        return $this->subtitle;
+    }
+
 
     /**
      * Get the description for this Cart Item.

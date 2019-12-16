@@ -5,6 +5,7 @@ namespace Kinicart\Objects\Product\PackagedProduct;
 
 
 use Kinicart\Services\Product\PackagedProduct\PackagedProductService;
+use Kinikit\Core\Logging\Logger;
 use Kinikit\Core\Util\ObjectArrayUtils;
 use Kinikit\Persistence\ORM\Interceptor\DefaultORMInterceptor;
 
@@ -39,7 +40,7 @@ class PackagedProductFeatureInterceptor extends DefaultORMInterceptor {
      */
     public function postMap($object) {
 
-        // Get the list of code defined features
+         // Get the list of code defined features
         $features = $this->packagedProductService->getPackagedProduct($object->getProductIdentifier())->getFeatures() ?? [];
         $indexedFeatures = ObjectArrayUtils::indexArrayOfObjectsByMember("identifier", $features);
 

@@ -89,12 +89,12 @@ class PackageSummary {
         foreach ($package->getFeatures() as $feature) {
             if ($productFeature = $feature->getProductFeature()) {
                 if ($productFeature->getFeature()->getType() === Feature::TYPE_PACKAGE) {
-                    $this->packageFeatures[] = new PackageFeatureSummary($feature);
+                    $this->packageFeatures[$feature->getFeatureIdentifier()] = new PackageFeatureSummary($feature);
                 } else if ($productFeature->getFeature()->getType() === Feature::TYPE_EXCESS) {
-                    $this->excessFeatures[] = new PackageFeatureSummary($feature);
+                    $this->excessFeatures[$feature->getFeatureIdentifier()] = new PackageFeatureSummary($feature);
                 }
             } else {
-                $this->packageFeatures[] = new PackageFeatureSummary($feature);
+                $this->packageFeatures[$feature->getFeatureIdentifier()] = new PackageFeatureSummary($feature);
             }
         }
 
@@ -115,7 +115,11 @@ class PackageSummary {
 
         $this->activePrices = [];
         foreach ($this->allTierPrices as $recurrenceType => $tiers) {
-            $this->activePrices[$recurrenceType] = $tiers[$account->getAccountData()->getTierId()];
+            $activeTierPrice = $tiers[$account->getAccountData()->getTierId()];
+
+            // Convert to float to remove extra formatting as this is used for advertising mostly.
+            $activeTierPrice = (float)$activeTierPrice;
+            $this->activePrices[$recurrenceType] = $activeTierPrice;
         }
 
 
