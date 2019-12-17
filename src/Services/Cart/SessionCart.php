@@ -110,6 +110,17 @@ class SessionCart {
         $this->session->setValue(self::CART_SESSION_NAME, $cart);
     }
 
+
+    /**
+     * Return the number of items
+     *
+     * @return int
+     */
+    public function getNumberOfItems() {
+        $cart = $this->get();
+        return sizeof($cart->getItems());
+    }
+
     /**
      * Clear the session cart and reset the state
      */
