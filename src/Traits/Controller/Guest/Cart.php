@@ -33,4 +33,15 @@ trait Cart {
         return new CartSummary($this->sessionCart->get());
     }
 
+    /**
+     * Remove the cart item at the specified index
+     *
+     * @http GET /remove
+     *
+     * @param $index
+     */
+    public function removeItem($index) {
+        $this->sessionCart->removeItem($index);
+    }
+
 }
