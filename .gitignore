@@ -1,1 +1,14 @@
-Setting.json
+node_modules/
+dist
+site/data/webpack.json
+site/resources/
+site/public/
+public/
+temp
+backend/vendor/
+
+.idea
+
+
+.env.stage
+.env.production
