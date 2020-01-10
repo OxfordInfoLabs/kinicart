@@ -6,6 +6,7 @@ namespace Kinicart\Objects\Product\PackagedProduct;
 
 use Kinicart\Exception\Product\PackagedProduct\CartItemAddOnDoesNotExistException;
 use Kinicart\Exception\Product\PackagedProduct\InvalidCartAddOnException;
+use Kinicart\Exception\Product\PackagedProduct\MaximumAddOnQuantityExceededException;
 use Kinicart\Exception\Product\PackagedProduct\NoSuchProductPlanException;
 use Kinicart\Objects\Pricing\ProductBasePrice;
 use Kinicart\Services\Product\PackagedProduct\PackagedProductService;
@@ -68,9 +69,8 @@ class PackagedProductCartItemTest extends TestBase {
         // Test can set valid plan
         $cartItem->setPlan("BUDGET");
 
-        $planProduct = $this->service->getPackage("virtual-host", "BUDGET");
-
-        $this->assertEquals([new PackageCartItem($planProduct)], $cartItem->getSubItems());
+        // No sub items because plans don't count as sub items.
+        $this->assertEquals([], $cartItem->getSubItems());
 
 
     }
@@ -148,12 +148,33 @@ class PackagedProductCartItemTest extends TestBase {
         $cartItem->addAddOn("BUDGET_5GB");
 
 
-        $planProduct = $this->service->getPackage("virtual-host", "BUDGET");
+        // Test that we can't add another ACCOUNT_MANAGER but we can add up to 5 BUDGET_5GB entries
+        try {
+            $cartItem->addAddOn("ACCOUNT_MANAGER");
+            $this->fail("Should have thrown here");
+        } catch (MaximumAddOnQuantityExceededException $e) {
+            // Success
+        }
+
+
+        $cartItem->addAddOn("BUDGET_5GB");
+        $cartItem->addAddOn("BUDGET_5GB");
+        $cartItem->addAddOn("BUDGET_5GB");
+        $cartItem->addAddOn("BUDGET_5GB");
+
+        try {
+            $cartItem->addAddOn("BUDGET_5GB");
+            $this->fail("Should have thrown here");
+        } catch (MaximumAddOnQuantityExceededException $e) {
+            // Success
+        }
+
+
         $accountManager = $this->service->getPackage("virtual-host", "ACCOUNT_MANAGER");
         $budget5GB = $this->service->getPackage("virtual-host", "BUDGET_5GB");
 
 
-        $this->assertEquals([new PackageCartItem($planProduct), new PackageCartItem($accountManager), new PackageCartItem($budget5GB)], $cartItem->getSubItems());
+        $this->assertEquals([new PackageCartItem($accountManager), new PackageCartItem($budget5GB, Recurrence::MONTHLY, 5)], $cartItem->getSubItems());
 
 
     }

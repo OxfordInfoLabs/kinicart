@@ -9,6 +9,7 @@ use Kinicart\Objects\Product\PackagedProduct\PackagedProductFeature;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductSubscriptionPackage;
 use Kinicart\Objects\Product\PackagedProduct\PackageFeature;
 use Kinicart\TestBase;
+use Kinicart\ValueObjects\Product\PackagedProduct\PackagedProductCartItemAddOnDescriptor;
 use Kinicart\ValueObjects\Product\PackagedProduct\PackagedProductCartItemDescriptor;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
@@ -53,7 +54,7 @@ class PackagedProductServiceTest extends TestBase {
 
         $vhostFeatures = $this->service->getAllProductFeatures("virtual-host");
 
-        $this->assertEquals(5, sizeof($vhostFeatures));
+        $this->assertEquals(3, sizeof($vhostFeatures));
         $this->assertEquals(new PackagedProductFeature("virtual-host",
             new Feature("memory", "Memory (GB)", "The amount of memory allocated to this VM"),
             0.02, 0.01, "MONTHLY", "USD"),
@@ -65,21 +66,13 @@ class PackagedProductServiceTest extends TestBase {
             $vhostFeatures[1]);
 
         $this->assertEquals(new PackagedProductFeature("virtual-host",
-            new Feature("includedBandwidth", "Included Bandwidth (GB/month)", "The amount of included bandwidth in GB/Month"),
+            new Feature("bandwidth", "Bandwidth (GB/month)", "The amount of bandwidth in GB/Month"),
             0.001, 0.001, "MONTHLY", "EUR"),
             $vhostFeatures[2]);
 
-        $this->assertEquals(new PackagedProductFeature("virtual-host",
-            new Feature("additionalBandwidth", "Additional Bandwidth (GB/month)", "Additional bandwidth per GB")),
-            $vhostFeatures[3]);
-
-        $this->assertEquals(new PackagedProductFeature("virtual-host",
-            new Feature("excessBandwidth", "Excess Bandwidth (GB/month)", "Excess bandwidth charges - additional GBs", Feature::TYPE_EXCESS)),
-            $vhostFeatures[4]);
-
 
         $emailFeatures = $this->service->getAllProductFeatures("email");
-        $this->assertEquals(7, sizeof($emailFeatures));
+        $this->assertEquals(3, sizeof($emailFeatures));
 
         $this->assertEquals(new PackagedProductFeature("email", new Feature("storage", "Storage (GB)", "The amount of storage space included per user"),
             0.2, 0.1, "MONTHLY", "USD"), $emailFeatures[0]);
@@ -88,7 +81,7 @@ class PackagedProductServiceTest extends TestBase {
             0, 2, "MONTHLY", "GBP"), $emailFeatures[1]);
 
         $this->assertEquals(new PackagedProductFeature("email",
-            new Feature("includedBandwidth", "Included Bandwidth (GB/month)", "The amount of included bandwidth in GB/Month")),
+            new Feature("bandwidth", "Bandwidth (GB/month)", "The amount of bandwidth in GB/Month")),
             $emailFeatures[2]);
 
 
@@ -99,15 +92,15 @@ class PackagedProductServiceTest extends TestBase {
 
         $vhostFeatures = $this->service->getAllProductFeatures("virtual-host");
 
-        $vhostFeatures[3]->setUnitSupplierBuyPrice(0.002);
-        $vhostFeatures[3]->setUnitBaseMargin(0.002);
-        $vhostFeatures[3]->setWorkingCurrency("GBP");
-        $vhostFeatures[3]->setWorkingPeriod("MONTHLY");
+        $vhostFeatures[0]->setUnitSupplierBuyPrice(0.002);
+        $vhostFeatures[0]->setUnitBaseMargin(0.002);
+        $vhostFeatures[0]->setWorkingCurrency("GBP");
+        $vhostFeatures[0]->setWorkingPeriod("MONTHLY");
 
-        $vhostFeatures[4]->setUnitSupplierBuyPrice(0.1);
-        $vhostFeatures[4]->setUnitBaseMargin(0.2);
-        $vhostFeatures[4]->setWorkingCurrency("GBP");
-        $vhostFeatures[4]->setWorkingPeriod("ANNUAL");
+        $vhostFeatures[1]->setUnitSupplierBuyPrice(0.1);
+        $vhostFeatures[1]->setUnitBaseMargin(0.2);
+        $vhostFeatures[1]->setWorkingCurrency("GBP");
+        $vhostFeatures[1]->setWorkingPeriod("ANNUAL");
 
         // Save product features.
         $this->service->saveProductFeatures($vhostFeatures);
@@ -115,31 +108,22 @@ class PackagedProductServiceTest extends TestBase {
 
         $vhostFeatures = $this->service->getAllProductFeatures("virtual-host");
 
-        $this->assertEquals(5, sizeof($vhostFeatures));
+        $this->assertEquals(3, sizeof($vhostFeatures));
         $this->assertEquals(new PackagedProductFeature("virtual-host",
             new Feature("memory", "Memory (GB)", "The amount of memory allocated to this VM"),
-            0.02, 0.01, "MONTHLY", "USD"),
+            0.002, 0.002, "MONTHLY", "GBP"),
             $vhostFeatures[0]);
 
         $this->assertEquals(new PackagedProductFeature("virtual-host",
             new Feature("diskSpace", "Disk Space (GB)", "The amount of disk space allocated to this VM"),
-            0.1, 0.05, "MONTHLY", "USD"),
+            0.1, 0.2, "ANNUAL", "GBP"),
             $vhostFeatures[1]);
 
         $this->assertEquals(new PackagedProductFeature("virtual-host",
-            new Feature("includedBandwidth", "Included Bandwidth (GB/month)", "The amount of included bandwidth in GB/Month"),
+            new Feature("bandwidth", "Bandwidth (GB/month)", "The amount of bandwidth in GB/Month"),
             0.001, 0.001, "MONTHLY", "EUR"),
             $vhostFeatures[2]);
 
-        $this->assertEquals(new PackagedProductFeature("virtual-host",
-            new Feature("additionalBandwidth", "Additional Bandwidth (GB/month)", "Additional bandwidth per GB"),
-            0.002, 0.002, "MONTHLY", "GBP"),
-            $vhostFeatures[3]);
-
-        $this->assertEquals(new PackagedProductFeature("virtual-host",
-            new Feature("excessBandwidth", "Excess Bandwidth (GB/month)", "Excess bandwidth charges - additional GBs", Feature::TYPE_EXCESS),
-            0.1, 0.2, "ANNUAL", "GBP"),
-            $vhostFeatures[4]);
 
     }
 
@@ -153,8 +137,9 @@ class PackagedProductServiceTest extends TestBase {
         $this->assertEquals("Budget Server", $plan->getTitle());
         $this->assertEquals("Rock bottom budget server - lean and mean", $plan->getDescription());
         $this->assertEquals(4, sizeof($plan->getFeatures()));
-        $this->assertEquals(1, sizeof($plan->getChildPackages()));
+        $this->assertEquals(2, sizeof($plan->getChildPackages()));
         $this->assertEquals(Package::fetch(["virtual-host", "BUDGET_5GB"]), $plan->getChildPackages()[0]);
+        $this->assertEquals(Package::fetch(["virtual-host", "BUDGET_TELEPHONE"]), $plan->getChildPackages()[1]);
 
         // Check that each nested feature has a feature object attached to it.
         $feature = $plan->getFeatures()[0];
@@ -259,7 +244,7 @@ class PackagedProductServiceTest extends TestBase {
         $this->assertEquals($this->service->getPackage("virtual-host", "BUDGET"), $entries[0]->getPackage());
 
 
-        $cartItem = new PackagedProductCartItem("virtual-host", new PackagedProductCartItemDescriptor("BUDGET", ["BUDGET_5GB"]));
+        $cartItem = new PackagedProductCartItem("virtual-host", new PackagedProductCartItemDescriptor("BUDGET", [new PackagedProductCartItemAddOnDescriptor("BUDGET_5GB", 3)]));
 
         $this->service->saveSubscriptionPackages(10, $cartItem);
 
@@ -267,6 +252,7 @@ class PackagedProductServiceTest extends TestBase {
         $this->assertEquals(2, sizeof($entries));
         $this->assertEquals($this->service->getPackage("virtual-host", "BUDGET"), $entries[0]->getPackage());
         $this->assertEquals($this->service->getPackage("virtual-host", "BUDGET_5GB"), $entries[1]->getPackage());
+        $this->assertEquals(3, $entries[1]->getQuantity());
 
 
         $cartItem = new PackagedProductCartItem("virtual-host", new PackagedProductCartItemDescriptor("ENTERPRISE"));
@@ -279,7 +265,7 @@ class PackagedProductServiceTest extends TestBase {
         $this->assertEquals($this->service->getPackage("virtual-host", "ENTERPRISE"), $entries[0]->getPackage());
 
 
-
     }
+
 
 }

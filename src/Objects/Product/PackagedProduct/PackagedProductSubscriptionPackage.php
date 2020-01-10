@@ -36,6 +36,15 @@ class PackagedProductSubscriptionPackage extends ActiveRecord {
 
 
     /**
+     * The quantity of this package which has been added to the subscription.
+     * This is only really applicable to ADD ON packages.
+     *
+     * @var integer
+     */
+    private $quantity = 1;
+
+
+    /**
      *
      * @manyToOne
      * @parentJoinColumns product_identifier,package_identifier
@@ -51,10 +60,11 @@ class PackagedProductSubscriptionPackage extends ActiveRecord {
      *
      * PackagedProductSubscriptionPackage constructor.
      */
-    public function __construct($subscriptionId, $productIdentifier, $packageIdentifier) {
+    public function __construct($subscriptionId, $productIdentifier, $packageIdentifier, $quantity = 1) {
         $this->subscriptionId = $subscriptionId;
         $this->productIdentifier = $productIdentifier;
         $this->packageIdentifier = $packageIdentifier;
+        $this->quantity = $quantity;
     }
 
     /**
@@ -84,6 +94,13 @@ class PackagedProductSubscriptionPackage extends ActiveRecord {
      */
     public function getPackage() {
         return $this->package;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQuantity() {
+        return $this->quantity;
     }
 
 

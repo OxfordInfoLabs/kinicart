@@ -107,9 +107,11 @@ class Order extends ActiveRecord {
 
                 $this->orderLines[] = [
                     "title" => $cartItem->getTitle(),
+                    "subtitle" => $cartItem->getSubtitle(),
                     "description" => $cartItem->getDescription(),
                     "quantity" => $cartItem->getQuantity(),
-                    "amount" => $cartItem->getUnitPrice($currency, $account->getAccountData()->getTierId()),
+                    "amount" => number_format($cartItem->getUnitPrice($currency, $account->getAccountData()->getTierId()), 2, ".", ""),
+                    "currency" => $currency,
                     "subItems" => $cartItem->getSubItems()
                 ];
             }

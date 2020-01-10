@@ -6,6 +6,7 @@ namespace Kinicart\Objects\Product\PackagedProduct;
 
 use Kinicart\Exception\Product\PackagedProduct\CartItemAddOnDoesNotExistException;
 use Kinicart\Exception\Product\PackagedProduct\InvalidCartAddOnException;
+use Kinicart\Exception\Product\PackagedProduct\MaximumAddOnQuantityExceededException;
 use Kinicart\Exception\Product\PackagedProduct\NoSuchProductPlanException;
 use Kinicart\Objects\Cart\CartItem;
 use Kinicart\Objects\Cart\SubscriptionCartItem;
@@ -47,6 +48,12 @@ class PackagedProductCartItem extends SubscriptionCartItem {
 
 
     /**
+     * @var integer[]
+     */
+    private $addOnQuantities = [];
+
+
+    /**
      * PackagedProductCartItem constructor.
      *
      * @param string $productIdentifier
@@ -74,16 +81,26 @@ class PackagedProductCartItem extends SubscriptionCartItem {
             if ($cartItemDescriptor->getPlanIdentifier())
                 $this->setPlan($cartItemDescriptor->getPlanIdentifier());
 
-            if ($cartItemDescriptor->getAddOnIdentifiers()) {
-                foreach ($cartItemDescriptor->getAddOnIdentifiers() as $addOn) {
-                    $this->addAddOn($addOn);
+            if ($cartItemDescriptor->getAddOnDescriptors()) {
+                foreach ($cartItemDescriptor->getAddOnDescriptors() as $addOn) {
+                    $this->addAddOn($addOn->getAddOnIdentifier(), $addOn->getQuantity());
                 }
             }
         }
     }
 
     public function getType() {
-        return "package";
+        return $this->getProductIdentifier();
+    }
+
+
+    /**
+     * Implement sub type to supply the plan identifier.
+     *
+     * @return mixed|string
+     */
+    public function getSubType() {
+        return $this->plan ? $this->plan->getIdentifier() : "";
     }
 
     /**
@@ -129,6 +146,10 @@ class PackagedProductCartItem extends SubscriptionCartItem {
     }
 
 
+    public function getAddOnQuantities() {
+        return $this->addOnQuantities;
+    }
+
     /**
      * Set the plan for this cart item.
      *
@@ -152,6 +173,7 @@ class PackagedProductCartItem extends SubscriptionCartItem {
                 $addOn = $this->addOns[$i];
                 if ($addOn->getParentIdentifier() && $addOn->getParentIdentifier() != $plan->getIdentifier()) {
                     array_splice($this->addOns, $i, 1);
+                    array_splice($this->addOnQuantities, $i, 1);
                 }
             }
 
@@ -169,7 +191,7 @@ class PackagedProductCartItem extends SubscriptionCartItem {
      *
      * @param string $addOnIdentifier
      */
-    public function addAddOn($addOnIdentifier) {
+    public function addAddOn($addOnIdentifier, $quantity = 1) {
         /**
          * @var $service PackagedProductService
          */
@@ -188,7 +210,33 @@ class PackagedProductCartItem extends SubscriptionCartItem {
                 throw new InvalidCartAddOnException($addOnIdentifier, $this->productIdentifier, $this->plan->getIdentifier());
             }
 
-            $this->addOns[] = $addOn;
+
+            // Check for existing add on of same type.
+            $existingAddOnFound = false;
+            foreach ($this->addOns as $index => $compareAddOn) {
+
+                if ($compareAddOn->getIdentifier() == $addOnIdentifier) {
+                    $newQuantity = $this->addOnQuantities[$index] + $quantity;
+
+                    if ($newQuantity > $addOn->getMaxQuantity())
+                        throw new MaximumAddOnQuantityExceededException($addOnIdentifier, $this->productIdentifier, $this->plan->getIdentifier());
+
+                    $this->addOnQuantities[$index] = $newQuantity;
+                    $existingAddOnFound = true;
+                    break;
+                }
+            }
+
+            if (!$existingAddOnFound) {
+
+                if ($quantity > $addOn->getMaxQuantity())
+                    throw new MaximumAddOnQuantityExceededException($addOnIdentifier, $this->productIdentifier, $this->plan->getIdentifier());
+
+                $this->addOns[] = $addOn;
+                $this->addOnQuantities[] = $quantity;
+            }
+
+
             return $addOn;
         } catch (ObjectNotFoundException $e) {
             throw new InvalidCartAddOnException($addOnIdentifier, $this->productIdentifier, $this->plan->getIdentifier());
@@ -203,6 +251,7 @@ class PackagedProductCartItem extends SubscriptionCartItem {
     public function removeAddOn($addOnIndex) {
         if (isset($this->addOns[$addOnIndex])) {
             array_splice($this->addOns, $addOnIndex, 1);
+            array_splice($this->addOnQuantities, $addOnIndex, 1);
         } else {
             throw new CartItemAddOnDoesNotExistException($addOnIndex);
         }
@@ -224,8 +273,9 @@ class PackagedProductCartItem extends SubscriptionCartItem {
         }
 
         if ($this->addOns) {
-            foreach ($this->addOns as $addOn) {
-                $price += $addOn->getTierPrice($tierId, $this->recurrenceType, $currency);
+            foreach ($this->addOns as $index => $addOn) {
+                $quantity = $this->addOnQuantities[$index];
+                $price += $quantity * ($addOn->getTierPrice($tierId, $this->recurrenceType, $currency));
             }
         }
 
@@ -243,13 +293,9 @@ class PackagedProductCartItem extends SubscriptionCartItem {
 
         $subItems = [];
 
-        if ($this->plan) {
-            $subItems[] = new PackageCartItem($this->plan);
-        }
-
         if ($this->addOns) {
-            foreach ($this->addOns as $addOn) {
-                $subItems[] = new PackageCartItem($addOn);
+            foreach ($this->addOns as $index => $addOn) {
+                $subItems[] = new PackageCartItem($addOn, Recurrence::MONTHLY, $this->addOnQuantities[$index]);
             }
         }
 

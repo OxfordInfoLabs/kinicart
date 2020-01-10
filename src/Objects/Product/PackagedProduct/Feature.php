@@ -32,6 +32,14 @@ class Feature {
      */
     private $description;
 
+
+    /**
+     * Optional unit string for display after quantity e.g. GB/s, Users etc.
+     *
+     * @var string
+     */
+    private $unit;
+
     /**
      * Type of feature - currently either PACKAGE (for inclusion in packages)
      * or EXCESS (for excess charging out of plan).
@@ -52,10 +60,11 @@ class Feature {
      * @param string $title
      * @param string $description
      */
-    public function __construct($identifier, $title, $description, $type = self::TYPE_PACKAGE) {
+    public function __construct($identifier, $title, $description, $unit = "", $type = self::TYPE_PACKAGE) {
         $this->identifier = $identifier;
         $this->title = $title;
         $this->description = $description;
+        $this->unit = $unit;
         $this->type = $type;
     }
 
@@ -85,6 +94,13 @@ class Feature {
      */
     public function getType() {
         return $this->type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUnit() {
+        return $this->unit;
     }
 
 

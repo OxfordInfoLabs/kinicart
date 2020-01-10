@@ -71,6 +71,14 @@ class Package extends ActiveRecord {
 
 
     /**
+     * The maximum quantity of this package that can be added to a subscription (used for add ons only).
+     *
+     * @var integer
+     */
+    private $maxQuantity = 1;
+
+
+    /**
      * The order in which this package fits in the upgrade hierarchy for this product (used for plans).
      *
      * @var integer
@@ -323,6 +331,20 @@ class Package extends ActiveRecord {
      */
     public function getParentIdentifier() {
         return $this->parentIdentifier;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxQuantity() {
+        return $this->maxQuantity;
+    }
+
+    /**
+     * @param int $maxQuantity
+     */
+    public function setMaxQuantity($maxQuantity) {
+        $this->maxQuantity = $maxQuantity;
     }
 
 
