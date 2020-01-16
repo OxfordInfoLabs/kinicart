@@ -15,7 +15,23 @@ abstract class CartItem {
      */
     private $quantity = 1;
 
+    /**
+     * Type string
+     *
+     * @return mixed
+     */
     public abstract function getType();
+
+
+    /**
+     * Subtype - optional identifier if required by a cart item.
+     *
+     * @return mixed
+     */
+    public function getSubType() {
+        return null;
+    }
+
 
     /**
      * Get the main title for this Cart Item.

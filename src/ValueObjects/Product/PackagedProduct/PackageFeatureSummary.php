@@ -14,6 +14,8 @@ class PackageFeatureSummary {
 
     private $description;
 
+    private $unit;
+
     private $quantity = null;
 
     /**
@@ -27,6 +29,7 @@ class PackageFeatureSummary {
             $productFeature = $feature->getProductFeature()->getFeature();
             $this->title = $productFeature->getTitle();
             $this->description = $productFeature->getDescription();
+            $this->unit = $productFeature->getUnit();
         } else {
             $this->title = $feature->getTitle();
             $this->description = $feature->getDescription();
@@ -60,6 +63,13 @@ class PackageFeatureSummary {
      */
     public function getQuantity() {
         return $this->quantity;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUnit() {
+        return $this->unit;
     }
 
 }

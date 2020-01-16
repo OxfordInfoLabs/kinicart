@@ -33,10 +33,10 @@ class PackageCartItem extends CartItem {
      * PackageCartItem constructor.
      * @param $package
      */
-    public function __construct($package, $recurrenceType = Recurrence::MONTHLY) {
+    public function __construct($package, $recurrenceType = Recurrence::MONTHLY, $quantity = 1) {
         $this->package = $package;
         $this->recurrenceType = $recurrenceType;
-
+        $this->setQuantity($quantity);
     }
 
 
@@ -94,6 +94,10 @@ class PackageCartItem extends CartItem {
     }
 
     public function getType() {
-        return "package";
+        return $this->package->getType();
+    }
+
+    public function getSubType() {
+        return $this->package->getIdentifier();
     }
 }

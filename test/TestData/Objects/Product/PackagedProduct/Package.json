@@ -15,7 +15,7 @@
         "quantity": 10
       },
       {
-        "featureIdentifier": "includedBandwidth",
+        "featureIdentifier": "bandwidth",
         "quantity": 5
       },
       {
@@ -42,9 +42,10 @@
         "type": "ADD_ON",
         "title": "Extra 5GB Bandwidth",
         "description": "Extra 5GB bandwidth",
+        "maxQuantity": 5,
         "features": [
           {
-            "featureIdentifier": "additionalBandwidth",
+            "featureIdentifier": "bandwidth",
             "quantity": 5
           }
         ],
@@ -52,6 +53,26 @@
           {
             "recurrenceType": "MONTHLY",
             "basePrice": 1,
+            "currencyCode": "USD"
+          }
+        ]
+      },
+      {
+        "productIdentifier": "virtual-host",
+        "identifier": "BUDGET_TELEPHONE",
+        "type": "ADD_ON",
+        "title": "Telephone Support",
+        "description": "Telephone Support",
+        "features": [
+          {
+            "title": "Telephone support",
+            "description": "Telephone support"
+          }
+        ],
+        "prices": [
+          {
+            "recurrenceType": "MONTHLY",
+            "basePrice": 10,
             "currencyCode": "USD"
           }
         ]
@@ -75,7 +96,7 @@
         "quantity": 50
       },
       {
-        "featureIdentifier": "includedBandwidth",
+        "featureIdentifier": "bandwidth",
         "quantity": 20
       },
       {
@@ -162,7 +183,7 @@
         "description": "Extra 10GB bandwidth",
         "features": [
           {
-            "featureIdentifier": "additionalBandwidth",
+            "featureIdentifier": "bandwidth",
             "quantity": 10
           }
         ],
@@ -182,7 +203,7 @@
         "description": "Extra 20GB bandwidth",
         "features": [
           {
-            "featureIdentifier": "additionalBandwidth",
+            "featureIdentifier": "bandwidth",
             "quantity": 20
           }
         ],
@@ -233,7 +254,7 @@
         "quantity": 500
       },
       {
-        "featureIdentifier": "includedBandwidth",
+        "featureIdentifier": "bandwidth",
         "quantity": 200
       },
       {

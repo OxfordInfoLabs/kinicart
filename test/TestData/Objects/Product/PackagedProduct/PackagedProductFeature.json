@@ -17,7 +17,7 @@
   },
   {
     "productIdentifier": "virtual-host",
-    "featureIdentifier": "includedBandwidth",
+    "featureIdentifier": "bandwidth",
     "unitSupplierBuyPrice": 0.001,
     "unitBaseMargin": 0.001,
     "workingPeriod": "MONTHLY",

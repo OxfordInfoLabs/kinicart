@@ -51,7 +51,7 @@ trait PackagedProduct {
      * @http GET /plans/$productIdentifier
      *
      * @param $productIdentifier
-     * @return Package[]
+     * @return PackageSummary[]
      */
     public function getProductPlans($productIdentifier) {
         $productPlans = $this->packagedProductService->getAllPlans($productIdentifier);
@@ -61,6 +61,22 @@ trait PackagedProduct {
         }
 
         return $summaries;
+    }
+
+
+    /**
+     * Get a single product plan
+     *
+     * @http GET /plans/$productIdentifier/$plan
+     *
+     * @param $productIdentifier
+     * @param $plan
+     *
+     * @return PackageSummary
+     */
+    public function getProductPlan($productIdentifier, $plan) {
+        $plan = $this->packagedProductService->getPackage($productIdentifier, $plan);
+        return new PackageSummary($plan, $this->sessionAccountProvider);
     }
 
 
@@ -92,57 +108,14 @@ trait PackagedProduct {
      * @param string $productIdentifier
      * @param PackagedProductCartItemDescriptor $packagedProductCartItemDescriptor
      */
-    public function addProductToCart($productIdentifier, $packagedProductCartItemDescriptor) {
+    public function updateProductCartItem($productIdentifier, $packagedProductCartItemDescriptor, $cartItemIndex = null) {
         $cartItem = new PackagedProductCartItem($productIdentifier, $packagedProductCartItemDescriptor);
-        $this->sessionCart->addItem($cartItem);
-    }
-
-
-    /**
-     * Update the plan for a cart item identified by index.
-     *
-     * @http PUT /cartitem/plan/$cartItemIndex/$planIdentifier
-     *
-     * @param integer $cartItemIndex
-     * @param string $planIdentifier
-     */
-    public function updateCartItemPlan($cartItemIndex, $planIdentifier) {
-        $cartItem = $this->sessionCart->getItem($cartItemIndex);
-        if ($cartItem instanceof PackagedProductCartItem) {
-            $cartItem->setPlan($planIdentifier);
+        if (is_numeric($cartItemIndex))
             $this->sessionCart->updateItem($cartItemIndex, $cartItem);
-        }
-    }
+        else
+            $this->sessionCart->addItem($cartItem);
 
-
-    /**
-     * Add the specified add on to the cart item
-     *
-     * @http POST /cartitem/addon/$cartItemIndex/$addOnIdentifier
-     *
-     * @param integer $cartItemIndex
-     * @param string $addOnIdentifier
-     */
-    public function addAddOnToCartItem($cartItemIndex, $addOnIdentifier) {
-        $cartItem = $this->sessionCart->getItem($cartItemIndex);
-        if ($cartItem instanceof PackagedProductCartItem) {
-            $cartItem->addAddOn($addOnIdentifier);
-            $this->sessionCart->updateItem($cartItemIndex, $cartItem);
-        }
-    }
-
-
-    /**
-     *
-     * @param integer $cartItemIndex
-     * @param integer $addOnIndex
-     */
-    public function removeAddOnFromCartItem($cartItemIndex, $addOnIndex) {
-        $cartItem = $this->sessionCart->getItem($cartItemIndex);
-        if ($cartItem instanceof PackagedProductCartItem) {
-            $cartItem->removeAddOn($addOnIndex);
-            $this->sessionCart->updateItem($cartItemIndex, $cartItem);
-        }
+        return 1;
     }
 
 

@@ -162,15 +162,17 @@ class PackagedProductService {
         // Remove any previous packages
         $previousSubPackages = PackagedProductSubscriptionPackage::filter("WHERE subscriptionId = ?", $subscriptionId);
         $this->orm->delete($previousSubPackages);
-
-
-        $packages = [];
-        $packages[] = $packagedProductCartItem->getPlan();
-        $packages = array_merge($packages, $packagedProductCartItem->getAddOns());
-
+        
         $subscriptionPackages = [];
-        foreach ($packages as $package) {
-            $subscriptionPackages[] = new PackagedProductSubscriptionPackage($subscriptionId, $package->getProductIdentifier(), $package->getIdentifier());
+
+        // Add the plan
+        $plan = $packagedProductCartItem->getPlan();
+        $subscriptionPackages[] = new PackagedProductSubscriptionPackage($subscriptionId, $plan->getProductIdentifier(), $plan->getIdentifier());
+
+
+        $addOnQuantities = $packagedProductCartItem->getAddOnQuantities();
+        foreach ($packagedProductCartItem->getAddOns() as $index => $addOn) {
+            $subscriptionPackages[] = new PackagedProductSubscriptionPackage($subscriptionId, $addOn->getProductIdentifier(), $addOn->getIdentifier(), $addOnQuantities[$index]);
         }
 
         $this->orm->save($subscriptionPackages);

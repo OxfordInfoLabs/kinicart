@@ -25,21 +25,22 @@ class PackagedProductCartItemDescriptor {
     private $planIdentifier;
 
     /**
-     * @var string[]
+     * @var PackagedProductCartItemAddOnDescriptor[]
      */
-    private $addOnIdentifiers = [];
+    private $addOnDescriptors = [];
+
 
     /**
      * PackagedProductCartItemDescriptor constructor.
      *
      * @param string $recurrenceType
      * @param string $planIdentifier
-     * @param string[] $addOnIdentifiers
+     * @param PackagedProductCartItemAddOnDescriptor[] $addOnDescriptors
      */
-    public function __construct($planIdentifier, $addOnIdentifiers = [], $recurrenceType = Recurrence::MONTHLY) {
+    public function __construct($planIdentifier, $addOnDescriptors = [], $recurrenceType = Recurrence::MONTHLY) {
         $this->recurrenceType = $recurrenceType;
         $this->planIdentifier = $planIdentifier;
-        $this->addOnIdentifiers = $addOnIdentifiers;
+        $this->addOnDescriptors = $addOnDescriptors;
     }
 
 
@@ -73,17 +74,17 @@ class PackagedProductCartItemDescriptor {
     }
 
     /**
-     * @return string[]
+     * @return PackagedProductCartItemAddOnDescriptor[]
      */
-    public function getAddOnIdentifiers() {
-        return $this->addOnIdentifiers;
+    public function getAddOnDescriptors() {
+        return $this->addOnDescriptors;
     }
 
     /**
-     * @param string[] $addOnIdentifiers
+     * @param PackagedProductCartItemAddOnDescriptor[] $addOnDescriptors
      */
-    public function setAddOnIdentifiers($addOnIdentifiers) {
-        $this->addOnIdentifiers = $addOnIdentifiers;
+    public function setAddOnDescriptors($addOnDescriptors) {
+        $this->addOnDescriptors = $addOnDescriptors;
     }
 
 

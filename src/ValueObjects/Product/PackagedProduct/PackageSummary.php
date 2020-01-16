@@ -43,6 +43,12 @@ class PackageSummary {
 
 
     /**
+     * @var integer
+     */
+    private $maxQuantity;
+
+
+    /**
      * Array of related add ons if any exist
      *
      * @var PackageSummary[]
@@ -86,6 +92,7 @@ class PackageSummary {
 
         $this->packageFeatures = [];
         $this->excessFeatures = [];
+
         foreach ($package->getFeatures() as $feature) {
             if ($productFeature = $feature->getProductFeature()) {
                 if ($productFeature->getFeature()->getType() === Feature::TYPE_PACKAGE) {
@@ -98,17 +105,20 @@ class PackageSummary {
             }
         }
 
+
         $this->upgradeOrder = $package->getUpgradeOrder();
+        $this->maxQuantity = $package->getMaxQuantity();
 
         $this->relatedAddOns = [];
         foreach ($package->getChildPackages() ?? [] as $childPackage) {
-            $this->relatedAddOns[] = new PackageSummary($childPackage, $accountProvider);
+            $this->relatedAddOns[] = new PackageAddOnSummary($childPackage, $this, $accountProvider);
         }
 
         // Get the account object to use for pricing this package
         $account = $accountProvider->provideAccount();
 
         $this->workingCurrency = $account->getAccountData()->getCurrencyCode();
+
 
         // Grab all prices for the passed currency
         $this->allTierPrices = $package->getAllTierPrices($this->workingCurrency);
@@ -176,6 +186,14 @@ class PackageSummary {
     }
 
     /**
+     * @return int
+     */
+    public function getMaxQuantity() {
+        return $this->maxQuantity;
+    }
+
+
+    /**
      * @return float
      */
     public function getActivePrices() {
@@ -194,6 +212,26 @@ class PackageSummary {
      */
     public function getWorkingCurrency() {
         return $this->workingCurrency;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getWorkingCurrencySymbol() {
+        switch ($this->getWorkingCurrency()) {
+            case "USD":
+                $currencyString = "$";
+                break;
+            case "GBP":
+                $currencyString = "£";
+                break;
+            case "EUR":
+                $currencyString = "€";
+                break;
+        }
+
+        return $currencyString;
     }
 
 
