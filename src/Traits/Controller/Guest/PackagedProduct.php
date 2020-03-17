@@ -2,6 +2,7 @@
 
 namespace Kinicart\Traits\Controller\Guest;
 
+use Kinicart\Exception\Cart\CartItemDoesNotExistsException;
 use Kinicart\Objects\Product\PackagedProduct\Package;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductCartItem;
 use Kinicart\Services\Account\SessionAccountProvider;
@@ -9,6 +10,7 @@ use Kinicart\Services\Cart\SessionCart;
 use Kinicart\Services\Product\PackagedProduct\PackagedProductService;
 use Kinicart\ValueObjects\Product\PackagedProduct\PackagedProductCartItemDescriptor;
 use Kinicart\ValueObjects\Product\PackagedProduct\PackageSummary;
+use Kinikit\Core\Logging\Logger;
 
 
 trait PackagedProduct {
@@ -110,9 +112,13 @@ trait PackagedProduct {
      */
     public function updateProductCartItem($productIdentifier, $packagedProductCartItemDescriptor, $cartItemIndex = null) {
         $cartItem = new PackagedProductCartItem($productIdentifier, $packagedProductCartItemDescriptor);
-        if (is_numeric($cartItemIndex))
-            $this->sessionCart->updateItem($cartItemIndex, $cartItem);
-        else
+        if (is_numeric($cartItemIndex)) {
+            try {
+                $this->sessionCart->updateItem($cartItemIndex, $cartItem);
+            } catch (CartItemDoesNotExistsException $e){
+                $this->sessionCart->addItem($cartItem);
+            }
+        } else
             $this->sessionCart->addItem($cartItem);
 
         return 1;
