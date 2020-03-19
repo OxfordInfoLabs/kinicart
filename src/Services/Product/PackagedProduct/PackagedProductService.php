@@ -6,6 +6,7 @@ namespace Kinicart\Services\Product\PackagedProduct;
 use Kinicart\Objects\Product\PackagedProduct\Package;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductCartItem;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductFeature;
+use Kinicart\Objects\Product\PackagedProduct\PackagedProductSubscription;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductSubscriptionPackage;
 use Kinicart\Services\Product\ProductService;
 use Kinikit\Core\Util\ObjectArrayUtils;
@@ -162,7 +163,7 @@ class PackagedProductService {
         // Remove any previous packages
         $previousSubPackages = PackagedProductSubscriptionPackage::filter("WHERE subscriptionId = ?", $subscriptionId);
         $this->orm->delete($previousSubPackages);
-        
+
         $subscriptionPackages = [];
 
         // Add the plan
