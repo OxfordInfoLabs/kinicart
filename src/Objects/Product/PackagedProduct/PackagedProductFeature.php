@@ -23,6 +23,7 @@ class PackagedProductFeature extends ActiveRecord {
      *
      * @var string
      * @primaryKey
+     * @maxLength 50
      */
     private $productIdentifier;
 
@@ -30,6 +31,7 @@ class PackagedProductFeature extends ActiveRecord {
     /**
      * @var string
      * @primaryKey
+     * @maxLength 50
      */
     private $featureIdentifier;
 

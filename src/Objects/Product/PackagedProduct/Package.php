@@ -25,6 +25,7 @@ class Package extends ActiveRecord {
      *
      * @var string
      * @primaryKey
+     * @maxLength 50
      */
     private $productIdentifier;
 
@@ -32,6 +33,7 @@ class Package extends ActiveRecord {
     /**
      * @var string
      * @primaryKey
+     * @maxLength 50
      */
     private $identifier;
 

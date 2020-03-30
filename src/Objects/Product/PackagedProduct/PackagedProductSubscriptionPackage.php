@@ -25,12 +25,14 @@ class PackagedProductSubscriptionPackage extends ActiveRecord {
     /**
      * @var string
      * @primaryKey
+     * @maxLength 50
      */
     private $productIdentifier;
 
     /**
      * @var string
      * @primaryKey
+     * @maxLength 50
      */
     private $packageIdentifier;
 

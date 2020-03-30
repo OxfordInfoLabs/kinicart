@@ -19,6 +19,7 @@ class Currency extends ActiveRecord {
      *
      * @primaryKey
      * @var string
+     * @maxLength 10
      */
     private $code;
 

@@ -36,6 +36,7 @@ class ProductTierPrice {
      *
      * @var string
      * @primaryKey
+     * @maxLength 10
      */
     private $currencyCode;
 
