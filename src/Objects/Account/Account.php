@@ -22,7 +22,10 @@ class Account extends \Kiniauth\Objects\Account\Account {
      * @return AccountData
      */
     public function getAccountData() {
-        return $this->accountData ? $this->accountData : new AccountData();
+        if (!$this->accountData){
+            $this->accountData = new AccountData();
+        }
+        return $this->accountData;
     }
 
     /**
