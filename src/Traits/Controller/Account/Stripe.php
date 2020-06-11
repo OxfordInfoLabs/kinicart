@@ -37,7 +37,7 @@ trait Stripe {
      *
      * @return array
      */
-    public function createSetupIntent($returnURL, $customer = null) {
+    public function createSetupIntent($returnURL = null, $customer = null) {
         return $this->stripeService->createSetupIntent($returnURL, $customer);
     }
 
