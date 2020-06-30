@@ -4,6 +4,7 @@ namespace Kinicart\Objects\Account;
 
 use Kiniauth\Services\Application\Session;
 use Kiniauth\Services\Security\AuthenticationService;
+use Kiniauth\Test\Services\Security\AuthenticationHelper;
 use Kinicart\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
 
@@ -21,7 +22,7 @@ class AccountTest extends TestBase {
          * @var $authenticationService AuthenticationService
          */
         $authenticationService = Container::instance()->get(AuthenticationService::class);
-        $authenticationService->login("sam@samdavisdesign.co.uk", "password");
+        $authenticationService->login("sam@samdavisdesign.co.uk", AuthenticationHelper::encryptPasswordForLogin("password"));
 
         $account = \Kiniauth\Objects\Account\Account::fetch(1);
 

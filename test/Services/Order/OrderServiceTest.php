@@ -6,6 +6,7 @@ namespace Kinicart\Test\Services\Order;
 
 use Kiniauth\Services\Communication\Email\EmailService;
 use Kiniauth\Services\Security\AuthenticationService;
+use Kiniauth\Test\Services\Security\AuthenticationHelper;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Cart\CartItem;
 use Kinicart\Objects\Cart\ProductCartItem;
@@ -69,7 +70,7 @@ class OrderServiceTest extends TestBase {
 
     public function testCanProcessOrder() {
 
-        $this->authenticationService->login("sam@samdavisdesign.co.uk", "password");
+        $this->authenticationService->login("sam@samdavisdesign.co.uk", AuthenticationHelper::encryptPasswordForLogin("password"));
 
         $cart = $this->sessionCart->get();
 

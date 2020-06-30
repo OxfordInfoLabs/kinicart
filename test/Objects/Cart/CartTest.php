@@ -3,6 +3,7 @@
 namespace Kinicart\Objects\Cart;
 
 use Kiniauth\Services\Security\AuthenticationService;
+use Kiniauth\Test\Services\Security\AuthenticationHelper;
 use Kinicart\Objects\Product\PackagedProduct\Package;
 use Kinicart\Objects\Product\PackagedProduct\PackageCartItem;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductCartItem;
@@ -42,7 +43,7 @@ class CartTest extends TestBase {
 
     public function testTotalForCartIsCalculatedUsingPassedAccountProviderForCurrencyAndTierInfo() {
 
-        $this->authenticationService->login("sam@samdavisdesign.co.uk", "password");
+        $this->authenticationService->login("sam@samdavisdesign.co.uk", AuthenticationHelper::encryptPasswordForLogin("password"));
 
         $cart = new Cart($this->sessionAccountProvider);
 
@@ -60,7 +61,7 @@ class CartTest extends TestBase {
         // Now login as someone else
         $this->authenticationService->logout();
 
-        $this->authenticationService->login("simon@peterjonescarwash.com", "password");
+        $this->authenticationService->login("simon@peterjonescarwash.com", AuthenticationHelper::encryptPasswordForLogin("password"));
 
         $cartTotal = $cart->getTotal();
         $this->assertEquals($item1->getUnitPrice("GBP", 1) + $item2->getUnitPrice("GBP", 1), $cartTotal);
