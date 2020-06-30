@@ -21,8 +21,8 @@ class AccountTest extends TestBase {
         /**
          * @var $authenticationService AuthenticationService
          */
-        $authenticationService = Container::instance()->get(AuthenticationService::class);
-        $authenticationService->login("sam@samdavisdesign.co.uk", AuthenticationHelper::encryptPasswordForLogin("password"));
+
+        AuthenticationHelper::login("sam@samdavisdesign.co.uk", "password");
 
         $account = \Kiniauth\Objects\Account\Account::fetch(1);
 

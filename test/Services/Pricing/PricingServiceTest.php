@@ -76,7 +76,7 @@ class PricingServiceTest extends TestBase {
 
     public function testIfLoggedInActiveTierAndCurrencyAreReturnedFromUser() {
 
-        $this->authenticationService->login("sam@samdavisdesign.co.uk", AuthenticationHelper::encryptPasswordForLogin("password"));
+        AuthenticationHelper::login("sam@samdavisdesign.co.uk", "password");
 
         $this->assertEquals(3, $this->service->getActiveTierId());
         $this->assertEquals("USD", $this->service->getActiveCurrency()->getCode());
@@ -91,7 +91,7 @@ class PricingServiceTest extends TestBase {
         $this->assertEquals("EUR", $this->service->getActiveCurrency()->getCode());
         $this->assertEquals("EUR", $_SESSION[PricingService::ACTIVE_CURRENCY_SESSION_NAME]);
 
-        $this->authenticationService->login("sam@samdavisdesign.co.uk", AuthenticationHelper::encryptPasswordForLogin("password"));
+        AuthenticationHelper::login("sam@samdavisdesign.co.uk", "password");
         $this->assertEquals("USD", $this->service->getActiveCurrency()->getCode());
         $this->service->setActiveCurrencyCode("EUR");
         $this->assertEquals("EUR", $this->service->getActiveCurrency()->getCode());

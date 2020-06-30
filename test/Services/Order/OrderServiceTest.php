@@ -70,7 +70,7 @@ class OrderServiceTest extends TestBase {
 
     public function testCanProcessOrder() {
 
-        $this->authenticationService->login("sam@samdavisdesign.co.uk", AuthenticationHelper::encryptPasswordForLogin("password"));
+        AuthenticationHelper::login("sam@samdavisdesign.co.uk", "password");
 
         $cart = $this->sessionCart->get();
 
