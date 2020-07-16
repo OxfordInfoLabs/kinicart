@@ -1,0 +1,112 @@
+<div class="flex align-center justify-between flex-wrap ">
+
+    <input type="text" (keyup)="search($event.target.value)"
+           placeholder="Search orders" class="flex1 mr050 mt0 desktop-table-view">
+
+    <div class="flex align-center flex-wrap">
+        <input [matDatepicker]="startDatePicker" placeholder="Start Date"
+               (click)="startDatePicker.open()" class="mt0 mr050" style="width: 32%"
+               (dateChange)="startDate.next(moment($event.value).format('DD/MM/YYYY'))">
+        <mat-datepicker #startDatePicker></mat-datepicker>
+
+        <input [matDatepicker]="endDatePicker" placeholder="End Date"
+               (click)="endDatePicker.open()" class="mt0" style="width: 32%"
+               (dateChange)="endDate.next(moment($event.value).format('DD/MM/YYYY'))">
+        <mat-datepicker #endDatePicker></mat-datepicker>
+
+        <button class="but mb0">Export CSV</button>
+    </div>
+
+</div>
+
+<div class="mobile-list-view pb1">
+
+    <input type="text" (keyup)="search($event.target.value)"
+           placeholder="Search orders" class="full mt050">
+
+    <div class="list-items">
+        <div class="list-item flex align-center" *ngFor="let order of orders; let i = index"
+             (click)="viewOrder(order)">
+            <div *ngIf="!order.selected" (click)="toggleOrderSelected(order)"
+                 class="item-selection flex align-center justify-center mr1"></div>
+
+            <div *ngIf="order.selected" (click)="toggleOrderSelected(order)"
+                 class="item-selection flex align-center justify-center mr1 selected">
+                <span>&#10004;</span>
+            </div>
+            <div>
+                <h3>{{order.id}}</h3>
+                <p>{{order.date}} • <span [innerHTML]="order.currency.htmlSymbol"></span>{{order.total}}</p>
+                <p>{{order.buyerName}} • {{order.status}}</p>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<div class="desktop-table-view">
+
+    <table class="mt1">
+        <thead>
+        <tr>
+            <th class="pl1">
+                <div *ngIf="!allSelected" (click)="toggleSelectAllOrders()"
+                     class="item-selection flex align-center justify-center mr1"></div>
+
+                <div *ngIf="allSelected" (click)="toggleSelectAllOrders()"
+                     class="item-selection flex align-center justify-center mr1 selected">
+                    <span>&#10004;</span>
+                </div>
+            </th>
+            <th>Order</th>
+            <th>Buyer</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let order of orders; let i = index">
+            <td class="pl1">
+                <div *ngIf="!order.selected" (click)="toggleOrderSelected(order)"
+                     class="item-selection flex align-center justify-center mr1"></div>
+
+                <div *ngIf="order.selected" (click)="toggleOrderSelected(order)"
+                     class="item-selection flex align-center justify-center mr1 selected">
+                    <span>&#10004;</span>
+                </div>
+            </td>
+            <td>
+                <b>{{order.id}}</b>
+            </td>
+            <td>
+                {{order.buyerName}}
+            </td>
+            <td>
+                {{order.date}}
+            </td>
+            <td><span [innerHTML]="order.currency.htmlSymbol"></span>{{order.total}}</td>
+            <td>{{order.status}}</td>
+            <td>
+                <a href="javascript:void(0)" class="thin reverse mb0"
+                   (click)="viewOrder(order)">
+                    Order Details
+                </a>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+</div>
+<mat-paginator style="background: transparent" class="domain-paginator flex1 pl050 mb0"
+               [length]="ordersSize" [pageSize]="pageSize.getValue()"
+               [pageSizeOptions]="[10, 25, 50, 100]"
+               (page)="updatePage($event)"></mat-paginator>
+
+<kc-inline-modal *ngIf="viewOrderDetails" (closed)="viewOrderDetails = false">
+    <div class="p1">
+        <kc-order-details [order]="selectedOrder"></kc-order-details>
+    </div>
+</kc-inline-modal>

@@ -1,0 +1,14 @@
+<label>
+    <input class="full" type="text" name="name" required placeholder="Cardholder Name">
+</label>
+<div id="card-element"></div>
+
+<div class="mt1">
+    <mat-checkbox [(ngModel)]="default">Make Default Payment Method</mat-checkbox>
+</div>
+
+<p style="color: darkred" class="mt1" *ngIf="errorMessage">{{errorMessage}}</p>
+
+<div class="mt2">
+    <button class="but butsm" (click)="handleCardSetup()">Add Payment Method</button>
+</div>

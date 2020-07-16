@@ -1,0 +1,60 @@
+<kb-bind source="/account/payment/methods" [model]="paymentSources" [reloadTrigger]="reload"></kb-bind>
+
+<div class="payment-methods">
+
+    <div class="payment-method new" (click)="addPaymentMethod = true">
+
+        <span style="font-size: 2rem"><b>+</b></span>
+        <span>New Payment Method</span>
+
+    </div>
+
+    <div class="payment-method existing" *ngFor="let source of paymentSources.data; let i = index">
+        <div class="payment-loading" *ngIf="paymentLoading === i">
+            <span style="color: white">loading ...</span>
+        </div>
+        <div class="flex align-center" style="width: 100%"
+             [ngClass]="{'justify-between': source.defaultMethod, 'justify-end': !source.defaultMethod}">
+            <span class="default" *ngIf="source.defaultMethod">
+                Default
+            </span>
+            <a href="javascript:void(0)" class="delete-method" (click)="removeCard(source.id, i, source.type)">
+                &#10005;
+            </a>
+        </div>
+
+        <div class="card-outline">
+            <p class="brand">
+                <img src="assets/images/{{source.payment.card.brand}}.png" [alt]="source.payment.card.brand" height="30">
+            </p>
+            <div>
+                <p><span style="vertical-align: sub">**** **** ****</span> {{source.payment.card.last4}}</p>
+                <p>
+                    <small>expires {{source.payment.card.exp_month}} / {{source.payment.exp_year}}</small>
+                </p>
+            </div>
+
+            <p>
+                <span *ngIf="source.payment.billingDetails">{{source.payment.billingDetails.name}}</span>
+            </p>
+        </div>
+
+        <div class="flex justify-end" style="width: 100%">
+            <button class="make-default but butsm" *ngIf="!source.defaultMethod"
+                    (click)="makeDefault(source.id, i)">
+                Make Default
+            </button>
+        </div>
+
+
+    </div>
+
+</div>
+
+<kc-inline-modal *ngIf="addPaymentMethod" (closed)="addPaymentMethod = false">
+    <div class="p1">
+        <h3>Add Payment Method</h3>
+        <kc-payment-method [environment]="environment"
+                           (saved)="addPaymentMethod = false;reload.emit(true)"></kc-payment-method>
+    </div>
+</kc-inline-modal>

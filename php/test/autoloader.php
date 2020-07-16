@@ -1,13 +1,13 @@
 <?php
 
 // Call the core autoloader.
-include_once __DIR__ . "/../vendor/autoload.php";
+include_once __DIR__ . "/../../vendor/autoload.php";
 
 /**
  * Test autoloader - includes src one as well.
  */
 spl_autoload_register(function ($class) {
-    
+
     // Now check for source classes.
     $srcClass = str_replace("Kinicart\\", "", $class);
     if ($srcClass !== $class) {
