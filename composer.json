@@ -16,8 +16,8 @@
   },
   "autoload": {
     "psr-4": {
-      "Kinicart\\Test\\": "test/",
-      "Kinicart\\": "src/"
+      "Kinicart\\Test\\": "php/test/",
+      "Kinicart\\": "php/src/"
     }
   }
 }
