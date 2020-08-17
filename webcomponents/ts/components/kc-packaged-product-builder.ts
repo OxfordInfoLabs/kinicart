@@ -59,15 +59,14 @@ export default class KcPackagedProductBuilder extends StandardForm {
             }
         });
 
-        this.fields = fields;
-
+        this.setFields(fields);
 
         const api = new Api();
 
         // If we are in the default plan based configuration state call the get package product plan logic.
         if (RequestParams.get().plan) {
 
-            this.view.setModelValue("update", 0);
+            this.view.model.update = 0;
 
             api.getPackageProductPlan(this.productIdentifier, RequestParams.get().plan).then(plan => {
 
@@ -76,7 +75,7 @@ export default class KcPackagedProductBuilder extends StandardForm {
         } else if (RequestParams.get().cartItem) {
 
             this.cartItemIndex = RequestParams.get().cartItem;
-            this.view.setModelValue("update", 1);
+            this.view.model.update = 1;
 
             // Get the cart first.
             api.getCart().then(cart => {
@@ -109,7 +108,7 @@ export default class KcPackagedProductBuilder extends StandardForm {
     private initialiseBuilder(plan, cartItem) {
 
         // Add the plan to the models.
-        this.view.setModelValue("plan", plan);
+        this.view.model.plan = plan;
 
         if (plan.relatedAddOns) {
             let addOns = [];
@@ -133,7 +132,7 @@ export default class KcPackagedProductBuilder extends StandardForm {
                 })
             });
 
-            this.view.setModelValue("addOns", addOns);
+            this.view.model.addOns = addOns;
         }
 
 
@@ -158,7 +157,11 @@ export default class KcPackagedProductBuilder extends StandardForm {
 
                 this.successUrl = target.hasAttribute("data-destination") ?
                     target.getAttribute("data-destination") : "/cart/";
-                this.getElementsByTagName("form").item(0).dispatchEvent(new Event("submit"));
+
+                let event = document.createEvent("Event");
+                event.initEvent("submit", false, true);
+
+                this.getElementsByTagName("form").item(0).dispatchEvent(event);
             }
         });
 
