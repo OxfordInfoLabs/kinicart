@@ -42,6 +42,8 @@ export default class KcStripeElement extends HTMLElement {
         script.type = 'text/javascript';
         script.onload = this.bind.call(this);
         script.src = 'https://js.stripe.com/v3/';
+        script.integrity = 'sha256-dDe73hNBUVTWjgm//0K9TsblfVyJT488i+FL7HBRlrQ=';
+        script.crossOrigin = 'anonymous';
 
         document.getElementsByTagName('head')[0].appendChild(script);
     }
