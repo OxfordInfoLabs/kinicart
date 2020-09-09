@@ -1,5 +1,6 @@
 import Api from '../framework/api';
 import AuthKinibind from "kiniauth/ts/framework/auth-kinibind";
+import RequestParams from "../../../../kiniauth/webcomponents/ts/util/request-params";
 
 
 export default class KcCart extends HTMLElement {
@@ -19,6 +20,7 @@ export default class KcCart extends HTMLElement {
             {
                 cart: {},
                 cartItems: null,
+                errors: RequestParams.get().errors ? JSON.parse(RequestParams.get().errors) : null,
                 removeCartItem: (index) => {
 
                     const api = new Api();
