@@ -4,6 +4,7 @@ namespace Kinicart\Services\Application;
 
 use Kiniauth\Services\Application\Session;
 use Kiniauth\Services\Security\SecurityService;
+use Kinicart\Objects\Order\Order;
 use Kinicart\Services\Cart\SessionCart;
 
 /**
@@ -21,6 +22,13 @@ class SessionData extends \Kiniauth\Services\Application\SessionData {
      */
     private $cartCount;
 
+    /**
+     * Completed order if one has been completed this session
+     *
+     * @var Order
+     */
+    private $lastSessionOrder;
+
 
     /**
      * SessionData constructor.
@@ -31,6 +39,7 @@ class SessionData extends \Kiniauth\Services\Application\SessionData {
     public function __construct($securityService, $session, $sessionCart) {
         parent::__construct($securityService, $session);
         $this->cartCount = $sessionCart->getNumberOfItems();
+        $this->lastSessionOrder = $session->getValue("lastSessionOrder");
     }
 
 
@@ -39,6 +48,11 @@ class SessionData extends \Kiniauth\Services\Application\SessionData {
      */
     public function getCartCount() {
         return $this->cartCount;
+    }
+
+
+    public function getLastSessionOrder() {
+        return $this->lastSessionOrder;
     }
 
 

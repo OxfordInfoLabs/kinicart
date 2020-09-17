@@ -4,6 +4,7 @@
 namespace Kinicart\Test\Services\Order;
 
 
+use Kiniauth\Services\Application\Session;
 use Kiniauth\Services\Communication\Email\EmailService;
 use Kiniauth\Services\Security\AuthenticationService;
 use Kiniauth\Test\Services\Security\AuthenticationHelper;
@@ -62,8 +63,9 @@ class OrderServiceTest extends TestBase {
         $this->authenticationService = Container::instance()->get(AuthenticationService::class);
         $this->productService = $this->mockObjectProvider->getMockInstance(ProductService::class);
         $this->emailService = $this->mockObjectProvider->getMockInstance(EmailService::class);
+        $session = Container::instance()->get(Session::class);
 
-        $this->service = new OrderService($this->sessionCart, $this->productService, $this->emailService);
+        $this->service = new OrderService($this->sessionCart, $this->productService, $this->emailService, $session);
 
 
     }

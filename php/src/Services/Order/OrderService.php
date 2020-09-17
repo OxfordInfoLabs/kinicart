@@ -6,40 +6,50 @@ namespace Kinicart\Services\Order;
 
 use Kiniauth\Objects\Account\Contact;
 use Kiniauth\Objects\Communication\Email\AccountTemplatedEmail;
+use Kiniauth\Services\Application\Session;
 use Kiniauth\Services\Communication\Email\EmailService;
 use Kinicart\Objects\Account\Account;
-use Kinicart\Objects\Account\AccountData;
 use Kinicart\Objects\Cart\Cart;
 use Kinicart\Objects\Cart\ProductCartItem;
 use Kinicart\Objects\Order\Order;
 use Kinicart\Objects\Payment\PaymentMethod;
 use Kinicart\Services\Cart\SessionCart;
 use Kinicart\Services\Product\ProductService;
-use Kinikit\Core\Communication\Email\MissingEmailTemplateException;
-use Kinikit\Core\Logging\Logger;
-use Kinikit\Core\Validation\ValidationException;
+
 
 class OrderService {
 
     // Product service
     private $productService;
+
     /**
      * @var EmailService
      */
     private $emailService;
 
+    /**
+     * @var SessionCart
+     */
     private $sessionCart;
 
     /**
+     * @var Session
+     */
+    private $session;
+
+    /**
      * OrderService constructor.
+     *
      * @param SessionCart $sessionCart
      * @param ProductService $productService
      * @param EmailService $emailService
+     * @param Session $session
      */
-    public function __construct($sessionCart, $productService, $emailService) {
+    public function __construct($sessionCart, $productService, $emailService, $session) {
         $this->sessionCart = $sessionCart;
         $this->productService = $productService;
         $this->emailService = $emailService;
+        $this->session = $session;
     }
 
     /**
@@ -92,6 +102,9 @@ class OrderService {
 
         // The order has now been processed - clear the cart
         $this->sessionCart->clear();
+
+        // Add the completed order to the session.
+        $this->session->setValue("lastSessionOrder", $order);
 
         return $order->getId();
     }

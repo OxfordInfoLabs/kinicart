@@ -138,8 +138,14 @@ export default class KcCheckout extends HTMLElement {
         const api = new Api();
         api.processOrder(this.billingContactId, paymentMethod)
             .then(res => {
-                window.location.href = '/order-confirmation?orderId=' + res;
-                // console.log(res);
+
+
+                if (this.getAttribute("data-logout-on-complete")) {
+                    api.callAPI('/guest/auth/logout').then(() => {
+                        window.location.href = '/order-confirmation';
+                    });
+                } else
+                    window.location.href = '/order-confirmation';
             })
             .catch(err => {
                 window.location.href = '/checkout';

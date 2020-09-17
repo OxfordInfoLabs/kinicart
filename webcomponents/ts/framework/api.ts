@@ -75,7 +75,7 @@ export default class Api {
      * @param method
      * @param rawResponse
      */
-    private callAPI(url: string, params: any = {}, method: string = 'GET', rawResponse: boolean = false) {
+    public callAPI(url: string, params: any = {}, method: string = 'GET', rawResponse: boolean = false) {
 
         let csrf = url.includes("/account/");
 
