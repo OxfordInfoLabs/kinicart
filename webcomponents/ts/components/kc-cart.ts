@@ -1,6 +1,6 @@
 import Api from '../framework/api';
 import AuthKinibind from "kiniauth/ts/framework/auth-kinibind";
-import RequestParams from "../../../../kiniauth/webcomponents/ts/util/request-params";
+import RequestParams from "kiniauth/ts/util/request-params";
 
 
 export default class KcCart extends HTMLElement {
