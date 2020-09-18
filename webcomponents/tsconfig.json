@@ -5,6 +5,7 @@
     "target": "es5",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "preserveSymlinks": true
+    "preserveSymlinks": true,
+    "moduleResolution":  "node"
   }
 }
