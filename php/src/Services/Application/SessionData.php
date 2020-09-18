@@ -29,6 +29,8 @@ class SessionData extends \Kiniauth\Services\Application\SessionData {
      */
     private $lastSessionOrder;
 
+    const LAST_SESSION_ORDER_NAME = "__kinicart_last_order";
+
 
     /**
      * SessionData constructor.
@@ -39,7 +41,7 @@ class SessionData extends \Kiniauth\Services\Application\SessionData {
     public function __construct($securityService, $session, $sessionCart) {
         parent::__construct($securityService, $session);
         $this->cartCount = $sessionCart->getNumberOfItems();
-        $this->lastSessionOrder = $session->getValue("lastSessionOrder");
+        $this->lastSessionOrder = $session->getValue(self::LAST_SESSION_ORDER_NAME);
     }
 
 

@@ -49,6 +49,16 @@ class SessionCart {
     }
 
     /**
+     * @return Session
+     */
+    public function getSession() {
+        return $this->session;
+    }
+
+
+
+
+    /**
      * Gets the session cart as a Cart object
      *
      * @return Cart
