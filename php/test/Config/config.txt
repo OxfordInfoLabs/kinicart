@@ -1,7 +1,7 @@
 # Config file
 
 application.namespace = Kinicart
-search.paths = ../vendor/oxil/kiniauth/src;
+search.paths = ../../vendor/oxil/kiniauth/php/src;
 
 db.provider = sqlite3
 db.filename = DB/kinicart-test.db
