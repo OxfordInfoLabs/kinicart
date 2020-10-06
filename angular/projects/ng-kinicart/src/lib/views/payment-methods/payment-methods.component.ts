@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit } from '@angular/core';
 import { KinibindModel, KinibindRequestService } from 'ng-kinibind';
 import { PaymentService } from '../../services/payment.service';
 
@@ -7,7 +7,7 @@ import { PaymentService } from '../../services/payment.service';
     templateUrl: './payment-methods.component.html',
     styleUrls: ['./payment-methods.component.sass']
 })
-export class PaymentMethodsComponent {
+export class PaymentMethodsComponent implements OnInit {
 
     @Input() environment: any;
 
@@ -19,6 +19,12 @@ export class PaymentMethodsComponent {
     constructor(private kbRequest: KinibindRequestService,
                 private paymentService: PaymentService) {
 
+    }
+
+    ngOnInit() {
+        this.paymentService.getPaymentMethods().then(methods => {
+            this.paymentSources.data = methods;
+        });
     }
 
     public removeCard(cardId, index, type) {
