@@ -14,19 +14,10 @@
                 No Payment Required. In case you need it, your reference number is #{{order.id}}
             </p>
 
-            <ng-template ngFor let-paymentDataKey [ngForOf]="Object.keys(order.paymentData)">
-                <p *ngIf="paymentDataKey === 'AccountBalance'">
-                    We have deducted <span
-                    [innerHTML]="order.currency.htmlSymbol"></span>{{(order.paymentData[paymentDataKey].amount).toFixed(2)}}
-                    from your account balance. - {{order.date}}. In case you need it, your
-                    reference number is #{{order.id}}
-                </p>
-                <p *ngIf="paymentDataKey !== 'AccountBalance'">
-                    We have taken payment of <span [innerHTML]="order.currency.htmlSymbol"></span>{{(order.paymentData[paymentDataKey].amount).toFixed(2)}}
-                    by {{paymentDataKey}} (ref: {{order.paymentData[paymentDataKey].reference}}). - {{order.date}}. In case you
-                    need it your reference number is #{{order.id}}
-                </p>
-            </ng-template>
+            <p>
+                We have taken payment of <span *ngIf="order.currency === 'GBP'">£</span>{{(order.paymentData.amount / 100)}}
+                (ref: {{order.paymentData.reference}}). - {{order.date}}. In case you need it your reference number is #{{order.id}}
+            </p>
         </div>
 
     </div>
@@ -101,7 +92,7 @@
                         </td>
                         <td align="right" style="padding: 20px 0 0; font-family: Helvetica, Arial, sans-serif; font-size: 16px;line-height: 1.3; vertical-align: top; color: #333; width: 25%;"
                             [ngStyle]="{'border-bottom': i < (order.orderLines.length -1) ? '1px dashed #ddd' : ''}">
-                            <span [innerHTML]="order.currency.htmlSymbol"></span>{{(orderLine.amount).toFixed(2)}}
+                            <span *ngIf="order.currency === 'GBP'">£</span>{{orderLine.amount}}
                         </td>
                     </tr>
 
@@ -123,7 +114,7 @@
                         </td>
                         <td align="right"
                             style="padding: 3px 0; font-family: Helvetica, Arial, sans-serif; font-size: 16px;line-height: 1.5; color: #333; ">
-                            <span [innerHTML]="order.currency.htmlSymbol"></span>{{order.subtotal}}
+                            <span *ngIf="order.currency === 'GBP'">£</span>{{order.subtotal}}
                         </td>
                     </tr>
                     <tr>
@@ -133,7 +124,7 @@
                         </td>
                         <td align="right"
                             style="padding: 3px 0; font-family: Helvetica, Arial, sans-serif; font-size: 16px;line-height: 1.5; color: #333; ">
-                            <span [innerHTML]="order.currency.htmlSymbol"></span>{{order.taxes}}
+                            <span *ngIf="order.currency === 'GBP'">£</span>{{order.taxes}}
                         </td>
                     </tr>
                     <tr>
@@ -143,7 +134,7 @@
                         </td>
                         <td align="right"
                             style="padding: 3px 0; font-family: Helvetica, Arial, sans-serif; font-size: 16px;line-height: 1.5; color: #333; font-weight: bold;">
-                            <span [innerHTML]="order.currency.htmlSymbol"></span>{{order.total}}
+                            <span *ngIf="order.currency === 'GBP'">£</span>{{order.total}}
                         </td>
                     </tr>
                     </tbody>
@@ -155,7 +146,7 @@
     </table>
 
     <p class="content mt2">
-        <small>Kinicart customer example, 1 Long Road, Oxford. UK No. 123456789 VAT No. 987654321</small>
+<!--        <small>Kinicart customer example, 1 Long Road, Oxford. UK No. 123456789 VAT No. 987654321</small>-->
     </p>
 
 </ng-template>
