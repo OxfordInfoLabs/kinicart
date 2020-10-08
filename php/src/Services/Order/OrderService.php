@@ -79,12 +79,17 @@ class OrderService {
         $account = Account::fetch($contact->getAccountId());
         $currency = $account->getAccountData()->getCurrencyCode();
 
-        /** @var PaymentMethod $paymentMethod */
-        $paymentMethod = PaymentMethod::fetch($paymentMethodId);
-        try {
-            $paymentData = $paymentMethod->getPayment()->charge($cart->getTotal(), $currency);
-        } catch (\Exception $e) {
-            $paymentData = ["error" => $e];
+
+        if ($cart->getTotal() > 0) {
+            /** @var PaymentMethod $paymentMethod */
+            $paymentMethod = PaymentMethod::fetch($paymentMethodId);
+            try {
+                $paymentData = $paymentMethod->getPayment()->charge($cart->getTotal(), $currency);
+            } catch (\Exception $e) {
+                $paymentData = ["error" => $e];
+            }
+        } else {
+            $paymentData = [];
         }
 
         // Process each cart item.

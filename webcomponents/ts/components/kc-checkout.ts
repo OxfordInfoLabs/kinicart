@@ -8,6 +8,7 @@ export default class KcCheckout extends HTMLElement {
     private loadingElement: HTMLElement;
     private checkoutWidget: HTMLElement;
     private processingOrder: HTMLElement;
+    private cartTotal: number;
 
     private billingContactId;
 
@@ -39,6 +40,7 @@ export default class KcCheckout extends HTMLElement {
         api.getCart().then(cart => {
             view.model.cart = cart;
             view.model.cartItems = cart.items.length;
+            this.cartTotal = Number(cart.total.substring(1));
         });
 
         api.getSessionData().then(session => {
@@ -116,7 +118,11 @@ export default class KcCheckout extends HTMLElement {
             }
         });
 
-        if (selectedPayment) {
+        if (this.cartTotal == 0){
+            selectedPayment = 0;
+        }
+
+        if (selectedPayment !== null) {
             if (selectedPayment === 'new') {
                 window.addPaymentMethod().then(res => {
                     if (!res.error) {
