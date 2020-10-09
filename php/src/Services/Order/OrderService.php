@@ -7,6 +7,10 @@ namespace Kinicart\Services\Order;
 use Kiniauth\Objects\Account\Contact;
 use Kiniauth\Objects\Communication\Email\AccountTemplatedEmail;
 use Kiniauth\Services\Communication\Email\EmailService;
+use Kinicart\Exception\Payment\InvalidBillingContactException;
+use Kinicart\Exception\Payment\InvalidPaymentMethodException;
+use Kinicart\Exception\Payment\MissingBillingContactException;
+use Kinicart\Exception\Payment\MissingPaymentMethodException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Cart\Cart;
 use Kinicart\Objects\Cart\ProductCartItem;
@@ -16,6 +20,8 @@ use Kinicart\Services\Application\SessionData;
 use Kinicart\Services\Cart\SessionCart;
 use Kinicart\Services\Product\ProductService;
 use Kiniauth\Services\Application\Session;
+use Kinikit\Core\Util\Primitive;
+use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
 
 
 class OrderService {
@@ -66,30 +72,55 @@ class OrderService {
      * @param $paymentMethodId
      * @param Cart $cart
      */
-    public function processOrder($contactId, $paymentMethodId, $cart = null) {
+    public function processOrder($contactId = null, $paymentMethodId = null, $cart = null) {
 
 
         if (!$cart) {
             $cart = $this->sessionCart->get();
         }
 
-        /** @var Contact $contact */
-        $contact = Contact::fetch($contactId);
+
+        if ($contactId) {
+
+            try {
+                /** @var Contact $contact */
+                $contact = Contact::fetch($contactId);
+            } catch (ObjectNotFoundException $e) {
+                throw new InvalidBillingContactException();
+            }
+        } else if ($cart->getTotal() > 0) {
+            throw new MissingBillingContactException();
+        } else {
+            $contact = null;
+        }
+
         /** @var Account $account */
-        $account = Account::fetch($contact->getAccountId());
+        $account = $cart->getAccountProvider()->provideAccount();
+
         $currency = $account->getAccountData()->getCurrencyCode();
 
 
         if ($cart->getTotal() > 0) {
-            /** @var PaymentMethod $paymentMethod */
-            $paymentMethod = PaymentMethod::fetch($paymentMethodId);
-            try {
-                $paymentData = $paymentMethod->getPayment()->charge($cart->getTotal(), $currency);
-            } catch (\Exception $e) {
-                $paymentData = ["error" => $e];
+
+            if ($paymentMethodId) {
+
+                try {
+                    /** @var PaymentMethod $paymentMethod */
+                    $paymentMethod = PaymentMethod::fetch($paymentMethodId);
+                } catch (ObjectNotFoundException $e) {
+                    throw new InvalidPaymentMethodException();
+                }
+
+                try {
+                    $paymentData = $paymentMethod->getPayment()->charge($cart->getTotal(), $currency);
+                } catch (\Exception $e) {
+                    $paymentData = ["error" => $e];
+                }
+            } else {
+                throw new MissingPaymentMethodException();
             }
         } else {
-            $paymentData = [];
+            $paymentData = ["reference" => date("U")];
         }
 
         // Process each cart item.
@@ -102,7 +133,7 @@ class OrderService {
         $order = new Order($contact, $cart, $paymentData, $account);
         $order->save();
 
-        $this->emailService->send(new AccountTemplatedEmail($contact->getAccountId(), "checkout/order-summary", ["order" => $order]), null);
+        $this->emailService->send(new AccountTemplatedEmail($account->getAccountId(), "checkout/order-summary", ["order" => $order]), null);
 
         // The order has now been processed - clear the cart
         $this->sessionCart->clear();

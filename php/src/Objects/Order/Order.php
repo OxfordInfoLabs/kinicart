@@ -95,10 +95,14 @@ class Order extends ActiveRecord {
      */
     public function __construct($contact = null, $cart = null, $paymentData = null, $account = null) {
         if ($contact) {
-            $this->accountId = $contact->getAccountId();
             $this->address = $contact->getHtmlAddressLinesString();
             $this->buyerName = $contact->getName();
+            $this->accountId = $contact->getAccountId();
+        } else if ($account) {
+            $this->buyerName = $account->getName();
+            $this->accountId = $account->getAccountId();
         }
+
         if ($account && $cart) {
             $currency = $account->getAccountData()->getCurrencyCode();
             $this->orderLines = [];

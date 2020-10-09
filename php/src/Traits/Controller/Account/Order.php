@@ -55,11 +55,7 @@ trait Order {
             $contacts = $this->contactService->getContacts("BILLING");
             $contactId = sizeof($contacts) > 0 ? $contacts[0]->getId(): null;
         }
-
-        if (!$contactId) {
-            throw new \Exception("No billing contact!");
-        }
-
+        
         return $this->orderService->processOrder($contactId, $paymentMethodId, $cart);
     }
 

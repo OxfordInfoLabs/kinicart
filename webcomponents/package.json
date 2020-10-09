@@ -1,6 +1,6 @@
 {
   "name": "kinicart",
-  "version": "0.0.63",
+  "version": "0.0.64",
   "description": "Kinicart Web Components",
   "main": "dist/kinicart.js",
   "files": [

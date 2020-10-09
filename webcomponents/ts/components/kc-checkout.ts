@@ -10,7 +10,7 @@ export default class KcCheckout extends HTMLElement {
     private processingOrder: HTMLElement;
     private cartTotal: number;
 
-    private billingContactId;
+    private billingContactId = "";
 
     constructor() {
         super();
@@ -46,10 +46,14 @@ export default class KcCheckout extends HTMLElement {
         api.getSessionData().then(session => {
             if (session.user || session.account) {
                 api.getBillingContact().then(contact => {
-                    if (contact) {
-                        view.model.billingURL = '/billing?contact=' + contact.id;
-                        view.model.billingContact = contact;
-                        this.billingContactId = contact.id;
+                    if (contact || this.cartTotal == 0) {
+                        if (contact) {
+                            view.model.billingURL = '/billing?contact=' + contact.id;
+                            view.model.billingContact = contact;
+                            this.billingContactId = contact.id;
+                        } else {
+                            view.model.billingURL = this.getAttribute('data-billing-url');
+                        }
                         this.loadPaymentMethods(api, view);
                     } else {
                         const url = this.getAttribute('data-billing-url');
@@ -118,9 +122,6 @@ export default class KcCheckout extends HTMLElement {
             }
         });
 
-        if (this.cartTotal == 0){
-            selectedPayment = 0;
-        }
 
         if (selectedPayment !== null) {
             if (selectedPayment === 'new') {
@@ -133,9 +134,12 @@ export default class KcCheckout extends HTMLElement {
             } else {
                 this.processOrder(selectedPayment);
             }
+        } else if (this.cartTotal == 0) {
+            this.processOrder("");
         } else {
             alert('Please add/select a payment method');
         }
+
     }
 
     private processOrder(paymentMethod) {
@@ -154,8 +158,8 @@ export default class KcCheckout extends HTMLElement {
                     window.location.href = '/order-confirmation';
             })
             .catch(err => {
-                window.location.href = '/checkout';
-                // console.log(err);
+                //window.location.href = '/checkout';
+                console.log(err);
             })
     }
 
