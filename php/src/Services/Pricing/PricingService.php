@@ -107,7 +107,7 @@ class PricingService {
      */
     public function getActiveCurrency() {
 
-        $loggedInAccount = $this->securityService->getLoggedInUserAndAccount()[1];
+        $loggedInAccount = $this->securityService->getLoggedInSecurableAndAccount()[1];
 
         if ($loggedInAccount) {
             $currencyCode = $loggedInAccount->getAccountData()->getCurrencyCode();
@@ -130,7 +130,7 @@ class PricingService {
      */
     public function setActiveCurrencyCode($activeCurrencyCode) {
 
-        $loggedInAccount = $this->securityService->getLoggedInUserAndAccount()[1];
+        $loggedInAccount = $this->securityService->getLoggedInSecurableAndAccount()[1];
 
 
         if ($loggedInAccount) {
@@ -158,7 +158,7 @@ class PricingService {
      */
     public function getActiveTierId() {
 
-        $loggedInAccount = $this->securityService->getLoggedInUserAndAccount()[1];
+        $loggedInAccount = $this->securityService->getLoggedInSecurableAndAccount()[1];
 
         if ($loggedInAccount) {
             return $loggedInAccount->getAccountData()->getTierId();
