@@ -94,10 +94,14 @@ class OrderService {
             $contact = null;
         }
 
+
+
         /** @var Account $account */
         $account = $cart->getAccountProvider()->provideAccount();
 
+
         $currency = $account->getAccountData()->getCurrencyCode();
+
 
 
         if ($cart->getTotal() > 0) {
@@ -113,8 +117,9 @@ class OrderService {
 
                 try {
                     $paymentData = $paymentMethod->getPayment()->charge($cart->getTotal(), $currency);
+
                 } catch (\Exception $e) {
-                    $paymentData = ["error" => $e];
+                    $paymentData = ["error" => $e->getMessage()];
                 }
             } else {
                 throw new MissingPaymentMethodException();
@@ -123,6 +128,7 @@ class OrderService {
             $paymentData = ["reference" => date("U")];
         }
 
+
         // Process each cart item.
         foreach ($cart->getItems() as $cartItem) {
             if ($cartItem instanceof ProductCartItem) {
@@ -130,9 +136,12 @@ class OrderService {
             }
         }
 
+
         $order = new Order($contact, $cart, $paymentData, $account);
         $order->save();
 
+
+        
         $this->emailService->send(new AccountTemplatedEmail($account->getAccountId(), "checkout/order-summary", ["order" => $order]), null);
 
         // The order has now been processed - clear the cart
