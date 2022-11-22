@@ -48,6 +48,17 @@ class AccountData {
     private $currency;
 
     /**
+     * AccountData constructor.
+     * @param Tier $tier
+     * @param Currency $currency
+     */
+    public function __construct($tier = null, $currency = null) {
+        $this->tier = $tier;
+        $this->currency = $currency;
+    }
+
+
+    /**
      * @return int
      */
     public function getAccountId() {

@@ -43,6 +43,22 @@ class Tier extends ActiveRecord {
      */
     private $upgradeOrder;
 
+    /**
+     * Tier constructor.
+     * @param int $id
+     * @param string $name
+     * @param float $defaultPriceMultiplier
+     * @param bool $defaultTier
+     * @param int $upgradeOrder
+     */
+    public function __construct($name, $defaultPriceMultiplier, $defaultTier, $upgradeOrder, $id = null) {
+        $this->id = $id;
+        $this->name = $name;
+        $this->defaultPriceMultiplier = $defaultPriceMultiplier;
+        $this->defaultTier = $defaultTier;
+        $this->upgradeOrder = $upgradeOrder;
+    }
+
 
     /**
      * @return int

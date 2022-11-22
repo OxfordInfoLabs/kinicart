@@ -22,6 +22,7 @@ class SessionData extends \Kiniauth\Services\Application\SessionData {
      */
     private $cartCount;
 
+
     /**
      * Completed order if one has been completed this session
      *
