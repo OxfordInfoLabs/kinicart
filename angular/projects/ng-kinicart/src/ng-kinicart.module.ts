@@ -39,7 +39,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 })
 export class NgKinicartModule {
 
-    static forRoot(conf?: KinicartModuleConfig): ModuleWithProviders {
+    static forRoot(conf?: KinicartModuleConfig): ModuleWithProviders<NgKinicartModule> {
         return {
             ngModule: NgKinicartModule,
             providers: [
