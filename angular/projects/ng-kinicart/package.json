@@ -1,9 +1,7 @@
 {
     "name": "ng-kinicart",
     "version": "0.0.22",
-    "dependencies": {
-
-    },
+    "dependencies": {},
     "peerDependencies": {
         "@angular/common": "~8.2.7",
         "@angular/core": "~8.2.7",
