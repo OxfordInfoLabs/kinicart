@@ -4,6 +4,7 @@
 namespace Kinicart\Objects\Product\PackagedProduct;
 
 
+use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Cart\CartItem;
 use Kinicart\Objects\Cart\SimpleCartItem;
 use Kinicart\Objects\Pricing\ProductBasePrice;
@@ -99,5 +100,14 @@ class PackageCartItem extends CartItem {
 
     public function getSubType() {
         return $this->package->getIdentifier();
+    }
+
+    /**
+     * Nothing to do for a package
+     *
+     * @param Account $account
+     */
+    public function onComplete($account) {
+
     }
 }

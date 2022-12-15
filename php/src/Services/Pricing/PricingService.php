@@ -4,9 +4,12 @@ namespace Kinicart\Services\Pricing;
 
 use Kiniauth\Services\Application\Session;
 use Kiniauth\Services\Security\SecurityService;
+use Kinicart\Exception\Pricing\InvalidCurrencyException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Pricing\Currency;
 use Kinicart\Objects\Pricing\Tier;
+use Kinikit\Core\Exception\WrongParameterTypeException;
+use Kinikit\Core\Exception\WrongPropertyTypeException;
 use Kinikit\Core\Util\ObjectArrayUtils;
 
 class PricingService {
@@ -166,5 +169,35 @@ class PricingService {
             return $this->getDefaultTier()->getId();
         }
     }
+
+    /**
+     * Convert an amount supplied as a decimal in source currency to target currency
+     *
+     * @param float $amount
+     * @param string $sourceCurrencyCode
+     * @param string $targetCurrencyCode
+     *
+     * @throws InvalidCurrencyException
+     * @throws WrongPropertyTypeException
+     */
+    public function convertAmountToCurrency($amount, $sourceCurrencyCode, $targetCurrencyCode) {
+
+        // Check amount is numeric
+        if (!is_numeric($amount)) {
+            throw new WrongParameterTypeException("Cannot convert a non-numeric amount from one currency to another");
+        }
+
+        $allCurrencies = $this->getCurrencies();
+        if (!isset($allCurrencies[$sourceCurrencyCode])) throw new InvalidCurrencyException($sourceCurrencyCode);
+        if (!isset($allCurrencies[$targetCurrencyCode])) throw new InvalidCurrencyException($targetCurrencyCode);
+
+        // Do conversion only if required
+        if ($sourceCurrencyCode != $targetCurrencyCode)
+            $amount = $amount / $allCurrencies[$sourceCurrencyCode]->getExchangeRateFromBase() * $allCurrencies[$targetCurrencyCode]->getExchangeRateFromBase();
+
+        // Return formatted number
+        return number_format(round($amount, 2), 2, '.', '');
+    }
+
 
 }

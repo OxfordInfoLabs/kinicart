@@ -50,11 +50,6 @@ class OrderServiceTest extends TestBase {
      */
     private $authenticationService;
 
-
-    /**
-     * @var MockObject
-     */
-    private $productService;
     /**
      * @var MockObject
      */
@@ -66,11 +61,10 @@ class OrderServiceTest extends TestBase {
         $this->sessionCart = Container::instance()->get(SessionCart::class);
         $this->mockObjectProvider = Container::instance()->get(MockObjectProvider::class);
         $this->authenticationService = Container::instance()->get(AuthenticationService::class);
-        $this->productService = $this->mockObjectProvider->getMockInstance(ProductService::class);
         $this->emailService = $this->mockObjectProvider->getMockInstance(EmailService::class);
         $session = Container::instance()->get(Session::class);
 
-        $this->service = new OrderService($this->sessionCart, $this->productService, $this->emailService, $session);
+        $this->service = new OrderService($this->sessionCart, $this->emailService, $session);
 
 
     }
@@ -172,8 +166,8 @@ class OrderServiceTest extends TestBase {
 
         $account = Account::fetch(1);
 
-        $this->assertTrue($this->productService->methodWasCalled("processProductCartItem", [$account, $cartItem1]));
-        $this->assertTrue($this->productService->methodWasCalled("processProductCartItem", [$account, $cartItem2]));
+        $this->assertTrue($cartItem1->methodWasCalled("onComplete", [$account]));
+        $this->assertTrue($cartItem2->methodWasCalled("onComplete", [$account]));
 
 
         $order = Order::fetch($orderId);
@@ -236,7 +230,7 @@ class OrderServiceTest extends TestBase {
 
         $account = Account::fetch(1);
 
-        $this->assertTrue($this->productService->methodWasCalled("processProductCartItem", [$account, $cartItem1]));
+        $this->assertTrue($cartItem1->methodWasCalled("onComplete", [$account]));
 
 
         $order = Order::fetch($orderId);
@@ -264,6 +258,7 @@ class OrderServiceTest extends TestBase {
 
 
     }
+
 
     
 }

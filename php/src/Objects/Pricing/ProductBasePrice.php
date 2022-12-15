@@ -85,8 +85,6 @@ class ProductBasePrice {
     private $tierPrices;
 
 
-
-
     /**
      * @return int
      */
@@ -204,6 +202,12 @@ class ProductBasePrice {
 
         $price = null;
 
+        /**
+         * @var PricingService $pricingService
+         */
+        $pricingService = Container::instance()->get(PricingService::class);
+
+
         // Check for explicit prices first.
         if ($this->tierPrices) {
 
@@ -217,15 +221,10 @@ class ProductBasePrice {
                 }
             }
 
+
             // If we didn't manage to get an explicit currency code, do the conversion now.
             if (is_numeric($price) && $tierPrice->getCurrencyCode() != $currencyCode) {
-                $currencies = Container::instance()->get(PricingService::class)->getCurrencies();
-
-                // Check currencies exist.
-                if (!isset($currencies[$priceCurrency])) throw new InvalidCurrencyException($priceCurrency);
-                if (!isset($currencies[$currencyCode])) throw new InvalidCurrencyException($currencyCode);
-
-                $price = $price / $currencies[$priceCurrency]->getExchangeRateFromBase() * $currencies[$currencyCode]->getExchangeRateFromBase();
+                $price = $pricingService->convertAmountToCurrency($price, $priceCurrency, $currencyCode);
             }
 
         }
@@ -233,8 +232,6 @@ class ProductBasePrice {
 
         // If still no price, use base price to derive tier.
         if ($price == null) {
-
-            $pricingService = Container::instance()->get(PricingService::class);
 
             // Do the tier conversion.
             $tiers = $pricingService->getTiers();
@@ -244,14 +241,8 @@ class ProductBasePrice {
 
             // If we need to do a currency conversion, do this too.
             if ($currencyCode != $this->currencyCode) {
-                $currencies = $pricingService->getCurrencies();
-
-                if (!isset($currencies[$this->currencyCode])) throw new InvalidCurrencyException($this->currencyCode);
-                if (!isset($currencies[$currencyCode])) throw new InvalidCurrencyException($currencyCode);
-
-                $price = $price / $currencies[$this->currencyCode]->getExchangeRateFromBase() * $currencies[$currencyCode]->getExchangeRateFromBase();
+                $price = $pricingService->convertAmountToCurrency($price, $this->currencyCode, $currencyCode);
             }
-
 
         }
 
