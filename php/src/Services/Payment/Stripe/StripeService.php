@@ -7,6 +7,7 @@ namespace Kinicart\Services\Payment\Stripe;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Core\Logging\Logger;
 use Kinikit\MVC\Session\PHPSession;
+use Stripe\Exception\ApiErrorException;
 
 class StripeService {
 
@@ -55,6 +56,13 @@ class StripeService {
             Logger::log($paymentIntent);
             return $paymentIntent;
         }
+    }
+
+    /**
+     * @throws ApiErrorException
+     */
+    public function capturePaymentIntent($paymentIntent) {
+        \Stripe\PaymentIntent::retrieve($paymentIntent)->capture();
     }
 
 }
