@@ -4,11 +4,13 @@
 namespace Kinicart\Test\Services\Account;
 
 
+use Cassandra\Exception\ConfigurationException;
 use Kiniauth\Test\Services\Security\AuthenticationHelper;
 use Kinicart\Exception\Account\InsufficientBalanceException;
 use Kinicart\Objects\Account\AccountBalance;
 use Kinicart\Services\Account\AccountBalanceService;
 use Kinicart\TestBase;
+use Kinikit\Core\Configuration\Configuration;
 use Kinikit\Core\DependencyInjection\Container;
 
 include_once "autoloader.php";
@@ -124,5 +126,28 @@ class AccountBalanceServiceTest extends TestBase {
 
     }
 
+    public function testIfAccountBalancePrecisionConfiguredAccountBalanceIsMaintainedToHigherGranularity() {
+
+        Configuration::instance()->addParameter("account.balance.precision", 4);
+
+
+        AuthenticationHelper::login("admin@kinicart.com", "password");
+
+        $this->accountBalanceService->topUpBalance(4.3213, "GBP", 4);
+
+        $balance = AccountBalance::fetch(4);
+        $this->assertEquals(4.3213, $balance->getBalance());
+
+        $this->accountBalanceService->topUpBalance(0.0012, "GBP", 4);
+
+        $balance = AccountBalance::fetch(4);
+        $this->assertEquals(4.3225, $balance->getBalance());
+
+        $this->accountBalanceService->deductFromBalance(0.0024, "GBP", 4);
+
+        $balance = AccountBalance::fetch(4);
+        $this->assertEquals(4.3201, $balance->getBalance());
+
+    }
 
 }

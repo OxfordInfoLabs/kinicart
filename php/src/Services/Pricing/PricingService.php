@@ -8,6 +8,7 @@ use Kinicart\Exception\Pricing\InvalidCurrencyException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Pricing\Currency;
 use Kinicart\Objects\Pricing\Tier;
+use Kinikit\Core\Configuration\Configuration;
 use Kinikit\Core\Exception\WrongParameterTypeException;
 use Kinikit\Core\Exception\WrongPropertyTypeException;
 use Kinikit\Core\Util\ObjectArrayUtils;
@@ -180,7 +181,7 @@ class PricingService {
      * @throws InvalidCurrencyException
      * @throws WrongPropertyTypeException
      */
-    public function convertAmountToCurrency($amount, $sourceCurrencyCode, $targetCurrencyCode) {
+    public function convertAmountToCurrency($amount, $sourceCurrencyCode, $targetCurrencyCode, $precision = 2) {
 
         // Check amount is numeric
         if (!is_numeric($amount)) {
@@ -195,8 +196,9 @@ class PricingService {
         if ($sourceCurrencyCode != $targetCurrencyCode)
             $amount = $amount / $allCurrencies[$sourceCurrencyCode]->getExchangeRateFromBase() * $allCurrencies[$targetCurrencyCode]->getExchangeRateFromBase();
 
+
         // Return formatted number
-        return number_format(round($amount, 2), 2, '.', '');
+        return number_format(round($amount, $precision), $precision, '.', '');
     }
 
 

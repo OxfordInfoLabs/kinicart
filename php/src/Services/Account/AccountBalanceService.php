@@ -8,6 +8,7 @@ use Kinicart\Exception\Account\InsufficientBalanceException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Account\AccountBalance;
 use Kinicart\Services\Pricing\PricingService;
+use Kinikit\Core\Configuration\Configuration;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Persistence\Database\Connection\DatabaseConnection;
 use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
@@ -63,16 +64,19 @@ class AccountBalanceService {
 
         $accountBalance = $this->getAccountBalance($accountId);
 
+        $accountBalancePrecision = Configuration::readParameter("account.balance.precision") ?? 2;
+
+
         // Convert the top up amount if currency code supplied
         if ($currencyCode) {
-            $topUpAmount = $this->pricingService->convertAmountToCurrency($topUpAmount, $currencyCode, $accountBalance->getBalanceCurrencyCode());
+            $topUpAmount = $this->pricingService->convertAmountToCurrency($topUpAmount, $currencyCode, $accountBalance->getBalanceCurrencyCode(), $accountBalancePrecision);
         }
 
         /**
          * @var DatabaseConnection $databaseConnection
          */
         $databaseConnection = Container::instance()->get(DatabaseConnection::class);
-        $databaseConnection->execute("UPDATE kc_account_balance SET balance = ROUND(balance + ?, 2) WHERE account_id = ?", $topUpAmount, $accountId);
+        $databaseConnection->execute("UPDATE kc_account_balance SET balance = ROUND(balance + ?, $accountBalancePrecision) WHERE account_id = ?", $topUpAmount, $accountId);
     }
 
 
@@ -87,8 +91,11 @@ class AccountBalanceService {
 
         $accountBalance = $this->getAccountBalance($accountId);
 
+        $accountBalancePrecision = Configuration::readParameter("account.balance.precision") ?? 2;
+
+
         // Convert the amount being ensured into account balance currency
-        $convertedAmount = $this->pricingService->convertAmountToCurrency($deductionAmount, $currencyCode, $accountBalance->getBalanceCurrencyCode());
+        $convertedAmount = $this->pricingService->convertAmountToCurrency($deductionAmount, $currencyCode, $accountBalance->getBalanceCurrencyCode(), $accountBalancePrecision);
 
         // If insufficient balance throw an exception
         if ($convertedAmount > $accountBalance->getBalance())
@@ -98,7 +105,7 @@ class AccountBalanceService {
          * @var DatabaseConnection $databaseConnection
          */
         $databaseConnection = Container::instance()->get(DatabaseConnection::class);
-        $databaseConnection->execute("UPDATE kc_account_balance SET balance = ROUND(balance - ?, 2) WHERE account_id = ?", $convertedAmount, $accountId);
+        $databaseConnection->execute("UPDATE kc_account_balance SET balance = ROUND(balance - ?, $accountBalancePrecision) WHERE account_id = ?", $convertedAmount, $accountId);
 
     }
 
