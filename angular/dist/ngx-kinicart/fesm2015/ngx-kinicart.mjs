@@ -33,7 +33,7 @@ class TopUpComponent {
                     },
                     quantity: 1
                 };
-                const checkoutSession = yield this.paymentService.getStripeCheckoutSessionURL([lineItem], 'payment', window.location.href + '/cancel', window.location.href + '/success');
+                const checkoutSession = yield this.paymentService.getStripeCheckoutSessionURL([lineItem], 'payment', window.location.origin + '/account/top-up/cancel', window.location.origin + '/account/top-up/success');
                 window.location.href = checkoutSession;
             }
             else {

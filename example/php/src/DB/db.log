@@ -6209,3 +6209,263 @@ LEFT JOIN kc_account_data _XABA ON _XAB.account_id = _XABA.account_id
 LEFT JOIN kc_tier _XABAA ON _XABA.tier_id = _XABAA.id
 LEFT JOIN kc_currency _XABAB ON _XABA.currency_code = _XABAB.code WHERE _X.id=?
 Completed in 0.0003 seconds
+PRAGMA table_info('ka_setting')
+Completed in 0 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.setting_key _X__setting_key, _X.value _X__value, _X.value_index _X__value_index FROM ka_setting _X  WHERE _X.setting_key = ? AND _X.value = ?
+Completed in 0 seconds
+PRAGMA table_info('ka_role')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_role' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('kc_tier')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_tier' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('ka_user')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_user' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('ka_user_role')
+Completed in 0 seconds
+PRAGMA table_info('ka_account')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_account' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('kc_account_data')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_account_data' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('kc_currency')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_currency' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.hashed_password _X__hashed_password, _X.mobile_number _X__mobile_number, _X.backup_email_address _X__backup_email_address, _X.active_account_id _X__active_account_id, _X.invalid_login_attempts _X__invalid_login_attempts, _X.created_date _X__created_date, _X.id _X__id, _X.name _X__name, _X.status _X__status, _X.email_address _X__email_address, _X.successful_logins _X__successful_logins, _X.application_settings _X__application_settings, _XA.user_id _XA__user_id, _XA.scope _XA__scope, _XA.scope_id _XA__scope_id, _XA.role_id _XA__role_id, _XA.account_id _XA__account_id, _XAA.id _XAA__id, _XAA.defined_account_id _XAA__defined_account_id, _XAA.scope _XAA__scope, _XAA.name _XAA__name, _XAA.description _XAA__description, _XAA.privileges _XAA__privileges, _XAB.sub_accounts_enabled _XAB__sub_accounts_enabled, _XAB.created_date _XAB__created_date, _XAB.name _XAB__name, _XAB.account_id _XAB__account_id, _XAB.parent_account_id _XAB__parent_account_id, _XAB.status _XAB__status, _XABA.account_id _XABA__account_id, _XABA.tier_id _XABA__tier_id, _XABA.currency_code _XABA__currency_code, _XABAA.id _XABAA__id, _XABAA.name _XABAA__name, _XABAA.default_price_multiplier _XABAA__default_price_multiplier, _XABAA.default_tier _XABAA__default_tier, _XABAA.upgrade_order _XABAA__upgrade_order, _XABAB.code _XABAB__code, _XABAB.description _XABAB__description, _XABAB.exchange_rate_from_base _XABAB__exchange_rate_from_base, _XABAB.default_currency _XABAB__default_currency FROM ka_user _X 
+LEFT JOIN ka_user_role _XA ON _X.id = _XA.user_id
+LEFT JOIN ka_role _XAA ON _XA.role_id = _XAA.id
+LEFT JOIN ka_account _XAB ON _XA.account_id = _XAB.account_id
+LEFT JOIN kc_account_data _XABA ON _XAB.account_id = _XABA.account_id
+LEFT JOIN kc_tier _XABAA ON _XABA.tier_id = _XABAA.id
+LEFT JOIN kc_currency _XABAB ON _XABA.currency_code = _XABAB.code WHERE _X.id=?
+Completed in 0.0001 seconds
+PRAGMA table_info('ka_setting')
+Completed in 0 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.setting_key _X__setting_key, _X.value _X__value, _X.value_index _X__value_index FROM ka_setting _X  WHERE _X.setting_key = ? AND _X.value = ?
+Completed in 0 seconds
+PRAGMA table_info('ka_role')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_role' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('kc_tier')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_tier' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('ka_user')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_user' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('ka_user_role')
+Completed in 0 seconds
+PRAGMA table_info('ka_account')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_account' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('kc_account_data')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_account_data' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('kc_currency')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_currency' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.hashed_password _X__hashed_password, _X.mobile_number _X__mobile_number, _X.backup_email_address _X__backup_email_address, _X.active_account_id _X__active_account_id, _X.invalid_login_attempts _X__invalid_login_attempts, _X.created_date _X__created_date, _X.id _X__id, _X.name _X__name, _X.status _X__status, _X.email_address _X__email_address, _X.successful_logins _X__successful_logins, _X.application_settings _X__application_settings, _XA.user_id _XA__user_id, _XA.scope _XA__scope, _XA.scope_id _XA__scope_id, _XA.role_id _XA__role_id, _XA.account_id _XA__account_id, _XAA.id _XAA__id, _XAA.defined_account_id _XAA__defined_account_id, _XAA.scope _XAA__scope, _XAA.name _XAA__name, _XAA.description _XAA__description, _XAA.privileges _XAA__privileges, _XAB.sub_accounts_enabled _XAB__sub_accounts_enabled, _XAB.created_date _XAB__created_date, _XAB.name _XAB__name, _XAB.account_id _XAB__account_id, _XAB.parent_account_id _XAB__parent_account_id, _XAB.status _XAB__status, _XABA.account_id _XABA__account_id, _XABA.tier_id _XABA__tier_id, _XABA.currency_code _XABA__currency_code, _XABAA.id _XABAA__id, _XABAA.name _XABAA__name, _XABAA.default_price_multiplier _XABAA__default_price_multiplier, _XABAA.default_tier _XABAA__default_tier, _XABAA.upgrade_order _XABAA__upgrade_order, _XABAB.code _XABAB__code, _XABAB.description _XABAB__description, _XABAB.exchange_rate_from_base _XABAB__exchange_rate_from_base, _XABAB.default_currency _XABAB__default_currency FROM ka_user _X 
+LEFT JOIN ka_user_role _XA ON _X.id = _XA.user_id
+LEFT JOIN ka_role _XAA ON _XA.role_id = _XAA.id
+LEFT JOIN ka_account _XAB ON _XA.account_id = _XAB.account_id
+LEFT JOIN kc_account_data _XABA ON _XAB.account_id = _XABA.account_id
+LEFT JOIN kc_tier _XABAA ON _XABA.tier_id = _XABAA.id
+LEFT JOIN kc_currency _XABAB ON _XABA.currency_code = _XABAB.code WHERE _X.id=?
+Completed in 0 seconds
+PRAGMA table_info('ka_setting')
+Completed in 0 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.setting_key _X__setting_key, _X.value _X__value, _X.value_index _X__value_index FROM ka_setting _X  WHERE _X.setting_key = ? AND _X.value = ?
+Completed in 0 seconds
+PRAGMA table_info('ka_setting')
+Completed in 0 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.setting_key _X__setting_key, _X.value _X__value, _X.value_index _X__value_index FROM ka_setting _X  WHERE (_X.parent_account_id = ? OR _X.parent_account_id = 0 OR _X.parent_account_id IS NULL) AND _X.setting_key = ?
+Completed in 0 seconds
+PRAGMA table_info('ka_setting')
+Completed in 0 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.setting_key _X__setting_key, _X.value _X__value, _X.value_index _X__value_index FROM ka_setting _X  WHERE (_X.parent_account_id = ? OR _X.parent_account_id = 0 OR _X.parent_account_id IS NULL) AND _X.setting_key = ?
+Completed in 0 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.setting_key _X__setting_key, _X.value _X__value, _X.value_index _X__value_index FROM ka_setting _X  WHERE (_X.parent_account_id = ? OR _X.parent_account_id = 0) AND _X.setting_key = 'publishableStripeKey'
+Completed in 0.0001 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.setting_key _X__setting_key, _X.value _X__value, _X.value_index _X__value_index FROM ka_setting _X  WHERE (_X.parent_account_id = ? OR _X.parent_account_id = 0) AND _X.setting_key = 'publishableStripeKey'
+Completed in 0 seconds
+PRAGMA table_info('ka_setting')
+Completed in 0.0003 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.setting_key _X__setting_key, _X.value _X__value, _X.value_index _X__value_index FROM ka_setting _X  WHERE _X.setting_key = ? AND _X.value = ?
+Completed in 0.0002 seconds
+PRAGMA table_info('ka_role')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_role' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('kc_tier')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_tier' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('ka_user')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_user' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('ka_user_role')
+Completed in 0 seconds
+PRAGMA table_info('ka_account')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_account' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('kc_account_data')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_account_data' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('kc_currency')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_currency' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.hashed_password _X__hashed_password, _X.mobile_number _X__mobile_number, _X.backup_email_address _X__backup_email_address, _X.active_account_id _X__active_account_id, _X.invalid_login_attempts _X__invalid_login_attempts, _X.created_date _X__created_date, _X.id _X__id, _X.name _X__name, _X.status _X__status, _X.email_address _X__email_address, _X.successful_logins _X__successful_logins, _X.application_settings _X__application_settings, _XA.user_id _XA__user_id, _XA.scope _XA__scope, _XA.scope_id _XA__scope_id, _XA.role_id _XA__role_id, _XA.account_id _XA__account_id, _XAA.id _XAA__id, _XAA.defined_account_id _XAA__defined_account_id, _XAA.scope _XAA__scope, _XAA.name _XAA__name, _XAA.description _XAA__description, _XAA.privileges _XAA__privileges, _XAB.sub_accounts_enabled _XAB__sub_accounts_enabled, _XAB.created_date _XAB__created_date, _XAB.name _XAB__name, _XAB.account_id _XAB__account_id, _XAB.parent_account_id _XAB__parent_account_id, _XAB.status _XAB__status, _XABA.account_id _XABA__account_id, _XABA.tier_id _XABA__tier_id, _XABA.currency_code _XABA__currency_code, _XABAA.id _XABAA__id, _XABAA.name _XABAA__name, _XABAA.default_price_multiplier _XABAA__default_price_multiplier, _XABAA.default_tier _XABAA__default_tier, _XABAA.upgrade_order _XABAA__upgrade_order, _XABAB.code _XABAB__code, _XABAB.description _XABAB__description, _XABAB.exchange_rate_from_base _XABAB__exchange_rate_from_base, _XABAB.default_currency _XABAB__default_currency FROM ka_user _X 
+LEFT JOIN ka_user_role _XA ON _X.id = _XA.user_id
+LEFT JOIN ka_role _XAA ON _XA.role_id = _XAA.id
+LEFT JOIN ka_account _XAB ON _XA.account_id = _XAB.account_id
+LEFT JOIN kc_account_data _XABA ON _XAB.account_id = _XABA.account_id
+LEFT JOIN kc_tier _XABAA ON _XABA.tier_id = _XABAA.id
+LEFT JOIN kc_currency _XABAB ON _XABA.currency_code = _XABAB.code WHERE _X.id=?
+Completed in 0.0009 seconds
+PRAGMA table_info('ka_setting')
+Completed in 0.0001 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.setting_key _X__setting_key, _X.value _X__value, _X.value_index _X__value_index FROM ka_setting _X  WHERE _X.setting_key = ? AND _X.value = ?
+Completed in 0.0002 seconds
+PRAGMA table_info('ka_role')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_role' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0.0001 seconds
+PRAGMA table_info('kc_tier')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_tier' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('ka_user')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_user' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('ka_user_role')
+Completed in 0.0001 seconds
+PRAGMA table_info('ka_account')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_account' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('kc_account_data')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_account_data' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('kc_currency')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_currency' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.hashed_password _X__hashed_password, _X.mobile_number _X__mobile_number, _X.backup_email_address _X__backup_email_address, _X.active_account_id _X__active_account_id, _X.invalid_login_attempts _X__invalid_login_attempts, _X.created_date _X__created_date, _X.id _X__id, _X.name _X__name, _X.status _X__status, _X.email_address _X__email_address, _X.successful_logins _X__successful_logins, _X.application_settings _X__application_settings, _XA.user_id _XA__user_id, _XA.scope _XA__scope, _XA.scope_id _XA__scope_id, _XA.role_id _XA__role_id, _XA.account_id _XA__account_id, _XAA.id _XAA__id, _XAA.defined_account_id _XAA__defined_account_id, _XAA.scope _XAA__scope, _XAA.name _XAA__name, _XAA.description _XAA__description, _XAA.privileges _XAA__privileges, _XAB.sub_accounts_enabled _XAB__sub_accounts_enabled, _XAB.created_date _XAB__created_date, _XAB.name _XAB__name, _XAB.account_id _XAB__account_id, _XAB.parent_account_id _XAB__parent_account_id, _XAB.status _XAB__status, _XABA.account_id _XABA__account_id, _XABA.tier_id _XABA__tier_id, _XABA.currency_code _XABA__currency_code, _XABAA.id _XABAA__id, _XABAA.name _XABAA__name, _XABAA.default_price_multiplier _XABAA__default_price_multiplier, _XABAA.default_tier _XABAA__default_tier, _XABAA.upgrade_order _XABAA__upgrade_order, _XABAB.code _XABAB__code, _XABAB.description _XABAB__description, _XABAB.exchange_rate_from_base _XABAB__exchange_rate_from_base, _XABAB.default_currency _XABAB__default_currency FROM ka_user _X 
+LEFT JOIN ka_user_role _XA ON _X.id = _XA.user_id
+LEFT JOIN ka_role _XAA ON _XA.role_id = _XAA.id
+LEFT JOIN ka_account _XAB ON _XA.account_id = _XAB.account_id
+LEFT JOIN kc_account_data _XABA ON _XAB.account_id = _XABA.account_id
+LEFT JOIN kc_tier _XABAA ON _XABA.tier_id = _XABAA.id
+LEFT JOIN kc_currency _XABAB ON _XABA.currency_code = _XABAB.code WHERE _X.id=?
+Completed in 0.0014 seconds
+PRAGMA table_info('ka_setting')
+Completed in 0 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.setting_key _X__setting_key, _X.value _X__value, _X.value_index _X__value_index FROM ka_setting _X  WHERE _X.setting_key = ? AND _X.value = ?
+Completed in 0.0002 seconds
+PRAGMA table_info('ka_role')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_role' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0.0001 seconds
+PRAGMA table_info('kc_tier')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_tier' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('ka_user')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_user' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('ka_user_role')
+Completed in 0 seconds
+PRAGMA table_info('ka_account')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_account' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('kc_account_data')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_account_data' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('kc_currency')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_currency' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0.0001 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.hashed_password _X__hashed_password, _X.mobile_number _X__mobile_number, _X.backup_email_address _X__backup_email_address, _X.active_account_id _X__active_account_id, _X.invalid_login_attempts _X__invalid_login_attempts, _X.created_date _X__created_date, _X.id _X__id, _X.name _X__name, _X.status _X__status, _X.email_address _X__email_address, _X.successful_logins _X__successful_logins, _X.application_settings _X__application_settings, _XA.user_id _XA__user_id, _XA.scope _XA__scope, _XA.scope_id _XA__scope_id, _XA.role_id _XA__role_id, _XA.account_id _XA__account_id, _XAA.id _XAA__id, _XAA.defined_account_id _XAA__defined_account_id, _XAA.scope _XAA__scope, _XAA.name _XAA__name, _XAA.description _XAA__description, _XAA.privileges _XAA__privileges, _XAB.sub_accounts_enabled _XAB__sub_accounts_enabled, _XAB.created_date _XAB__created_date, _XAB.name _XAB__name, _XAB.account_id _XAB__account_id, _XAB.parent_account_id _XAB__parent_account_id, _XAB.status _XAB__status, _XABA.account_id _XABA__account_id, _XABA.tier_id _XABA__tier_id, _XABA.currency_code _XABA__currency_code, _XABAA.id _XABAA__id, _XABAA.name _XABAA__name, _XABAA.default_price_multiplier _XABAA__default_price_multiplier, _XABAA.default_tier _XABAA__default_tier, _XABAA.upgrade_order _XABAA__upgrade_order, _XABAB.code _XABAB__code, _XABAB.description _XABAB__description, _XABAB.exchange_rate_from_base _XABAB__exchange_rate_from_base, _XABAB.default_currency _XABAB__default_currency FROM ka_user _X 
+LEFT JOIN ka_user_role _XA ON _X.id = _XA.user_id
+LEFT JOIN ka_role _XAA ON _XA.role_id = _XAA.id
+LEFT JOIN ka_account _XAB ON _XA.account_id = _XAB.account_id
+LEFT JOIN kc_account_data _XABA ON _XAB.account_id = _XABA.account_id
+LEFT JOIN kc_tier _XABAA ON _XABA.tier_id = _XABAA.id
+LEFT JOIN kc_currency _XABAB ON _XABA.currency_code = _XABAB.code WHERE _X.id=?
+Completed in 0.0006 seconds
+PRAGMA table_info('ka_setting')
+Completed in 0 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.setting_key _X__setting_key, _X.value _X__value, _X.value_index _X__value_index FROM ka_setting _X  WHERE _X.setting_key = ? AND _X.value = ?
+Completed in 0.0002 seconds
+PRAGMA table_info('ka_setting')
+Completed in 0 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.setting_key _X__setting_key, _X.value _X__value, _X.value_index _X__value_index FROM ka_setting _X  WHERE (_X.parent_account_id = ? OR _X.parent_account_id = 0 OR _X.parent_account_id IS NULL) AND _X.setting_key = ?
+Completed in 0 seconds
+PRAGMA table_info('ka_setting')
+Completed in 0 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.setting_key _X__setting_key, _X.value _X__value, _X.value_index _X__value_index FROM ka_setting _X  WHERE (_X.parent_account_id = ? OR _X.parent_account_id = 0 OR _X.parent_account_id IS NULL) AND _X.setting_key = ?
+Completed in 0 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.setting_key _X__setting_key, _X.value _X__value, _X.value_index _X__value_index FROM ka_setting _X  WHERE (_X.parent_account_id = ? OR _X.parent_account_id = 0) AND _X.setting_key = 'publishableStripeKey'
+Completed in 0.0005 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.setting_key _X__setting_key, _X.value _X__value, _X.value_index _X__value_index FROM ka_setting _X  WHERE (_X.parent_account_id = ? OR _X.parent_account_id = 0) AND _X.setting_key = 'publishableStripeKey'
+Completed in 0 seconds
+PRAGMA table_info('ka_setting')
+Completed in 0 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.setting_key _X__setting_key, _X.value _X__value, _X.value_index _X__value_index FROM ka_setting _X  WHERE _X.setting_key = ? AND _X.value = ?
+Completed in 0 seconds
+PRAGMA table_info('ka_role')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_role' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0.0001 seconds
+PRAGMA table_info('kc_tier')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_tier' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('ka_user')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_user' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('ka_user_role')
+Completed in 0 seconds
+PRAGMA table_info('ka_account')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='ka_account' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('kc_account_data')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_account_data' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+PRAGMA table_info('kc_currency')
+Completed in 0 seconds
+SELECT 'is-autoincrement' FROM sqlite_master WHERE tbl_name='kc_currency' AND sql LIKE '%AUTOINCREMENT%'
+Completed in 0 seconds
+SELECT _X.parent_account_id _X__parent_account_id, _X.hashed_password _X__hashed_password, _X.mobile_number _X__mobile_number, _X.backup_email_address _X__backup_email_address, _X.active_account_id _X__active_account_id, _X.invalid_login_attempts _X__invalid_login_attempts, _X.created_date _X__created_date, _X.id _X__id, _X.name _X__name, _X.status _X__status, _X.email_address _X__email_address, _X.successful_logins _X__successful_logins, _X.application_settings _X__application_settings, _XA.user_id _XA__user_id, _XA.scope _XA__scope, _XA.scope_id _XA__scope_id, _XA.role_id _XA__role_id, _XA.account_id _XA__account_id, _XAA.id _XAA__id, _XAA.defined_account_id _XAA__defined_account_id, _XAA.scope _XAA__scope, _XAA.name _XAA__name, _XAA.description _XAA__description, _XAA.privileges _XAA__privileges, _XAB.sub_accounts_enabled _XAB__sub_accounts_enabled, _XAB.created_date _XAB__created_date, _XAB.name _XAB__name, _XAB.account_id _XAB__account_id, _XAB.parent_account_id _XAB__parent_account_id, _XAB.status _XAB__status, _XABA.account_id _XABA__account_id, _XABA.tier_id _XABA__tier_id, _XABA.currency_code _XABA__currency_code, _XABAA.id _XABAA__id, _XABAA.name _XABAA__name, _XABAA.default_price_multiplier _XABAA__default_price_multiplier, _XABAA.default_tier _XABAA__default_tier, _XABAA.upgrade_order _XABAA__upgrade_order, _XABAB.code _XABAB__code, _XABAB.description _XABAB__description, _XABAB.exchange_rate_from_base _XABAB__exchange_rate_from_base, _XABAB.default_currency _XABAB__default_currency FROM ka_user _X 
+LEFT JOIN ka_user_role _XA ON _X.id = _XA.user_id
+LEFT JOIN ka_role _XAA ON _XA.role_id = _XAA.id
+LEFT JOIN ka_account _XAB ON _XA.account_id = _XAB.account_id
+LEFT JOIN kc_account_data _XABA ON _XAB.account_id = _XABA.account_id
+LEFT JOIN kc_tier _XABAA ON _XABA.tier_id = _XABAA.id
+LEFT JOIN kc_currency _XABAB ON _XABA.currency_code = _XABAB.code WHERE _X.id=?
+Completed in 0.0006 seconds
