@@ -41,4 +41,22 @@ trait Stripe {
         return $this->stripeService->createSetupIntent($returnURL, $customer);
     }
 
+    /**
+     * Create a checkout session
+     *
+     * @http POST /checkoutSession
+     *
+     * @param mixed $payload
+     * @return mixed
+     */
+    public function createCheckoutSession($payload = []) {
+        $lineItems = $payload["lineItems"] ?? [];
+        $mode = $payload["mode"] ?? "payment";
+        $cancelURL = $payload["cancelURL"] ?? "/cancel";
+        $successURL = $payload["successURL"] ?? "/success";
+        $currency = $payload["currency"] ?? "gbp";
+
+        return $this->stripeService->createStripeCheckoutSession($lineItems, $mode, $cancelURL, $successURL, $currency);
+    }
+
 }

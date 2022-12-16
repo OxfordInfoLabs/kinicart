@@ -38,6 +38,56 @@ class StripePaymentProvider implements PaymentProvider {
         Stripe::setApiKey($secretKey);
     }
 
+    /**
+     * @param $lineItems
+     * @param $mode
+     * @param $cancelURL
+     * @param $successURL
+     * @param $currency
+     * @return mixed
+     */
+    public function createStripeCheckoutSession($lineItems = [], $mode = 'payment', $cancelURL = '/cancel', $successURL = '/success', $currency = 'gbp') {
+        $checkoutSession = \Stripe\Checkout\Session::create([
+            "success_url" => $successURL,
+            "cancel_url" => $cancelURL,
+            "mode" => $mode,
+            "line_items" => $lineItems,
+            "currency" => $currency
+        ]);
+
+        return $checkoutSession->toArray()["url"];
+    }
+
+    /**
+     * Function for Stripe to call when a checkout session has completed
+     *
+     * @param $payload
+     * @return void
+     */
+    public function checkoutSessionCompleted($payload) {
+        // This is your Stripe CLI webhook secret for testing your endpoint locally.
+        $endpoint_secret = 'whsec_5b8367facabd78a744996e193acc70372c6bcce2aabc4e275ef115ea2027ba65';
+        $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+
+        try {
+            $event = \Stripe\Webhook::constructEvent(
+                $payload, $sig_header, $endpoint_secret
+            );
+        } catch(\UnexpectedValueException $e) {
+            Logger::log($e);
+        } catch(\Stripe\Exception\SignatureVerificationException $e) {
+            Logger::log($e);
+        }
+Logger::log($event);
+        // Handle the event
+        if ($event->type === 'checkout.session.completed') {
+            $paymentIntent = $event->data->object;
+            Logger::log($paymentIntent);
+            return $paymentIntent;
+        }
+
+    }
+
     public function createSetupIntent($confirm = false, $returnURL = null, $customer = null) {
         $setupIntent = SetupIntent::create([
             'usage' => 'off_session',

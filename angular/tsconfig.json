@@ -23,6 +23,9 @@
       ],
       "ng-kinicart/*": [
         "dist/ng-kinicart/*"
+      ],
+      "ngx-kinicart": [
+        "dist/ngx-kinicart"
       ]
     }
   }

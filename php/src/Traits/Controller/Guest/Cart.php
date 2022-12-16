@@ -6,6 +6,7 @@ namespace Kinicart\Traits\Controller\Guest;
 
 use Kinicart\Services\Cart\SessionCart;
 use Kinicart\ValueObjects\Cart\CartSummary;
+use Kinikit\Core\DependencyInjection\Container;
 
 trait Cart {
 

@@ -28,4 +28,12 @@ class StripeService {
         return $this->stripeProvider->createPaymentIntent($amount, $currency, $customer, $paymentMethod);
     }
 
+    public function createStripeCheckoutSession($lineItems = [], $mode = 'payment', $cancelURL = '/cancel', $successURL = '/success', $currency = 'gbp') {
+        return $this->stripeProvider->createStripeCheckoutSession($lineItems, $mode, $cancelURL, $successURL, $currency);
+    }
+
+    public function checkoutSessionCompleted($payload) {
+        return $this->stripeProvider->checkoutSessionCompleted($payload);
+    }
+
 }
