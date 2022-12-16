@@ -13,6 +13,7 @@ use Kinicart\Exception\Payment\InvalidBillingContactException;
 use Kinicart\Exception\Payment\InvalidPaymentMethodException;
 use Kinicart\Exception\Payment\MissingBillingContactException;
 use Kinicart\Exception\Payment\MissingPaymentMethodException;
+use Kinicart\Exception\Payment\PaymentFailureException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Cart\CartItem;
 use Kinicart\Objects\Cart\ProductCartItem;
@@ -267,5 +268,90 @@ class OrderServiceTest extends TestBase {
 
     }
 
+
+    public function testIfPaymentFailureOccursAsExceptionThisIsWrappedUpInPaymentFailureExceptionAndNoOrderCreated() {
+
+
+        $this->sessionCart->clear();
+        $cart = $this->sessionCart->get();
+
+        /**
+         * @var MockObject $cartItem1
+         */
+        $cartItem1 = $this->mockObjectProvider->getMockInstance(ProductCartItem::class);
+        $cartItem1->returnValue("getTitle", "Mr Blobby");
+        $cartItem1->returnValue("getUnitPrice", 4.20);
+        $cartItem1->returnValue("isTaxable", true);
+        $cart->addItem($cartItem1);
+
+        /**
+         * @var MockObject $cartItem2
+         */
+        $cartItem2 = $this->mockObjectProvider->getMockInstance(ProductCartItem::class);
+        $cartItem2->returnValue("getTitle", "Mr Alan");
+        $cartItem2->returnValue("getUnitPrice", 8.50);
+        $cartItem2->returnValue("isTaxable", true);
+        $cart->addItem($cartItem2);
+
+
+        // Programme exception
+        $this->paymentProvider->throwException("charge", new \Exception("Bad payment"), [
+            15.24, "USD", ["test" => "hello"]
+        ]);
+
+        try {
+
+            /** @var Order $order */
+            $this->service->processOrder("test", ["test" => "hello"]);
+            $this->fail("Should have thrown here");
+
+        } catch (PaymentFailureException $e) {
+            $this->assertTrue(true);
+        }
+
+    }
+
+
+    public function testIfPaymentFailureOccursAsReturnValueThisIsWrappedUpInPaymentFailureExceptionAndNoOrderCreated() {
+
+
+        $this->sessionCart->clear();
+        $cart = $this->sessionCart->get();
+
+        /**
+         * @var MockObject $cartItem1
+         */
+        $cartItem1 = $this->mockObjectProvider->getMockInstance(ProductCartItem::class);
+        $cartItem1->returnValue("getTitle", "Mr Blobby");
+        $cartItem1->returnValue("getUnitPrice", 4.20);
+        $cartItem1->returnValue("isTaxable", true);
+        $cart->addItem($cartItem1);
+
+        /**
+         * @var MockObject $cartItem2
+         */
+        $cartItem2 = $this->mockObjectProvider->getMockInstance(ProductCartItem::class);
+        $cartItem2->returnValue("getTitle", "Mr Alan");
+        $cartItem2->returnValue("getUnitPrice", 8.50);
+        $cartItem2->returnValue("isTaxable", true);
+        $cart->addItem($cartItem2);
+
+
+        // Programme exception
+        $this->paymentProvider->returnValue("charge", new PaymentResult(PaymentResult::STATUS_FAILED, null, "Bad payment"), [
+            15.24, "USD", ["test" => "hello"]
+        ]);
+
+        try {
+
+            /** @var Order $order */
+            $this->service->processOrder("test", ["test" => "hello"]);
+            $this->fail("Should have thrown here");
+
+        } catch (PaymentFailureException $e) {
+            $this->assertTrue(true);
+        }
+
+    }
 
 }

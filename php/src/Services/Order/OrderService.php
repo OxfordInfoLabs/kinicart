@@ -10,6 +10,7 @@ use Kiniauth\Services\Communication\Email\EmailService;
 use Kinicart\Exception\Payment\InvalidBillingContactException;
 use Kinicart\Exception\Payment\InvalidPaymentMethodException;
 use Kinicart\Exception\Payment\MissingPaymentMethodException;
+use Kinicart\Exception\Payment\PaymentFailureException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Cart\Cart;
 use Kinicart\Objects\Order\Order;
@@ -149,25 +150,37 @@ class OrderService {
         }
 
 
-        // Process on complete for each cart item
-        foreach ($cart->getItems() as $cartItem) {
-            $cartItem->onComplete($account);
+        // Only process cart completion if successful payment
+        if ($paymentResult) {
+
+
+            // If a failed payment, throw immediately
+            if ($paymentResult->getStatus() == PaymentResult::STATUS_FAILED) {
+                throw new PaymentFailureException($paymentResult);
+            }
+
+            // Process on complete for each cart item
+            foreach ($cart->getItems() as $cartItem) {
+                $cartItem->onComplete($account);
+            }
+
+            $order = new Order($cart, $paymentResult, $account, $contact);
+            $order->save();
+
+
+            $this->emailService->send(new AccountTemplatedEmail($account->getAccountId(), "checkout/order-summary", ["order" => $order]), null);
+
+            // The order has now been processed - clear the cart
+            $this->sessionCart->clear();
+
+            // Stash the last order for confirmation purposes
+            $this->session->setValue(SessionData::LAST_SESSION_ORDER_NAME, $order);
+
+            return $order->getId();
+
         }
 
 
-        $order = new Order($cart, $paymentResult, $account, $contact);
-        $order->save();
-
-
-        $this->emailService->send(new AccountTemplatedEmail($account->getAccountId(), "checkout/order-summary", ["order" => $order]), null);
-
-        // The order has now been processed - clear the cart
-        $this->sessionCart->clear();
-
-        // Stash the last order for confirmation purposes
-        $this->session->setValue(SessionData::LAST_SESSION_ORDER_NAME, $order);
-
-        return $order->getId();
     }
 
 
