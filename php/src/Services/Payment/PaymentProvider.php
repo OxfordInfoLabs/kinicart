@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Kinicart\Objects\Payment;
+namespace Kinicart\Services\Payment;
 
 use Kinicart\ValueObjects\Payment\PaymentResult;
 

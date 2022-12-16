@@ -9,21 +9,17 @@ use Kiniauth\Objects\Communication\Email\AccountTemplatedEmail;
 use Kiniauth\Services\Communication\Email\EmailService;
 use Kinicart\Exception\Payment\InvalidBillingContactException;
 use Kinicart\Exception\Payment\InvalidPaymentMethodException;
-use Kinicart\Exception\Payment\MissingBillingContactException;
 use Kinicart\Exception\Payment\MissingPaymentMethodException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Cart\Cart;
-use Kinicart\Objects\Cart\ProductCartItem;
 use Kinicart\Objects\Order\Order;
-use Kinicart\Objects\Payment\PaymentMethod;
-use Kinicart\Objects\Payment\PaymentProvider;
+use Kinicart\Services\Payment\PaymentProvider;
 use Kinicart\Services\Application\SessionData;
 use Kinicart\Services\Cart\SessionCart;
-use Kinicart\Services\Product\ProductService;
 use Kiniauth\Services\Application\Session;
 use Kinicart\ValueObjects\Payment\PaymentResult;
 use Kinikit\Core\DependencyInjection\Container;
-use Kinikit\Core\Util\Primitive;
+use Kinikit\Core\DependencyInjection\MissingInterfaceImplementationException;
 use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
 
 
@@ -126,17 +122,22 @@ class OrderService {
         $currency = $account->getAccountData()->getCurrencyCode();
 
 
-        if ($cart->getTotal() > 0) {
+        if ($cart->getSubTotal() > 0) {
 
             if ($paymentProviderKey) {
 
-                /**
-                 * @var PaymentProvider $paymentProvider
-                 */
-                $paymentProvider = Container::instance()->getInterfaceImplementation(PaymentProvider::class, $paymentProviderKey);
+                try {
+                    /**
+                     * @var PaymentProvider $paymentProvider
+                     */
+                    $paymentProvider = Container::instance()->getInterfaceImplementation(PaymentProvider::class, $paymentProviderKey);
+                } catch (MissingInterfaceImplementationException $e) {
+                    throw new InvalidPaymentMethodException();
+                }
+
 
                 try {
-                    $paymentResult = $paymentProvider->charge($cart->getTotal(), $currency);
+                    $paymentResult = $paymentProvider->charge($cart->getTotal(), $currency, $paymentData);
                 } catch (\Exception $e) {
                     $paymentResult = new PaymentResult(PaymentResult::STATUS_FAILED, null, $e->getMessage());
                 }
@@ -154,7 +155,7 @@ class OrderService {
         }
 
 
-        $order = new Order($contact, $cart, $paymentResult, $account);
+        $order = new Order($cart, $paymentResult, $account, $contact);
         $order->save();
 
 

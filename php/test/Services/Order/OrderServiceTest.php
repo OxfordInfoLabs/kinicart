@@ -20,8 +20,10 @@ use Kinicart\Objects\Order\Order;
 use Kinicart\Objects\Product\PackagedProduct\PackagedProductCartItem;
 use Kinicart\Services\Cart\SessionCart;
 use Kinicart\Services\Order\OrderService;
+use Kinicart\Services\Payment\PaymentProvider;
 use Kinicart\Services\Product\ProductService;
 use Kinicart\TestBase;
+use Kinicart\ValueObjects\Payment\PaymentResult;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Core\Testing\MockObject;
 use Kinikit\Core\Testing\MockObjectProvider;
@@ -50,6 +52,12 @@ class OrderServiceTest extends TestBase {
      */
     private $authenticationService;
 
+
+    /**
+     * @var PaymentProvider
+     */
+    private $paymentProvider;
+
     /**
      * @var MockObject
      */
@@ -62,9 +70,13 @@ class OrderServiceTest extends TestBase {
         $this->mockObjectProvider = Container::instance()->get(MockObjectProvider::class);
         $this->authenticationService = Container::instance()->get(AuthenticationService::class);
         $this->emailService = $this->mockObjectProvider->getMockInstance(EmailService::class);
-        $session = Container::instance()->get(Session::class);
 
-        $this->service = new OrderService($this->sessionCart, $this->emailService, $session);
+        // Programme a mock payment provider
+        $this->paymentProvider = MockObjectProvider::instance()->getMockInstance(PaymentProvider::class);
+        Container::instance()->addInterfaceImplementation(PaymentProvider::class, "test", get_class($this->paymentProvider));
+        Container::instance()->set(get_class($this->paymentProvider), $this->paymentProvider);
+
+        $this->service = new OrderService($this->sessionCart, $this->emailService);
 
 
     }
@@ -86,14 +98,14 @@ class OrderServiceTest extends TestBase {
 
 
         try {
-            $this->service->processOrder(1, 150);
+            $this->service->processOrder("bingo", 150);
             $this->fail("Should have throw here");
         } catch (InvalidPaymentMethodException $e) {
             $this->assertTrue(true);
         }
 
         try {
-            $this->service->processOrder(1, null);
+            $this->service->processOrder(null, null);
             $this->fail("Should have throw here");
         } catch (MissingPaymentMethodException $e) {
             $this->assertTrue(true);
@@ -102,7 +114,7 @@ class OrderServiceTest extends TestBase {
     }
 
 
-    public function testExceptionRaisedIfNullOrInvalidContactIdPassedForNonZeroPayment() {
+    public function testExceptionRaisedIfInvalidContactIdPassedForNonZeroPayment() {
 
 
         AuthenticationHelper::login("sam@samdavisdesign.co.uk", "password");
@@ -119,16 +131,9 @@ class OrderServiceTest extends TestBase {
 
 
         try {
-            $this->service->processOrder(150, 1);
+            $this->service->processOrder("test", ["test" => "Joe Bloggs"], 44);
             $this->fail("Should have throw here");
         } catch (InvalidBillingContactException $e) {
-            $this->assertTrue(true);
-        }
-
-        try {
-            $this->service->processOrder(null, 1);
-            $this->fail("Should have throw here");
-        } catch (MissingBillingContactException $e) {
             $this->assertTrue(true);
         }
 
@@ -136,7 +141,7 @@ class OrderServiceTest extends TestBase {
     }
 
 
-    public function testCanProcessOrderForValidContactAndPaymentMethod() {
+    public function testCanProcessOrderForDefaultContactAndTestPaymentMethod() {
 
         AuthenticationHelper::login("sam@samdavisdesign.co.uk", "password");
 
@@ -150,6 +155,7 @@ class OrderServiceTest extends TestBase {
         $cartItem1 = $this->mockObjectProvider->getMockInstance(ProductCartItem::class);
         $cartItem1->returnValue("getTitle", "Mr Blobby");
         $cartItem1->returnValue("getUnitPrice", 4.20);
+        $cartItem1->returnValue("isTaxable", true);
         $cart->addItem($cartItem1);
 
         /**
@@ -158,11 +164,17 @@ class OrderServiceTest extends TestBase {
         $cartItem2 = $this->mockObjectProvider->getMockInstance(ProductCartItem::class);
         $cartItem2->returnValue("getTitle", "Mr Alan");
         $cartItem2->returnValue("getUnitPrice", 8.50);
+        $cartItem2->returnValue("isTaxable", true);
         $cart->addItem($cartItem2);
+
+        // Programme charge method
+        $this->paymentProvider->returnValue("charge", new PaymentResult(PaymentResult::STATUS_SUCCESS, "ABCDEF"), [
+            15.24, "USD", ["test" => "hello"]
+        ]);
 
 
         /** @var Order $order */
-        $orderId = $this->service->processOrder(1, 1);
+        $orderId = $this->service->processOrder("test", ["test" => "hello"]);
 
         $account = Account::fetch(1);
 
@@ -176,14 +188,10 @@ class OrderServiceTest extends TestBase {
         $this->assertEquals(12.70 * 0.2, $order->getTaxes());
         $this->assertEquals(12.70 * 1.2, $order->getTotal());
 
-        $this->assertEquals("Sam Davis", $order->getBuyerName());
-        $this->assertEquals(Contact::fetch(1)->getAddressString("<br />"), $order->getAddress());
+        $this->assertEquals("Sam Davis Design", $order->getBuyerName());
+        $this->assertEquals("", $order->getAddress());
         $this->assertEquals(Order::ORDER_STATUS_COMPLETED, $order->getStatus());
-        $this->assertEquals(1270, $order->getPaymentData()["amount"]);
-        $this->assertTrue($order->getPaymentData()["captured"]);
-        $this->assertNotNull($order->getPaymentData()["paymentIntent"]);
-        $this->assertNotNull($order->getPaymentData()["reference"]);
-
+        $this->assertEquals(new PaymentResult(PaymentResult::STATUS_SUCCESS, "ABCDEF"), $order->getPaymentData());
 
         $this->assertEquals(2, sizeof($order->getOrderLines()));
         $orderline1 = $order->getOrderLines()[0];
@@ -226,7 +234,7 @@ class OrderServiceTest extends TestBase {
 
 
         /** @var Order $order */
-        $orderId = $this->service->processOrder();
+        $orderId = $this->service->processOrder("test");
 
         $account = Account::fetch(1);
 
@@ -242,7 +250,7 @@ class OrderServiceTest extends TestBase {
         $this->assertEquals("Sam Davis Design", $order->getBuyerName());
         $this->assertEquals(null, $order->getAddress());
         $this->assertEquals(Order::ORDER_STATUS_COMPLETED, $order->getStatus());
-        $this->assertNotNull($order->getPaymentData()["reference"]);
+        $this->assertNotNull($order->getPaymentData());
 
         $this->assertEquals(1, sizeof($order->getOrderLines()));
         $orderline1 = $order->getOrderLines()[0];
@@ -260,5 +268,4 @@ class OrderServiceTest extends TestBase {
     }
 
 
-    
 }

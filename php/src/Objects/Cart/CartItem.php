@@ -60,6 +60,16 @@ abstract class CartItem {
 
 
     /**
+     * Boolean indicator as to whether or not this cart item is taxable
+     *
+     * @return bool
+     */
+    public function isTaxable() {
+        return true;
+    }
+
+
+    /**
      * Get the unit price for this Cart Item.
      *
      * @param $currency

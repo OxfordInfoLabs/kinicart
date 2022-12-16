@@ -1,10 +1,9 @@
 <?php
 
 
-namespace Kinicart\Objects\Payment\Stripe;
+namespace Kinicart\Services\Payment\Stripe;
 
-use Kinicart\Objects\Payment\PaymentProvider;
-use Kinicart\Services\Payment\Stripe\StripeService;
+use Kinicart\Services\Payment\PaymentProvider;
 use Kinicart\ValueObjects\Payment\PaymentResult;
 use Kinikit\Core\DependencyInjection\Container;
 

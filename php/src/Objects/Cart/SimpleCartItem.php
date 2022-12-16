@@ -51,6 +51,14 @@ class SimpleCartItem extends CartItem {
      */
     private $subItems = [];
 
+
+    /**
+     * Indicator as to whether or not this cart item is taxable
+     *
+     * @var bool
+     */
+    private $taxable = true;
+
     /**
      * Simple cart item -  accepts a title and description explicitly and optionally some prices
      * which should be Currency => Value key value pairs.  If only one currency is supplied, others
@@ -62,12 +70,13 @@ class SimpleCartItem extends CartItem {
      * @param float[string] $prices
      * @param CartItem[] $subItems
      */
-    public function __construct($title, $subtitle = null, $description = null, $prices = [], $subItems = []) {
+    public function __construct($title, $subtitle = null, $description = null, $prices = [], $subItems = [], $taxable = true) {
         $this->title = $title;
         $this->subtitle = $subtitle;
         $this->description = $description;
         $this->prices = $prices;
         $this->subItems = $subItems;
+        $this->taxable = $taxable;
     }
 
     /**
@@ -120,6 +129,17 @@ class SimpleCartItem extends CartItem {
     public function getType() {
         return "simple";
     }
+
+
+    /**
+     * Return indicator as to whether or not the cart item is taxable
+     *
+     * @return bool|mixed
+     */
+    public function isTaxable() {
+        return $this->taxable;
+    }
+
 
     /**
      * Blank implementation not required for simple cart items.

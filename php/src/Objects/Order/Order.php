@@ -89,10 +89,11 @@ class Order extends ActiveRecord {
 
     /**
      * Order constructor.
-     * @param Contact $contact
+     *
      * @param Cart $cart
      * @param PaymentResult $paymentResult
      * @param Account $account
+     * @param Contact $contact
      */
     public function __construct($cart = null, $paymentResult = null, $account = null, $contact = null) {
         if ($contact) {
@@ -121,16 +122,16 @@ class Order extends ActiveRecord {
                 ];
             }
             $this->currency = $currency;
-            $this->subtotal = $cart->getTotal();
-            $this->taxes = round($this->subtotal * 0.20, 2);
-            $this->total = round($this->subtotal + $this->taxes, 2);
+            $this->subtotal = $cart->getSubTotal();
+            $this->taxes = $cart->getTaxes();
+            $this->total = $cart->getTotal();
         }
 
         $this->date = date("Y-m-d H:i:s");
 
         $this->paymentData = $paymentResult;
 
-        if ($paymentResult)
+        if ($paymentResult instanceof PaymentResult)
             $this->status = $paymentResult->getStatus() == PaymentResult::STATUS_SUCCESS ? Order::ORDER_STATUS_COMPLETED : Order::ORDER_STATUS_FAILED;
     }
 

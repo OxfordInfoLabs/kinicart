@@ -37,7 +37,7 @@ class CartTest extends TestBase {
 
     }
 
-    public function testTotalForCartIsCalculatedUsingPassedAccountProviderForCurrencyAndTierInfo() {
+    public function testSubTotalTaxesAndTotalForCartIsCalculatedUsingPassedAccountProviderForCurrencyAndTierInfo() {
 
         AuthenticationHelper::login("sam@samdavisdesign.co.uk", "password");
 
@@ -50,8 +50,11 @@ class CartTest extends TestBase {
         $cart->addItem($item1);
         $cart->addItem($item2);
 
-        $cartTotal = $cart->getTotal();
-        $this->assertEquals($item1->getUnitPrice("USD", 3) + $item2->getUnitPrice("USD", 3), $cartTotal);
+        $cartSubTotal = $cart->getSubTotal();
+        $this->assertEquals($item1->getUnitPrice("USD", 3) + $item2->getUnitPrice("USD", 3), $cartSubTotal);
+
+        $this->assertEquals(round($cartSubTotal * 0.2, 2), $cart->getTaxes());
+        $this->assertEquals(round($cartSubTotal * 1.2, 2), $cart->getTotal());
 
 
         // Now login as someone else
@@ -59,8 +62,18 @@ class CartTest extends TestBase {
 
         AuthenticationHelper::login("simon@peterjonescarwash.com", "password");
 
-        $cartTotal = $cart->getTotal();
-        $this->assertEquals($item1->getUnitPrice("GBP", 1) + $item2->getUnitPrice("GBP", 1), $cartTotal);
+        $cartSubTotal = $cart->getSubTotal();
+        $this->assertEquals($item1->getUnitPrice("GBP", 1) + $item2->getUnitPrice("GBP", 1), $cartSubTotal);
+
+        $this->assertEquals(round($cartSubTotal * 0.2, 2), $cart->getTaxes());
+        $this->assertEquals(round($cartSubTotal * 1.2, 2), $cart->getTotal());
+
+        $nonTaxedItem = new SimpleCartItem("Untaxed", null, null, ["GBP" => 1], [], false);
+        $cart->addItem($nonTaxedItem);
+
+        $this->assertEquals($cartSubTotal + 1, $cart->getSubTotal());
+        $this->assertEquals(round($cartSubTotal * 0.2, 2), $cart->getTaxes());
+        $this->assertEquals(round(($cartSubTotal * 1.2) + 1, 2), $cart->getTotal());
 
 
     }

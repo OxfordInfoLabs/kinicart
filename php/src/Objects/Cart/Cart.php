@@ -100,7 +100,7 @@ class Cart {
      *
      * @return float
      */
-    public function getTotal() {
+    public function getSubTotal() {
 
         $account = $this->accountProvider->provideAccount();
 
@@ -109,9 +109,34 @@ class Cart {
             $total += $item->getUnitPrice($account->getAccountData()->getCurrencyCode(), $account->getAccountData()->getTierId());
         }
 
-        return $total;
+        return number_format(round($total, 2), 2, '.', '');
 
     }
+
+
+    /**
+     * Get the taxes if applicable
+     */
+    public function getTaxes() {
+        $account = $this->accountProvider->provideAccount();
+
+        $taxes = 0;
+        foreach ($this->items as $item) {
+            if ($item->isTaxable())
+                $taxes += $item->getUnitPrice($account->getAccountData()->getCurrencyCode(), $account->getAccountData()->getTierId()) * 0.2;
+        }
+
+        return number_format(round($taxes, 2), 2, '.', '');
+    }
+
+
+    /**
+     * Get the total including taxes
+     */
+    public function getTotal() {
+        return number_format(round($this->getSubTotal() + $this->getTaxes(), 2), 2, '.', '');
+    }
+
 
     /**
      * @return AccountProvider

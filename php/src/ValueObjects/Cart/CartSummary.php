@@ -54,7 +54,7 @@ class CartSummary {
                 break;
         }
 
-        $this->subtotal = number_format($cart->getTotal(), 2, ".", "");
+        $this->subtotal = number_format($cart->getSubTotal(), 2, ".", "");
         $this->taxes = number_format(round($this->subtotal * 0.20, 2), 2, ".", "");
         $this->total = number_format($this->subtotal + $this->taxes, 2, ".", "");
     }
