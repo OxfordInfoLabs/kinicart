@@ -13,6 +13,6 @@ interface Payment {
      * @param $currency
      * @return mixed
      */
-    public function charge($amount, $currency);
+    public function charge($amount, $currency, $paymentData);
 
 }
