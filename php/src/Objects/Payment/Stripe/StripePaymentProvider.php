@@ -3,8 +3,9 @@
 
 namespace Kinicart\Objects\Payment\Stripe;
 
-use Kinicart\Objects\Payment\Payment;
+use Kinicart\Objects\Payment\PaymentProvider;
 use Kinicart\Services\Payment\Stripe\StripeService;
+use Kinicart\ValueObjects\Payment\PaymentResult;
 use Kinikit\Core\DependencyInjection\Container;
 
 /**
@@ -14,13 +15,14 @@ use Kinikit\Core\DependencyInjection\Container;
  * @package Kinicart\Objects\Payment\Stripe
  *
  */
-class StripePayment implements Payment {
+class StripePaymentProvider implements PaymentProvider {
 
     /**
      * @param $amount
      * @param $currency
      * @param $paymentData mixed
-     * @return mixed|void
+     *
+     * @return PaymentResult
      */
     public function charge($amount, $currency, $paymentData = []) {
         if (isset($paymentData["paymentIntent"])) {

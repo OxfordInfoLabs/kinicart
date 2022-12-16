@@ -8,6 +8,7 @@ use Kiniauth\Objects\Account\Contact;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Cart\Cart;
 use Kinicart\Objects\Cart\CartItem;
+use Kinicart\ValueObjects\Payment\PaymentResult;
 use Kinikit\Persistence\ORM\ActiveRecord;
 
 /**
@@ -68,9 +69,9 @@ class Order extends ActiveRecord {
     private $address;
 
     /**
-     * @var string[]
+     * @var PaymentResult
      * @json
-     * @sqlType TEXT
+     * @sqlType LONGTEXT
      */
     private $paymentData;
 
@@ -90,10 +91,10 @@ class Order extends ActiveRecord {
      * Order constructor.
      * @param Contact $contact
      * @param Cart $cart
-     * @param mixed $paymentData
+     * @param PaymentResult $paymentResult
      * @param Account $account
      */
-    public function __construct($contact = null, $cart = null, $paymentData = null, $account = null) {
+    public function __construct($cart = null, $paymentResult = null, $account = null, $contact = null) {
         if ($contact) {
             $this->address = $contact->getHtmlAddressLinesString();
             $this->buyerName = $contact->getName();
@@ -127,8 +128,10 @@ class Order extends ActiveRecord {
 
         $this->date = date("Y-m-d H:i:s");
 
-        $this->paymentData = $paymentData;
-        $this->status = ($paymentData && isset($paymentData["reference"])) ? self::ORDER_STATUS_COMPLETED : self::ORDER_STATUS_FAILED;
+        $this->paymentData = $paymentResult;
+
+        if ($paymentResult)
+            $this->status = $paymentResult->getStatus() == PaymentResult::STATUS_SUCCESS ? Order::ORDER_STATUS_COMPLETED : Order::ORDER_STATUS_FAILED;
     }
 
     /**
