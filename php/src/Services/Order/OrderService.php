@@ -26,8 +26,6 @@ use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
 
 class OrderService {
 
-    // Product service
-    private $productService;
     /**
      * @var EmailService
      */
@@ -43,16 +41,13 @@ class OrderService {
     /**
      * OrderService constructor.
      * @param SessionCart $sessionCart
-     * @param ProductService $productService
      * @param EmailService $emailService
      * @param Session $session
      */
-    public function __construct($sessionCart, $productService, $emailService) {
+    public function __construct($sessionCart, $emailService) {
         $this->sessionCart = $sessionCart;
-        $this->productService = $productService;
         $this->emailService = $emailService;
         $this->session = $sessionCart->getSession();
-
     }
 
     /**
@@ -95,13 +90,11 @@ class OrderService {
         }
 
 
-
         /** @var Account $account */
         $account = $cart->getAccountProvider()->provideAccount();
 
 
         $currency = $account->getAccountData()->getCurrencyCode();
-
 
 
         if ($cart->getTotal() > 0) {
@@ -129,11 +122,9 @@ class OrderService {
         }
 
 
-        // Process each cart item.
+        // Process on complete for each cart item
         foreach ($cart->getItems() as $cartItem) {
-            if ($cartItem instanceof ProductCartItem) {
-                $this->productService->processProductCartItem($account, $cartItem);
-            }
+            $cartItem->onComplete($account);
         }
 
 
@@ -141,7 +132,6 @@ class OrderService {
         $order->save();
 
 
-        
         $this->emailService->send(new AccountTemplatedEmail($account->getAccountId(), "checkout/order-summary", ["order" => $order]), null);
 
         // The order has now been processed - clear the cart

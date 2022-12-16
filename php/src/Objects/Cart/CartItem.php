@@ -4,6 +4,8 @@
 namespace Kinicart\Objects\Cart;
 
 
+use Kinicart\Objects\Account\Account;
+
 /**
  * Class CartItem
  * @package Kinicart\Objects\Cart
@@ -65,6 +67,15 @@ abstract class CartItem {
      * @return float
      */
     public abstract function getUnitPrice($currency, $tierId = null);
+
+
+    /**
+     * On complete method, called once the cart payment has completed to perform any
+     * item specific operations.
+     *
+     * @param Account $account
+     */
+    public abstract function onComplete($account);
 
 
     /**

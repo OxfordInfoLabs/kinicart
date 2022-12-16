@@ -3,6 +3,8 @@
 
 namespace Kinicart\Objects\Cart;
 
+use Kinicart\Objects\Account\Account;
+
 /**
  *
  * Class SimpleCartItem
@@ -117,5 +119,13 @@ class SimpleCartItem extends CartItem {
 
     public function getType() {
         return "simple";
+    }
+
+    /**
+     * Blank implementation not required for simple cart items.
+     *
+     * @param Account $account
+     */
+    public function onComplete($account) {
     }
 }

@@ -4,11 +4,13 @@ namespace Kinicart\Services\Pricing;
 
 use Kiniauth\Services\Security\AuthenticationService;
 use Kiniauth\Test\Services\Security\AuthenticationHelper;
+use Kinicart\Exception\Pricing\InvalidCurrencyException;
 use Kinicart\Objects\Account\Account;
 use Kinicart\Objects\Pricing\Currency;
 use Kinicart\Objects\Pricing\Tier;
 use Kinicart\TestBase;
 use Kinikit\Core\DependencyInjection\Container;
+use Kinikit\Core\Exception\WrongParameterTypeException;
 
 include_once __DIR__ . "/../../autoloader.php";
 
@@ -98,6 +100,48 @@ class PricingServiceTest extends TestBase {
 
         $account = Account::fetch(1);
         $this->assertEquals("EUR", $account->getAccountData()->getCurrencyCode());
+
+    }
+
+
+    public function testIfInvalidValueCurrencyCodesPassedToConvertAmountForSourceOrTargetCurrenciesExceptionRaised() {
+
+        try {
+            $this->service->convertAmountToCurrency("BOB", "EUR", "GBP");
+            $this->fail("Should have thrown here");
+        } catch (WrongParameterTypeException $e) {
+            $this->assertTrue(true);
+        }
+
+        try {
+            $this->service->convertAmountToCurrency(12.00, "KRR", "GBP");
+            $this->fail("Should have thrown here");
+        } catch (InvalidCurrencyException $e) {
+            $this->assertTrue(true);
+        }
+
+        try {
+            $this->service->convertAmountToCurrency(12.00, "USD", "KRR");
+            $this->fail("Should have thrown here");
+        } catch (InvalidCurrencyException $e) {
+            $this->assertTrue(true);
+        }
+
+    }
+
+    public function testIfValidAmountAndCurrencyCodesSuppliedConversionsHappenAsExpected() {
+
+        // No conversion where currency codes match
+        $this->assertEquals(20.34, $this->service->convertAmountToCurrency(20.34, "GBP", "GBP"));
+        $this->assertEquals(20.34, $this->service->convertAmountToCurrency(20.34, "USD", "USD"));
+        $this->assertEquals(20.34, $this->service->convertAmountToCurrency(20.34, "EUR", "EUR"));
+
+        $this->assertEquals(12.00, $this->service->convertAmountToCurrency(10, "GBP", "USD"));
+        $this->assertEquals(11.00, $this->service->convertAmountToCurrency(10, "GBP", "EUR"));
+
+        $this->assertEquals(8.33, $this->service->convertAmountToCurrency(10, "USD", "GBP"));
+        $this->assertEquals(10.91, $this->service->convertAmountToCurrency(10, "EUR", "USD"));
+
 
     }
 
