@@ -6,6 +6,7 @@ namespace Kinicart\Services\Account;
 
 use Kiniauth\Objects\Account\Contact;
 use Kiniauth\Services\Account\ContactService;
+use Kiniauth\Services\Security\SecurityService;
 use Kinicart\Objects\Account\Account;
 use Kinicart\ValueObjects\Account\BillingContact;
 
@@ -17,14 +18,21 @@ class AccountService {
      */
     private $contactService;
 
+    /**
+     * @var SecurityService
+     */
+    private $securityService;
+
 
     /**
      * AccountService constructor.
      *
      * @param ContactService $contactService
+     * @param SecurityService $securityService
      */
-    public function __construct($contactService) {
+    public function __construct($contactService, $securityService) {
         $this->contactService = $contactService;
+        $this->securityService = $securityService;
     }
 
 
@@ -74,6 +82,10 @@ class AccountService {
         }
 
         $this->contactService->saveContact($contact);
+
+        // Ensure session account object is kept in sync.
+        $this->securityService->reloadLoggedInObjects();
+
     }
 
 
