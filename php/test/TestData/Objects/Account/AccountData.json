@@ -6,6 +6,16 @@
     },
     "currency": {
       "code": "USD"
+    },
+    "billingContact": {
+      "name": "Joe Bloggs",
+      "organisation": "Show caser",
+      "street1": "1 New Place",
+      "street2": "Sometown",
+      "city": "Somewhere",
+      "county": "Someshire",
+      "postcode": "SW12 1TT",
+      "countryCode": "GB"
     }
   }
 ]

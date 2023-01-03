@@ -2,6 +2,7 @@
 
 namespace Kinicart\Objects\Account;
 
+use Kiniauth\Objects\Account\Contact;
 use Kinicart\Objects\Pricing\Currency;
 use Kinicart\Objects\Pricing\Tier;
 use Kinicart\Services\Pricing\PricingService;
@@ -46,6 +47,16 @@ class AccountData {
      * @var Currency
      */
     private $currency;
+
+
+    /**
+     * @var Contact
+     * @oneToOne
+     * @childJoinColumns account_id,type=BILLING
+     *
+     */
+    private $billingContact;
+
 
     /**
      * AccountData constructor.
@@ -134,6 +145,20 @@ class AccountData {
      */
     public function setCurrency($currency) {
         $this->currency = $currency;
+    }
+
+    /**
+     * @return Contact
+     */
+    public function getBillingContact() {
+        return $this->billingContact;
+    }
+
+    /**
+     * @param Contact $billingContact
+     */
+    public function setBillingContact($billingContact) {
+        $this->billingContact = $billingContact;
     }
 
 
