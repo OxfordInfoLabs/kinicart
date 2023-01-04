@@ -19,29 +19,6 @@ trait Stripe {
     }
 
     /**
-     * Return the publishable key from settings
-     *
-     * @http GET /publishableKey
-     *
-     * @return string|null
-     */
-    public function getPublishableKey() {
-        return $this->stripeService->getPublishableKey();
-    }
-
-    /**
-     * @http GET /createSetupIntent
-     *
-     * @param $returnURL string
-     * @param $customer string
-     *
-     * @return array
-     */
-    public function createSetupIntent($returnURL = null, $customer = null) {
-        return $this->stripeService->createSetupIntent($returnURL, $customer);
-    }
-
-    /**
      * Create a checkout session
      *
      * @http POST /checkoutSession
@@ -50,13 +27,11 @@ trait Stripe {
      * @return mixed
      */
     public function createCheckoutSession($payload = []) {
-        $lineItems = $payload["lineItems"] ?? [];
         $mode = $payload["mode"] ?? "payment";
         $cancelURL = $payload["cancelURL"] ?? "/cancel";
         $successURL = $payload["successURL"] ?? "/success";
-        $currency = $payload["currency"] ?? "gbp";
 
-        return $this->stripeService->createStripeCheckoutSession($lineItems, $mode, $cancelURL, $successURL, $currency);
+        return $this->stripeService->createStripeCheckoutSession($mode, $cancelURL, $successURL);
     }
 
 }

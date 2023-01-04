@@ -36,7 +36,7 @@ trait BillingContact {
     /**
      * @http POST /
      *
-     * @param $billingContact
+     * @param \Kinicart\ValueObjects\Account\BillingContact $billingContact
      */
     public function updateBillingContact($billingContact) {
         $this->accountService->updateBillingContact($billingContact);

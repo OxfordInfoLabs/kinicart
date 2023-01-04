@@ -3,11 +3,13 @@ import {TopUpComponent} from './components/top-up/top-up.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {BrowserModule} from '@angular/platform-browser';
+import { BillingAddressComponent } from './components/billing-address/billing-address.component';
 
 
 @NgModule({
     declarations: [
-        TopUpComponent
+        TopUpComponent,
+        BillingAddressComponent
     ],
     imports: [
         FormsModule,
@@ -16,7 +18,8 @@ import {BrowserModule} from '@angular/platform-browser';
         BrowserModule
     ],
     exports: [
-        TopUpComponent
+        TopUpComponent,
+        BillingAddressComponent
     ]
 })
 export class NgxKinicartModule {

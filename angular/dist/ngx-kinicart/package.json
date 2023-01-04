@@ -1,6 +1,6 @@
 {
   "name": "ngx-kinicart",
-  "version": "0.0.0-watch+1671186626877",
+  "version": "0.0.0-watch+1672826191166",
   "peerDependencies": {
     "@angular/common": "^14.2.0",
     "@angular/core": "^14.2.0"
