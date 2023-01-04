@@ -1,15 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'app-top-up',
-  templateUrl: './top-up.component.html',
-  styleUrls: ['./top-up.component.sass']
+    selector: 'app-top-up',
+    templateUrl: './top-up.component.html',
+    styleUrls: ['./top-up.component.sass']
 })
 export class TopUpComponent implements OnInit {
 
-  constructor() { }
+    public topUpMessage = '';
 
-  ngOnInit(): void {
-  }
+    constructor() {
+    }
+
+    ngOnInit(): void {
+    }
+
+    public amountChange(amount: any) {
+        if (amount) {
+            this.topUpMessage = 'You are about to top up ' + amount;
+        } else {
+            this.topUpMessage = '';
+        }
+    }
 
 }

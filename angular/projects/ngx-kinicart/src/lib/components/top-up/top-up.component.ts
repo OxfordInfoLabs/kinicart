@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {PaymentService} from '../../services/payment.service';
 import {ActivatedRoute} from '@angular/router';
 import {CartService} from '../../services/cart.service';
@@ -9,6 +9,11 @@ import {CartService} from '../../services/cart.service';
     styleUrls: ['./top-up.component.css']
 })
 export class TopUpComponent implements OnInit {
+
+    @Input() topUpMessage: string;
+    @Input() minAmount: number;
+
+    @Output() amount = new EventEmitter();
 
     public topUpAmount: number;
     public status: string;

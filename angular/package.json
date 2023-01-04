@@ -5,7 +5,7 @@
         "watch": "ng build ngx-kinicart --watch",
         "build": "ng build ngx-kinicart",
         "test": "ng test ngx-kinicart",
-        "publish": "npm run build && cd dist/ngx-kinicart && npm publish"
+        "publish": "cd projects/ngx-kinicart && npm version patch && cd ../.. && npm run build && cd dist/ngx-kinicart && npm publish"
     },
     "private": true,
     "dependencies": {

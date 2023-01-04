@@ -78,18 +78,56 @@
                             <span
                                 class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500">
                                 £</span>
-                            <input type="number" [(ngModel)]="topUpAmount"
-                                   class="block w-full flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            <input type="number" [(ngModel)]="topUpAmount" (ngModelChange)="amount.emit(topUpAmount)"
+                                   class="block w-full flex-1 rounded-none rounded-r-md border-gray-300 sm:text-sm"
                                    placeholder="Enter amount">
                         </div>
                     </div>
                 </div>
 
+                <div class="rounded-md bg-yellow-50 p-4" *ngIf="topUpAmount && (minAmount && topUpAmount < minAmount)">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <!-- Heroicon name: mini/exclamation-triangle -->
+                            <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M8.485 3.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 3.495zM10 6a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-yellow-800">Attention needed</h3>
+                            <div class="mt-2 text-sm text-yellow-700">
+                                <p>
+                                    Minimum top up of {{minAmount}} required.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <ng-template [ngIf]="topUpMessage">
+                    <div class="rounded-md bg-blue-50 p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <!-- Heroicon name: mini/information-circle -->
+                                <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M19 10.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0zM8.25 9.75A.75.75 0 019 9h.253a1.75 1.75 0 011.709 2.13l-.46 2.066a.25.25 0 00.245.304H11a.75.75 0 010 1.5h-.253a1.75 1.75 0 01-1.709-2.13l.46-2.066a.25.25 0 00-.245-.304H9a.75.75 0 01-.75-.75zM10 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3 flex-1 md:flex md:justify-between">
+                                <p class="text-sm text-blue-700">
+                                    {{topUpMessage}}
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+
                 <div class="flex justify-end">
                     <button type="button" class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">
                         Cancel</button>
-                    <button type="button" (click)="topUp()"
-                            class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700">
+                    <button type="button" (click)="topUp()" [disabled]="!topUpAmount || (minAmount && topUpAmount < minAmount)"
+                            class="disabled:opacity-50 ml-3 inline-flex justify-center rounded-md border border-transparent bg-primary py-2 px-4 text-sm font-medium text-white shadow-sm">
                         Proceed to Payment</button>
                 </div>
             </div>
