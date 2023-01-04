@@ -50,9 +50,10 @@ class AccountData {
 
 
     /**
-     * @var Contact
+     * @var BillingContact
      * @oneToOne
      * @childJoinColumns account_id,type=BILLING
+     * @readOnly
      *
      */
     private $billingContact;
@@ -148,14 +149,14 @@ class AccountData {
     }
 
     /**
-     * @return Contact
+     * @return BillingContact
      */
     public function getBillingContact() {
         return $this->billingContact;
     }
 
     /**
-     * @param Contact $billingContact
+     * @param BillingContact $billingContact
      */
     public function setBillingContact($billingContact) {
         $this->billingContact = $billingContact;

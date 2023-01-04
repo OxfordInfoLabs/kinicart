@@ -1,0 +1,26 @@
+[
+  {
+    "accountId": 1,
+    "type": "BILLING",
+    "name": "Joe Bloggs",
+    "organisation": "Show caser",
+    "street1": "1 New Place",
+    "street2": "Sometown",
+    "city": "Somewhere",
+    "county": "Someshire",
+    "postcode": "SW12 1TT",
+    "countryCode": "GB"
+  },
+  {
+    "accountId": 3,
+    "type": "BILLING",
+    "name": "Joe Bloggs",
+    "organisation": "Show caser",
+    "street1": "1 New Place",
+    "street2": "Sometown",
+    "city": "Somewhere",
+    "county": "Someshire",
+    "postcode": "SW12 1TT",
+    "countryCode": "US"
+  }
+]

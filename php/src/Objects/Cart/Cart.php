@@ -120,10 +120,12 @@ class Cart {
     public function getTaxes() {
         $account = $this->accountProvider->provideAccount();
 
+        $vatRate = $account->getAccountData()->getBillingContact() ? $account->getAccountData()->getBillingContact()->getVatRatePercentage() / 100 : 0;
+
         $taxes = 0;
         foreach ($this->items as $item) {
             if ($item->isTaxable())
-                $taxes += $item->getUnitPrice($account->getAccountData()->getCurrencyCode(), $account->getAccountData()->getTierId()) * 0.2;
+                $taxes += $item->getUnitPrice($account->getAccountData()->getCurrencyCode(), $account->getAccountData()->getTierId()) * $vatRate;
         }
 
         return number_format(round($taxes, 2), 2, '.', '');

@@ -54,4 +54,42 @@ class AccountTest extends TestBase {
 
     }
 
+
+    public function testVATRateReturnedCorrectlyIfBillingContactConfigured() {
+
+        /**
+         * @var Account $account
+         */
+        $account = Account::fetch(1);
+        $accountData = $account->getAccountData();
+
+        $billingContact = $accountData->getBillingContact();
+        $this->assertEquals("Joe Bloggs", $billingContact->getName());
+        $this->assertEquals(20, $billingContact->getVatRatePercentage());
+
+        $billingContact->setCountryCode("FR");
+        $billingContact->save();
+
+        $account = Account::fetch(1);
+        $accountData = $account->getAccountData();
+
+        $billingContact = $accountData->getBillingContact();
+        $this->assertEquals("Joe Bloggs", $billingContact->getName());
+        $this->assertEquals(17, $billingContact->getVatRatePercentage());
+
+        $billingContact->setCountryCode("US");
+        $billingContact->save();
+
+        $account = Account::fetch(1);
+        $accountData = $account->getAccountData();
+
+        $billingContact = $accountData->getBillingContact();
+        $this->assertEquals("Joe Bloggs", $billingContact->getName());
+        $this->assertEquals(0, $billingContact->getVatRatePercentage());
+
+        $billingContact->setCountryCode("GB");
+        $billingContact->save();
+
+    }
+
 }

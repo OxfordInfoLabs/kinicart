@@ -56,8 +56,6 @@ class SessionCart {
     }
 
 
-
-
     /**
      * Gets the session cart as a Cart object
      *

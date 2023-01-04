@@ -1,0 +1,14 @@
+[
+  {
+    "countryCode": "GB",
+    "vatPercentage": 20
+  },
+  {
+    "countryCode": "UK",
+    "vatPercentage": 20
+  },
+  {
+    "countryCode": "FR",
+    "vatPercentage": 17
+  }
+]

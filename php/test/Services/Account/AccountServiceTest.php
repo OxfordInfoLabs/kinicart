@@ -24,6 +24,7 @@ class AccountServiceTest extends TestBase {
         $this->accountService = Container::instance()->get(AccountService::class);
     }
 
+
     public function testCanGetBillingContactForAccountIdOrNullIfNoneExists() {
 
         AuthenticationHelper::login("admin@kinicart.com", "password");

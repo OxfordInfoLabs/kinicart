@@ -37,7 +37,7 @@ class CartTest extends TestBase {
 
     }
 
-    public function testSubTotalTaxesAndTotalForCartIsCalculatedUsingPassedAccountProviderForCurrencyAndTierInfo() {
+    public function testSubTotalTaxesAndTotalForCartIsCalculatedUsingPassedAccountProviderForCurrencyTierAndBillingContactInfo() {
 
         AuthenticationHelper::login("sam@samdavisdesign.co.uk", "password");
 
@@ -56,8 +56,15 @@ class CartTest extends TestBase {
         $this->assertEquals(round($cartSubTotal * 0.2, 2), $cart->getTaxes());
         $this->assertEquals(round($cartSubTotal * 1.2, 2), $cart->getTotal());
 
+        $nonTaxedItem = new SimpleCartItem("Untaxed", null, null, ["USD" => 1], [], false);
+        $cart->addItem($nonTaxedItem);
 
-        // Now login as someone else
+        $this->assertEquals($cartSubTotal + 1, $cart->getSubTotal());
+        $this->assertEquals(round($cartSubTotal * 0.2, 2), $cart->getTaxes());
+        $this->assertEquals(round(($cartSubTotal * 1.2) + 1, 2), $cart->getTotal());
+
+
+        // Now login as someone else with zero VAT rate
         AuthenticationHelper::logout();
 
         AuthenticationHelper::login("simon@peterjonescarwash.com", "password");
@@ -65,15 +72,8 @@ class CartTest extends TestBase {
         $cartSubTotal = $cart->getSubTotal();
         $this->assertEquals($item1->getUnitPrice("GBP", 1) + $item2->getUnitPrice("GBP", 1), $cartSubTotal);
 
-        $this->assertEquals(round($cartSubTotal * 0.2, 2), $cart->getTaxes());
-        $this->assertEquals(round($cartSubTotal * 1.2, 2), $cart->getTotal());
-
-        $nonTaxedItem = new SimpleCartItem("Untaxed", null, null, ["GBP" => 1], [], false);
-        $cart->addItem($nonTaxedItem);
-
-        $this->assertEquals($cartSubTotal + 1, $cart->getSubTotal());
-        $this->assertEquals(round($cartSubTotal * 0.2, 2), $cart->getTaxes());
-        $this->assertEquals(round(($cartSubTotal * 1.2) + 1, 2), $cart->getTotal());
+        $this->assertEquals(0, $cart->getTaxes());
+        $this->assertEquals(round($cartSubTotal, 2), $cart->getTotal());
 
 
     }
