@@ -98,9 +98,9 @@ class Order extends ActiveRecord {
     public function __construct($cart = null, $paymentResult = null, $account = null, $contact = null) {
         if ($contact) {
             $this->address = $contact->getHtmlAddressLinesString();
-            $this->buyerName = $contact->getName();
-            $this->accountId = $contact->getAccountId();
-        } else if ($account) {
+        }
+
+        if ($account) {
             $this->buyerName = $account->getName();
             $this->accountId = $account->getAccountId();
         }

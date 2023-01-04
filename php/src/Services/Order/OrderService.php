@@ -9,6 +9,7 @@ use Kiniauth\Objects\Communication\Email\AccountTemplatedEmail;
 use Kiniauth\Services\Communication\Email\EmailService;
 use Kinicart\Exception\Payment\InvalidBillingContactException;
 use Kinicart\Exception\Payment\InvalidPaymentMethodException;
+use Kinicart\Exception\Payment\MissingBillingContactException;
 use Kinicart\Exception\Payment\MissingPaymentMethodException;
 use Kinicart\Exception\Payment\PaymentFailureException;
 use Kinicart\Objects\Account\Account;
@@ -97,7 +98,7 @@ class OrderService {
      * @param mixed $paymentData
      * @param Cart $cart
      */
-    public function processOrder($paymentProviderKey, $paymentData = null, $contactId = null, $cart = null) {
+    public function processOrder($paymentProviderKey, $paymentData = null, $cart = null) {
 
 
         if (!$cart) {
@@ -105,20 +106,16 @@ class OrderService {
         }
 
 
-        if ($contactId) {
-            try {
-                /** @var Contact $contact */
-                $contact = Contact::fetch($contactId);
-            } catch (ObjectNotFoundException $e) {
-                throw new InvalidBillingContactException();
-            }
-        } else {
-            $contact = null;
-        }
-
-
         /** @var Account $account */
         $account = $cart->getAccountProvider()->provideAccount();
+
+        /**
+         * Ensure we have a billing contact
+         */
+        $billingContact = $account->getAccountData()->getBillingContact();
+        if (!$billingContact) {
+            throw new MissingBillingContactException();
+        }
 
 
         $currency = $account->getAccountData()->getCurrencyCode();
@@ -151,6 +148,7 @@ class OrderService {
         }
 
 
+
         // Only process cart completion if successful payment
         if ($paymentResult) {
 
@@ -165,7 +163,7 @@ class OrderService {
                 $cartItem->onComplete($account);
             }
 
-            $order = new Order($cart, $paymentResult, $account, $contact);
+            $order = new Order($cart, $paymentResult, $account, $billingContact);
             $order->save();
 
 

@@ -115,34 +115,10 @@ class OrderServiceTest extends TestBase {
     }
 
 
-    public function testExceptionRaisedIfInvalidContactIdPassedForNonZeroPayment() {
 
 
-        AuthenticationHelper::login("sam@samdavisdesign.co.uk", "password");
 
-        $cart = $this->sessionCart->get();
-
-        /**
-         * @var MockObject $cartItem1
-         */
-        $cartItem1 = $this->mockObjectProvider->getMockInstance(ProductCartItem::class);
-        $cartItem1->returnValue("getTitle", "Mr Blobby");
-        $cartItem1->returnValue("getUnitPrice", 4.20);
-        $cart->addItem($cartItem1);
-
-
-        try {
-            $this->service->processOrder("test", ["test" => "Joe Bloggs"], 44);
-            $this->fail("Should have throw here");
-        } catch (InvalidBillingContactException $e) {
-            $this->assertTrue(true);
-        }
-
-
-    }
-
-
-    public function testCanProcessOrderForDefaultContactAndTestPaymentMethod() {
+    public function testCanProcessOrderForTestPaymentMethod() {
 
         AuthenticationHelper::login("sam@samdavisdesign.co.uk", "password");
 
@@ -190,7 +166,7 @@ class OrderServiceTest extends TestBase {
         $this->assertEquals(12.70 * 1.2, $order->getTotal());
 
         $this->assertEquals("Sam Davis Design", $order->getBuyerName());
-        $this->assertEquals("", $order->getAddress());
+        $this->assertEquals("Joe Bloggs<br />Show caser<br />1 New Place<br />Sometown<br />Somewhere<br />Someshire<br />SW12 1TT<br />GB", $order->getAddress());
         $this->assertEquals(Order::ORDER_STATUS_COMPLETED, $order->getStatus());
         $this->assertEquals(new PaymentResult(PaymentResult::STATUS_SUCCESS, "ABCDEF"), $order->getPaymentData());
 
@@ -220,7 +196,10 @@ class OrderServiceTest extends TestBase {
     }
 
 
-    public function testCanProcessValidZeroRateOrderWithoutContactOrBillingInfo() {
+    public function testCanProcessValidZeroRateOrderWithoutBillingInfo() {
+
+        AuthenticationHelper::login("sam@samdavisdesign.co.uk", "password");
+
 
         $this->sessionCart->clear();
         $cart = $this->sessionCart->get();
@@ -249,7 +228,7 @@ class OrderServiceTest extends TestBase {
         $this->assertEquals(0, $order->getTotal());
 
         $this->assertEquals("Sam Davis Design", $order->getBuyerName());
-        $this->assertEquals(null, $order->getAddress());
+        $this->assertEquals("Joe Bloggs<br />Show caser<br />1 New Place<br />Sometown<br />Somewhere<br />Someshire<br />SW12 1TT<br />GB", $order->getAddress());
         $this->assertEquals(Order::ORDER_STATUS_COMPLETED, $order->getStatus());
         $this->assertNotNull($order->getPaymentData());
 

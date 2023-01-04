@@ -47,6 +47,7 @@ class AccountServiceTest extends TestBase {
         $this->accountService->updateBillingContact($billingContact, 2);
         $this->assertEquals($billingContact, $this->accountService->getBillingContact(2));
 
+        $this->accountService->updateBillingContact(new BillingContact("Joe Bloggs", "Show caser", "1 New Place", "Sometown", "Somewhere", "Someshire", "SW12 1TT", "GB"), 1);
 
     }
 
