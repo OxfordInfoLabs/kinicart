@@ -31,6 +31,36 @@ class AccountBalanceService {
 
 
     /**
+     * Get the account balance for a given account
+     *
+     * @param $accountId
+     * @return AccountBalance
+     */
+    public function getAccountBalance($accountId = Account::LOGGED_IN_ACCOUNT) {
+        try {
+            /**
+             * @var AccountBalance $balance
+             */
+            $balance = AccountBalance::fetch($accountId);
+        } catch (ObjectNotFoundException $e) {
+
+            /**
+             * @var Account $account
+             */
+            $account = Account::fetch($accountId);
+            $accountCurrencyCode = $account->getAccountData()->getCurrencyCode();
+
+            // Create new balance object
+            $balance = new AccountBalance($accountId, $accountCurrencyCode);
+            $balance->save();
+        }
+
+        return $balance;
+
+    }
+
+
+    /**
      * Ensure the account identified has enough balance to fulfil the payment amount in the
      * supplied currency
      *
@@ -109,34 +139,5 @@ class AccountBalanceService {
 
     }
 
-
-    /**
-     * Get the account balance for a given account
-     *
-     * @param $accountId
-     * @return AccountBalance
-     */
-    private function getAccountBalance($accountId) {
-        try {
-            /**
-             * @var AccountBalance $balance
-             */
-            $balance = AccountBalance::fetch($accountId);
-        } catch (ObjectNotFoundException $e) {
-
-            /**
-             * @var Account $account
-             */
-            $account = Account::fetch($accountId);
-            $accountCurrencyCode = $account->getAccountData()->getCurrencyCode();
-
-            // Create new balance object
-            $balance = new AccountBalance($accountId, $accountCurrencyCode);
-            $balance->save();
-        }
-
-        return $balance;
-
-    }
 
 }

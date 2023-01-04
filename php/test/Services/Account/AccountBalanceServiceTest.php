@@ -150,4 +150,21 @@ class AccountBalanceServiceTest extends TestBase {
 
     }
 
+
+    public function testCanGetBalanceForAccount() {
+
+        AuthenticationHelper::login("admin@kinicart.com", "password");
+
+        $balance = $this->accountBalanceService->getAccountBalance(5);
+        $this->assertEquals(new AccountBalance(5, "GBP", 0), $balance);
+
+        $this->accountBalanceService->topUpBalance(15.44, "GBP", 5);
+
+        $balance = $this->accountBalanceService->getAccountBalance(5);
+        $this->assertEquals(new AccountBalance(5, "GBP", 15.44), $balance);
+
+
+    }
+
+
 }

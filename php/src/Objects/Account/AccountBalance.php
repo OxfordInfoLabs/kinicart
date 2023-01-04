@@ -38,9 +38,10 @@ class AccountBalance extends ActiveRecord {
      * @param int $accountId
      * @param string $balanceCurrencyCode
      */
-    public function __construct($accountId, $balanceCurrencyCode) {
+    public function __construct($accountId, $balanceCurrencyCode, $balance = 0) {
         $this->accountId = $accountId;
         $this->balanceCurrencyCode = $balanceCurrencyCode;
+        $this->balance = $balance;
     }
 
 
