@@ -8,7 +8,7 @@ use Kinicart\ValueObjects\Payment\PaymentResult;
 /**
  * Payment base interface
  *
- * @implementation stripe \Kinicart\Objects\Payment\Stripe\StripePayment
+ * @implementation stripe \Kinicart\Services\Payment\Stripe\StripePaymentProvider
  */
 interface PaymentProvider {
 

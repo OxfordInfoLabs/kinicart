@@ -49,7 +49,7 @@ class AccountTopUpCartItem extends CartItem {
      * @return string
      */
     public function getSubtitle() {
-        return "Amount: " . $this->topUpAmount . " " . $this->topUpCurrencyCode;
+        return "Amount: " . $this->topUpAmount;
     }
 
     /**

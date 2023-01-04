@@ -21,6 +21,7 @@ use Kiniauth\Services\Application\Session;
 use Kinicart\ValueObjects\Payment\PaymentResult;
 use Kinikit\Core\DependencyInjection\Container;
 use Kinikit\Core\DependencyInjection\MissingInterfaceImplementationException;
+use Kinikit\Core\Logging\Logger;
 use Kinikit\Persistence\ORM\Exception\ObjectNotFoundException;
 
 
@@ -125,6 +126,7 @@ class OrderService {
 
         if ($cart->getSubTotal() > 0) {
 
+
             if ($paymentProviderKey) {
 
                 try {
@@ -135,7 +137,6 @@ class OrderService {
                 } catch (MissingInterfaceImplementationException $e) {
                     throw new InvalidPaymentMethodException();
                 }
-
 
                 try {
                     $paymentResult = $paymentProvider->charge($cart->getTotal(), $currency, $paymentData);

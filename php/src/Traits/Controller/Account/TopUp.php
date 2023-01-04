@@ -31,6 +31,7 @@ trait TopUp {
      * @param float $amount
      */
     public function addTopUpCartItem($amount) {
+        $this->sessionCart->clear();
         $cartItem = new AccountTopUpCartItem($amount);
         $this->sessionCart->addItem($cartItem);
     }

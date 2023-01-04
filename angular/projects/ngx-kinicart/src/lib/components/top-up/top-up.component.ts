@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {PaymentService} from '../../services/payment.service';
 import {ActivatedRoute} from '@angular/router';
+import {CartService} from '../../services/cart.service';
 
 @Component({
     selector: 'kc-top-up',
@@ -13,7 +14,8 @@ export class TopUpComponent implements OnInit {
     public status: string;
 
     constructor(private paymentService: PaymentService,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private cartService: CartService) {
     }
 
     ngOnInit(): void {
@@ -24,6 +26,8 @@ export class TopUpComponent implements OnInit {
 
     public async topUp() {
         if (this.topUpAmount >= 5) {
+            await this.cartService.addTopUpCartItem(this.topUpAmount);
+
             const lineItem = {
                 price_data: {
                     currency: 'gbp',
