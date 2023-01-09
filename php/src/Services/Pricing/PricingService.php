@@ -192,13 +192,14 @@ class PricingService {
         if (!isset($allCurrencies[$sourceCurrencyCode])) throw new InvalidCurrencyException($sourceCurrencyCode);
         if (!isset($allCurrencies[$targetCurrencyCode])) throw new InvalidCurrencyException($targetCurrencyCode);
 
+
         // Do conversion only if required
         if ($sourceCurrencyCode != $targetCurrencyCode)
             $amount = $amount / $allCurrencies[$sourceCurrencyCode]->getExchangeRateFromBase() * $allCurrencies[$targetCurrencyCode]->getExchangeRateFromBase();
 
 
         // Return formatted number
-        return number_format(round($amount, $precision), $precision, '.', '');
+        return round($amount, $precision);
     }
 
 

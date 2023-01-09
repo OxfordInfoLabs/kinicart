@@ -16,12 +16,18 @@ class AccountTopUpCartItem extends CartItem {
     private $topUpAmount;
 
     /**
+     * @var string
+     */
+    private $description;
+
+    /**
      * AccountTopUpCartItem constructor.
      *
      * @param float $topUpAmount
      */
-    public function __construct($topUpAmount) {
+    public function __construct($topUpAmount, $description = "") {
         $this->topUpAmount = $topUpAmount;
+        $this->description = $description;
     }
 
 
@@ -40,7 +46,7 @@ class AccountTopUpCartItem extends CartItem {
      * @return string
      */
     public function getTitle() {
-        return "Account Top Up";
+        return "Account Top Up" . ($this->description ? " (" . $this->description . ")" : "");
     }
 
     /**

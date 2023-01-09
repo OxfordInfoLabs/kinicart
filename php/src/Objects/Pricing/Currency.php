@@ -47,6 +47,21 @@ class Currency extends ActiveRecord {
      */
     private $defaultCurrency;
 
+    /**
+     * Currency constructor.
+     *
+     * @param string $code
+     * @param string $description
+     * @param float $exchangeRateFromBase
+     * @param bool $defaultCurrency
+     */
+    public function __construct($code, $description, $exchangeRateFromBase, $defaultCurrency) {
+        $this->code = $code;
+        $this->description = $description;
+        $this->exchangeRateFromBase = $exchangeRateFromBase;
+        $this->defaultCurrency = $defaultCurrency;
+    }
+
 
     /**
      * @return string
