@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {PaymentService} from '../../services/payment.service';
 import {ActivatedRoute} from '@angular/router';
 import {CartService} from '../../services/cart.service';
+import {BillingService} from '../../services/billing.service';
 
 @Component({
     selector: 'kc-top-up',
@@ -12,21 +13,29 @@ export class TopUpComponent implements OnInit {
 
     @Input() topUpMessage: string;
     @Input() minAmount: number;
+    @Input() currency = '£';
+    @Input() callbackRoute = '/account/top-up';
 
     @Output() amount = new EventEmitter();
 
     public topUpAmount: number;
     public status: string;
+    public billingContact: any = null;
+    public loading = true;
 
     constructor(private paymentService: PaymentService,
                 private route: ActivatedRoute,
-                private cartService: CartService) {
+                private cartService: CartService,
+                private billingService: BillingService) {
     }
 
-    ngOnInit(): void {
+    async ngOnInit() {
         this.route.params.subscribe(params => {
             this.status = params.status || '';
         });
+
+        this.billingContact = await this.billingService.getBillingContact();
+        this.loading = false;
     }
 
     public async topUp() {
@@ -46,8 +55,8 @@ export class TopUpComponent implements OnInit {
             const checkoutSession: string = await this.paymentService.getStripeCheckoutSessionURL(
                 [lineItem],
                 'payment',
-                window.location.origin + '/account/top-up/cancel',
-                window.location.origin + '/account/top-up/success',
+                window.location.origin + this.callbackRoute + '/cancel',
+                window.location.origin + this.callbackRoute + '/success',
             );
 
             window.location.href = checkoutSession;
@@ -58,6 +67,10 @@ export class TopUpComponent implements OnInit {
 
     public viewOrder() {
 
+    }
+
+    public billingSaved(contact) {
+        this.billingContact = contact;
     }
 
 }

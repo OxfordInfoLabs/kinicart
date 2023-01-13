@@ -113,7 +113,7 @@ class StripeService {
         // This is your Stripe CLI webhook secret for testing your endpoint locally.
         $endpoint_secret = $this->getEndpointSecret();
         $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
-
+Logger::log($endpoint_secret);
         try {
             $event = \Stripe\Webhook::constructEvent(
                 $rawPayload, $sig_header, $endpoint_secret

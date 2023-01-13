@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {BillingService} from '../../services/billing.service';
 import * as _ from 'lodash';
 
@@ -8,6 +8,8 @@ import * as _ from 'lodash';
     styleUrls: ['./billing-address.component.css']
 })
 export class BillingAddressComponent implements OnInit {
+
+    @Output() saved = new EventEmitter();
 
     public editAddress = false;
     public address: any = {};
@@ -25,6 +27,7 @@ export class BillingAddressComponent implements OnInit {
         await this.billingService.saveBillingContact(this.address);
         this.addressString = _.chain(this.address).values().filter().join(', ').valueOf();
         this.editAddress = false;
+        this.saved.emit(this.address);
     }
 
 }

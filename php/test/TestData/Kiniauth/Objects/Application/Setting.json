@@ -6,5 +6,9 @@
   {
     "key": "secretStripeKey",
     "value": "sk_test_9FzyYytXLsOXEHBRVMVIQbTH000YI2Guvv"
+  },
+  {
+    "key": "stripeEndpointSecret",
+    "value": "whsec_5b8367facabd78a744996e193acc70372c6bcce2aabc4e275ef115ea2027ba65"
   }
 ]

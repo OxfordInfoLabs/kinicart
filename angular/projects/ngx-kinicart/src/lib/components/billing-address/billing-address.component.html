@@ -1,41 +1,18 @@
 <div class="my-5">
-    <div *ngIf="!editAddress" class="overflow-hidden bg-white shadow sm:rounded-md">
-        <ul role="list" class="divide-y divide-gray-200">
-            <li>
-                <a (click)="editAddress = true" class="cursor-pointer block hover:bg-gray-50">
-                    <div class="flex items-center px-4 py-4 sm:px-6">
-                        <div class="flex min-w-0 flex-1 items-center">
-                            <div class="flex-shrink-0 rounded-full ">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                     class="h-12 w-12 text-gray-200">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
+    <div *ngIf="!editAddress" class="rounded-md bg-white shadow my-4 mb-8 flex" >
 
-                            </div>
-                            <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
-                                <div>
-                                    <p class="truncate text-sm font-medium text-primary">Billing Address</p>
-                                    <p class="mt-2 flex items-center text-sm text-gray-500">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                             class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
-                                        </svg>
+        <div class="w-3/5 p-8">
+            <h4 class="mb-4 mt-0 font-medium text-xl">Billing Address</h4>
 
-                                        <span class="truncate">{{addressString || 'None Set - Click to add'}}</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <!-- Heroicon name: mini/chevron-right -->
-                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                    </div>
-                </a>
-            </li>
-        </ul>
+            <p class="text-sm m-0">{{addressString || 'None Set'}}</p>
+
+        </div>
+        <div class="bg-gray-50 w-2/5 p-4 flex items-center justify-center rounded-r-md">
+            <button class="hover:bg-gray-50 rounded-md border border-gray-100 bg-white py-2 px-4 text-sm font-medium text-secondary" (click)="editAddress = true">
+                {{addressString ? 'Edit' : 'Add'}} Billing Address
+            </button>
+        </div>
+
     </div>
 
     <div *ngIf="editAddress" class="shadow sm:overflow-hidden sm:rounded-md">
@@ -52,9 +29,15 @@
                            class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm sm:text-sm">
                 </div>
 
-                <div class="col-span-6">
-                    <label class="block text-sm font-medium text-gray-700">Street address</label>
+                <div class="col-span-6 sm:col-span-6 lg:col-span-3">
+                    <label class="block text-sm font-medium text-gray-700">Address Line 1</label>
                     <input type="text" [(ngModel)]="address.street1"
+                           class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm sm:text-sm">
+                </div>
+
+                <div class="col-span-6 sm:col-span-6 lg:col-span-3">
+                    <label class="block text-sm font-medium text-gray-700">Address Line 2</label>
+                    <input type="text" [(ngModel)]="address.street2"
                            class="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm sm:text-sm">
                 </div>
 

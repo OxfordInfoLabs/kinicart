@@ -63,21 +63,40 @@
         </div>
     </div>
 
-    <kc-billing-address></kc-billing-address>
-    <div class="bg-white px-4 py-5 shadow sm:rounded-lg sm:p-6">
+    <kc-billing-address (saved)="billingSaved($event)"></kc-billing-address>
+    <div class="bg-white p-8 rounded-md shadow">
         <div class="md:grid md:grid-cols-3 md:gap-6">
             <div class="md:col-span-1">
                 <h3 class="text-lg font-medium leading-6 text-gray-900">Top Up</h3>
                 <p class="mt-1 text-sm text-gray-500">Enter the amount you would like to add to your account.</p>
             </div>
             <div class="mt-5 space-y-6 md:col-span-2 md:mt-0">
+                <div *ngIf="!billingContact && !loading" class="rounded-md bg-yellow-50 p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <!-- Heroicon name: mini/exclamation-triangle -->
+                            <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-yellow-800">Billing Address Required</h3>
+                            <div class="mt-2 text-sm text-yellow-700">
+                                <p>
+                                    Please enter a billing address above in order to proceed with the top up.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-3 gap-6">
                     <div class="col-span-3 sm:col-span-2">
                         <label class="block text-sm font-medium text-gray-700">Top Up Amount</label>
                         <div class="mt-1 flex rounded-md shadow-sm">
                             <span
                                 class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500">
-                                £</span>
+                                {{currency}}</span>
                             <input type="number" [(ngModel)]="topUpAmount" (ngModelChange)="amount.emit(topUpAmount)"
                                    class="block w-full flex-1 rounded-none rounded-r-md border-gray-300 sm:text-sm"
                                    placeholder="Enter amount">
@@ -126,7 +145,7 @@
                 <div class="flex justify-end">
                     <button type="button" class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">
                         Cancel</button>
-                    <button type="button" (click)="topUp()" [disabled]="!topUpAmount || (minAmount && topUpAmount < minAmount)"
+                    <button type="button" (click)="topUp()" [disabled]="(!topUpAmount || (minAmount && topUpAmount < minAmount)) || !billingContact"
                             class="disabled:opacity-50 ml-3 inline-flex justify-center rounded-md border border-transparent bg-primary py-2 px-4 text-sm font-medium text-white shadow-sm">
                         Proceed to Payment</button>
                 </div>
