@@ -49,6 +49,16 @@ class ProductTierPrice {
      */
     private $tierPrice;
 
+    /**
+     * @var string
+     */
+    private $pricingRule;
+
+    /**
+     * @var float
+     */
+    private $value;
+
 
     /**
      * ProductTierPrice constructor.
@@ -59,7 +69,6 @@ class ProductTierPrice {
      * @param string $currencyCode
      */
     public function __construct($tierId = null, $pricingRule = null, $value = null, $currencyCode = null) {
-
         $this->tierId = $tierId;
         $this->pricingRule = $pricingRule;
         $this->value = $value;

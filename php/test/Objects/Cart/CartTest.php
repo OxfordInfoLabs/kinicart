@@ -70,7 +70,7 @@ class CartTest extends TestBase {
         AuthenticationHelper::login("simon@peterjonescarwash.com", "password");
 
         $cartSubTotal = $cart->getSubTotal();
-        $this->assertEquals($item1->getUnitPrice("GBP", 1) + $item2->getUnitPrice("GBP", 1), $cartSubTotal);
+        $this->assertEquals(round($item1->getUnitPrice("GBP", 1) + $item2->getUnitPrice("GBP", 1), 2), $cartSubTotal);
 
         $this->assertEquals(0, $cart->getTaxes());
         $this->assertEquals(round($cartSubTotal, 2), $cart->getTotal());
