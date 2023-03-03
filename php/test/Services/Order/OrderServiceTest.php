@@ -115,9 +115,6 @@ class OrderServiceTest extends TestBase {
     }
 
 
-
-
-
     public function testCanProcessOrderForTestPaymentMethod() {
 
         AuthenticationHelper::login("sam@samdavisdesign.co.uk", "password");
@@ -163,7 +160,7 @@ class OrderServiceTest extends TestBase {
         $this->assertEquals("USD", $order->getCurrency());
         $this->assertEquals(12.70, $order->getSubtotal());
         $this->assertEquals(12.70 * 0.2, $order->getTaxes());
-        $this->assertEquals(12.70 * 1.2, $order->getTotal());
+        $this->assertEquals(round(12.70 * 1.2, 2), $order->getTotal());
 
         $this->assertEquals("Sam Davis Design", $order->getBuyerName());
         $this->assertEquals("Joe Bloggs<br />Show caser<br />1 New Place<br />Sometown<br />Somewhere<br />Someshire<br />SW12 1TT<br />GB", $order->getAddress());
