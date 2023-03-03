@@ -2,6 +2,7 @@
 
 namespace Kinicart\Objects\Pricing;
 
+use Kinikit\Core\Logging\Logger;
 use Kinikit\Persistence\ORM\ActiveRecord;
 
 /**
@@ -45,7 +46,7 @@ class Currency extends ActiveRecord {
      *
      * @var boolean
      */
-    private $defaultCurrency;
+    private $defaultCurrency = 0;
 
     /**
      * Currency constructor.
@@ -53,9 +54,9 @@ class Currency extends ActiveRecord {
      * @param string $code
      * @param string $description
      * @param float $exchangeRateFromBase
-     * @param bool $defaultCurrency
+     * @param int $defaultCurrency
      */
-    public function __construct($code, $description, $exchangeRateFromBase, $defaultCurrency) {
+    public function __construct($code, $description, $exchangeRateFromBase, $defaultCurrency = 0) {
         $this->code = $code;
         $this->description = $description;
         $this->exchangeRateFromBase = $exchangeRateFromBase;

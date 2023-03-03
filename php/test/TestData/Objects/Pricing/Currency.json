@@ -3,16 +3,18 @@
     "code": "GBP",
     "description": "British Pounds",
     "exchangeRateFromBase": 1,
-    "defaultCurrency": true
+    "defaultCurrency": 1
   },
   {
     "code": "USD",
     "description": "US Dollars",
-    "exchangeRateFromBase": 1.2
+    "exchangeRateFromBase": 1.2,
+    "defaultCurrency": 0
   },
   {
     "code": "EUR",
     "description": "Euros",
-    "exchangeRateFromBase": 1.1
+    "exchangeRateFromBase": 1.1,
+    "defaultCurrency": 0
   }
 ]
