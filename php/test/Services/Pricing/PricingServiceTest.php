@@ -46,9 +46,19 @@ class PricingServiceTest extends TestBase {
     public function testCanGetAllTiersAndTheyAreCachedOnSubsequentRequests() {
 
         $tiers = $this->service->getTiers();
-        $this->assertEquals([1 => Tier::fetch(1), 2 => Tier::fetch(2), 3 => Tier::fetch(3)], $tiers);
+        $this->assertEquals([1 => Tier::fetch(1), 2 => Tier::fetch(2), 3 => Tier::fetch(3), 4 => Tier::fetch(4)], $tiers);
 
         $reTiers = $this->service->getTiers();
+        $this->assertTrue($tiers === $reTiers);
+
+    }
+
+
+    public function testCanGetAllTiersOmittingPrivateOneIfBooleanSupplied(){
+        $tiers = $this->service->getTiers(true);
+        $this->assertEquals([1 => Tier::fetch(1), 2 => Tier::fetch(2), 3 => Tier::fetch(3)], $tiers);
+
+        $reTiers = $this->service->getTiers(true);
         $this->assertTrue($tiers === $reTiers);
 
     }

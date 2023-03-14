@@ -14,5 +14,9 @@
     "name": "Enterprise",
     "defaultPriceMultiplier": 1,
     "upgradeOrder": 3
+  },
+  {
+    "name": "Hidden",
+    "private": true
   }
 ]

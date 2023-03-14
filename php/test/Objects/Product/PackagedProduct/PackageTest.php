@@ -165,17 +165,19 @@ class PackageTest extends TestBase {
         $this->assertEquals(2, sizeof($allPrices));
 
         // Check sub arrays
-        $this->assertEquals(3, sizeof($allPrices["MONTHLY"]));
+        $this->assertEquals(4, sizeof($allPrices["MONTHLY"]));
         $this->assertEquals($package->getTierPrice(1, "MONTHLY", "GBP"), $allPrices["MONTHLY"][1]);
         $this->assertEquals($package->getTierPrice(2, "MONTHLY", "GBP"), $allPrices["MONTHLY"][2]);
         $this->assertEquals($package->getTierPrice(3, "MONTHLY", "GBP"), $allPrices["MONTHLY"][3]);
+        $this->assertEquals($package->getTierPrice(4, "MONTHLY", "GBP"), $allPrices["MONTHLY"][4]);
 
 
         // Check sub arrays
-        $this->assertEquals(3, sizeof($allPrices["ANNUAL"]));
+        $this->assertEquals(4, sizeof($allPrices["ANNUAL"]));
         $this->assertEquals($package->getTierPrice(1, "ANNUAL", "GBP"), $allPrices["ANNUAL"][1]);
         $this->assertEquals($package->getTierPrice(2, "ANNUAL", "GBP"), $allPrices["ANNUAL"][2]);
         $this->assertEquals($package->getTierPrice(3, "ANNUAL", "GBP"), $allPrices["ANNUAL"][3]);
+        $this->assertEquals($package->getTierPrice(4, "ANNUAL", "GBP"), $allPrices["ANNUAL"][4]);
 
     }
 

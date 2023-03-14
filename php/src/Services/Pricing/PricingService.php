@@ -69,11 +69,13 @@ class PricingService {
     /**
      * Get all tiers indexed by id in an efficient manner, caching after first read.
      */
-    public function getTiers() {
+    public function getTiers($publicOnly = false) {
         if (!$this->tiers) {
             $this->tiers = ObjectArrayUtils::indexArrayOfObjectsByMember("id", Tier::filter(""));
         }
-        return $this->tiers;
+        return $publicOnly ? array_filter($this->tiers, function($tier){
+            return !$tier->isPrivate();
+        }) : $this->tiers;
     }
 
     /**

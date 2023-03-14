@@ -43,20 +43,30 @@ class Tier extends ActiveRecord {
      */
     private $upgradeOrder;
 
+
+    /**
+     * Indicator as to whether this tier is private or not.
+     *
+     * @var boolean
+     */
+    private $private;
+
     /**
      * Tier constructor.
-     * @param int $id
      * @param string $name
      * @param float $defaultPriceMultiplier
      * @param bool $defaultTier
      * @param int $upgradeOrder
+     * @param bool $private
+     * @param int $id
      */
-    public function __construct($name, $defaultPriceMultiplier, $defaultTier, $upgradeOrder, $id = null) {
+    public function __construct($name, $defaultPriceMultiplier, $defaultTier, $upgradeOrder, $private = false, $id = null) {
         $this->id = $id;
         $this->name = $name;
         $this->defaultPriceMultiplier = $defaultPriceMultiplier;
         $this->defaultTier = $defaultTier;
         $this->upgradeOrder = $upgradeOrder;
+        $this->private = $private;
     }
 
 
@@ -128,6 +138,20 @@ class Tier extends ActiveRecord {
      */
     public function setUpgradeOrder($upgradeOrder) {
         $this->upgradeOrder = $upgradeOrder;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPrivate() {
+        return $this->private;
+    }
+
+    /**
+     * @param bool $private
+     */
+    public function setPrivate($private) {
+        $this->private = $private;
     }
 
 
