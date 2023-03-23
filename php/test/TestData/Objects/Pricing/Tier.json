@@ -3,17 +3,20 @@
     "name": "Standard",
     "defaultPriceMultiplier": 1.25,
     "defaultTier": true,
-    "upgradeOrder": 1
+    "upgradeOrder": 1,
+    "private": false
   },
   {
     "name": "Pro",
     "defaultPriceMultiplier": 1.1,
-    "upgradeOrder": 2
+    "upgradeOrder": 2,
+    "private": false
   },
   {
     "name": "Enterprise",
     "defaultPriceMultiplier": 1,
-    "upgradeOrder": 3
+    "upgradeOrder": 3,
+    "private": false
   },
   {
     "name": "Hidden",

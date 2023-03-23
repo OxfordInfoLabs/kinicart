@@ -57,7 +57,7 @@ class Tier extends ActiveRecord {
      * @param float $defaultPriceMultiplier
      * @param bool $defaultTier
      * @param int $upgradeOrder
-     * @param bool $private
+     * @param boolean $private
      * @param int $id
      */
     public function __construct($name, $defaultPriceMultiplier, $defaultTier, $upgradeOrder, $private = false, $id = null) {
@@ -141,14 +141,14 @@ class Tier extends ActiveRecord {
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function isPrivate() {
         return $this->private;
     }
 
     /**
-     * @param bool $private
+     * @param boolean $private
      */
     public function setPrivate($private) {
         $this->private = $private;
