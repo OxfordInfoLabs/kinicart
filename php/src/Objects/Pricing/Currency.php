@@ -54,7 +54,7 @@ class Currency extends ActiveRecord {
      * @param string $code
      * @param string $description
      * @param float $exchangeRateFromBase
-     * @param int $defaultCurrency
+     * @param boolean $defaultCurrency
      */
     public function __construct($code, $description, $exchangeRateFromBase, $defaultCurrency = 0) {
         $this->code = $code;
