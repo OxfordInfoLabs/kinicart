@@ -2,6 +2,8 @@
 
 namespace Kinicart\Objects\Account;
 
+use Kiniauth\Objects\Security\AccountRole;
+use Kiniauth\Objects\Security\Role;
 use Kiniauth\Services\Application\Session;
 use Kiniauth\Services\Security\AuthenticationService;
 use Kiniauth\Test\Services\Security\AuthenticationHelper;
@@ -89,6 +91,18 @@ class AccountTest extends TestBase {
 
         $billingContact->setCountryCode("GB");
         $billingContact->save();
+
+    }
+
+    public function testAccountRolesAreAugmentedWithTierRolesIfSuppliedForUserTier() {
+
+        AuthenticationHelper::login("sam@samdavisdesign.co.uk", "password");
+
+        /**
+         * @var Account $account
+         */
+        $account = Account::fetch(1);
+        $this->assertEquals(["ACCOUNT" => ["viewdata"]], $account->returnAccountPrivileges());
 
     }
 

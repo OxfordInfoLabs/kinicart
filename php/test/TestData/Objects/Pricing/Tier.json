@@ -16,7 +16,12 @@
     "name": "Enterprise",
     "defaultPriceMultiplier": 1,
     "upgradeOrder": 3,
-    "private": false
+    "private": false,
+    "privileges": {
+      "ACCOUNT": [
+        "viewdata"
+      ]
+    }
   },
   {
     "name": "Hidden",

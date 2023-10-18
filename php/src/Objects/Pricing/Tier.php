@@ -51,6 +51,16 @@ class Tier extends ActiveRecord {
      */
     private $private;
 
+
+    /**
+     * An array of explicit tier privileges supplied as an array indexed by
+     *
+     *
+     * @var string[]
+     * @json
+     */
+    protected $privileges = array();
+
     /**
      * Tier constructor.
      * @param string $name
@@ -152,6 +162,20 @@ class Tier extends ActiveRecord {
      */
     public function setPrivate($private) {
         $this->private = $private;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getPrivileges() {
+        return $this->privileges;
+    }
+
+    /**
+     * @param string[] $privileges
+     */
+    public function setPrivileges($privileges) {
+        $this->privileges = $privileges;
     }
 
 

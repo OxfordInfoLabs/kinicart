@@ -3,6 +3,8 @@
 
 namespace Kinicart\Objects\Account;
 
+use Kiniauth\Objects\Security\AccountRole;
+
 /**
  * Extension of the core account class with cart functionality.
  *
@@ -18,11 +20,12 @@ class Account extends \Kiniauth\Objects\Account\Account {
      */
     private $accountData;
 
+
     /**
      * @return AccountData
      */
     public function getAccountData() {
-        if (!$this->accountData){
+        if (!$this->accountData) {
             $this->accountData = new AccountData();
         }
         return $this->accountData;
@@ -33,6 +36,19 @@ class Account extends \Kiniauth\Objects\Account\Account {
      */
     public function setAccountData($accountData) {
         $this->accountData = $accountData;
+    }
+
+    /**
+     * Return account roles and fall back to tier roles if none defined
+     *
+     * @return string[]
+     */
+    public function returnAccountPrivileges() {
+        $accountPrivileges = parent::returnAccountPrivileges();
+        if (!$accountPrivileges && $this->getAccountData()->getTierPrivileges()) {
+            $accountPrivileges = $this->getAccountData()->getTierPrivileges();
+        }
+        return $accountPrivileges;
     }
 
 

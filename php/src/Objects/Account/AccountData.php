@@ -5,6 +5,7 @@ namespace Kinicart\Objects\Account;
 use Kiniauth\Objects\Account\Contact;
 use Kinicart\Objects\Pricing\Currency;
 use Kinicart\Objects\Pricing\Tier;
+use Kinicart\Objects\Security\TierRole;
 use Kinicart\Services\Pricing\PricingService;
 use Kinikit\Core\DependencyInjection\Container;
 
@@ -100,7 +101,7 @@ class AccountData {
      * @return integer
      */
     public function getTierId() {
-        return $this->getTier()->getId();
+        return $this->getTier() ? $this->getTier()->getId() : null;
     }
 
 
@@ -110,9 +111,18 @@ class AccountData {
      * @return string
      */
     public function getTierName() {
-        return $this->getTier()->getName();
+        return $this->getTier() ? $this->getTier()->getName() : null;
     }
 
+
+    /**
+     * Return tier roles
+     *
+     * @return string[]
+     */
+    public function getTierPrivileges() {
+        return $this->getTier() ? $this->getTier()->getPrivileges() : [];
+    }
 
     /**
      * @return Currency
