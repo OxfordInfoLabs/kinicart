@@ -46,7 +46,7 @@ class Account extends \Kiniauth\Objects\Account\Account {
     public function returnAccountPrivileges() {
         $accountPrivileges = parent::returnAccountPrivileges();
         if (!$accountPrivileges && $this->getAccountData()->getTierPrivileges()) {
-            $accountPrivileges = $this->getAccountData()->getTierPrivileges();
+            $accountPrivileges = $this->getAccountData()->getTierPrivileges() ?? [];
         }
         return $accountPrivileges;
     }
