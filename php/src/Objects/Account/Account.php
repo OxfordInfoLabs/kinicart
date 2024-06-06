@@ -3,6 +3,7 @@
 
 namespace Kinicart\Objects\Account;
 
+use Kiniauth\Attributes\Security\AccessNonActiveScopes;
 use Kiniauth\Objects\Security\AccountRole;
 
 /**
@@ -10,6 +11,7 @@ use Kiniauth\Objects\Security\AccountRole;
  *
  * @table ka_account
  */
+#[AccessNonActiveScopes]
 class Account extends \Kiniauth\Objects\Account\Account {
 
     /**
