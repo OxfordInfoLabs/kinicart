@@ -2,6 +2,7 @@
 
 namespace Kinicart\Objects\Account;
 
+use Kiniauth\Attributes\Security\AccessNonActiveScopes;
 use Kiniauth\Objects\Account\Contact;
 use Kinicart\Objects\Pricing\Currency;
 use Kinicart\Objects\Pricing\Tier;
@@ -17,6 +18,7 @@ use Kinikit\Core\DependencyInjection\Container;
  * @table kc_account_data
  * @generate
  */
+#[AccessNonActiveScopes]
 class AccountData {
 
     /**

@@ -7,5 +7,23 @@
     "currency": {
       "code": "USD"
     }
+  },
+  {
+    "accountId": 2,
+    "tier": {
+      "id": 2
+    },
+    "currency": {
+      "code": "GBP"
+    }
+  },
+  {
+    "accountId": 3,
+    "tier": {
+      "id": 1
+    },
+    "currency": {
+      "code": "GBP"
+    }
   }
 ]
