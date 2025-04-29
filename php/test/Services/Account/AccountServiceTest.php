@@ -4,6 +4,7 @@
 namespace Kinicart\Test\Services\Account;
 
 
+use Kiniauth\Objects\Account\Account;
 use Kiniauth\Test\Services\Security\AuthenticationHelper;
 use Kinicart\Services\Account\AccountService;
 use Kinicart\TestBase;
@@ -48,6 +49,22 @@ class AccountServiceTest extends TestBase {
         $this->assertEquals($billingContact, $this->accountService->getBillingContact(2));
 
         $this->accountService->updateBillingContact(new BillingContact("Joe Bloggs", "Show caser", "1 New Place", "Sometown", "Somewhere", "Someshire", "SW12 1TT", "GB"), 1);
+
+    }
+
+    public function testCanCreateSubAccountAsParentAccountAdmin() {
+
+        AuthenticationHelper::login("sam@samdavisdesign.co.uk", "password");
+
+        $kiniauthAccountService = Container::instance()->get(\Kiniauth\Services\Account\AccountService::class);
+        $accountId = $kiniauthAccountService->createAccount("Badger", null, null, null, 1);
+
+        $this->assertNotNull($accountId);
+
+        $account = Account::fetch($accountId);
+
+        $this->assertEquals("Badger", $account->getName());
+
 
     }
 

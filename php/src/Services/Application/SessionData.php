@@ -5,6 +5,7 @@ namespace Kinicart\Services\Application;
 use Kiniauth\Services\Application\Session;
 use Kiniauth\Services\Security\SecurityService;
 use Kinicart\Objects\Order\Order;
+use Kinicart\Objects\Pricing\Tier;
 use Kinicart\Services\Cart\SessionCart;
 
 /**
@@ -30,6 +31,12 @@ class SessionData extends \Kiniauth\Services\Application\SessionData {
      */
     private $lastSessionOrder;
 
+    /**
+     * @var string
+     */
+    private $tierName;
+
+
     const LAST_SESSION_ORDER_NAME = "__kinicart_last_order";
 
 
@@ -43,6 +50,7 @@ class SessionData extends \Kiniauth\Services\Application\SessionData {
         parent::__construct($securityService, $session);
         $this->cartCount = $sessionCart->getNumberOfItems();
         $this->lastSessionOrder = $session->getValue(self::LAST_SESSION_ORDER_NAME);
+        $this->tierName = $session->__getLoggedInAccount()?->getAccountData()?->getTierName();
     }
 
 
@@ -57,6 +65,15 @@ class SessionData extends \Kiniauth\Services\Application\SessionData {
     public function getLastSessionOrder() {
         return $this->lastSessionOrder;
     }
+
+    /**
+     * @return string|null
+     */
+    public function getTierName(): ?string {
+        return $this->tierName;
+    }
+
+
 
 
 }
