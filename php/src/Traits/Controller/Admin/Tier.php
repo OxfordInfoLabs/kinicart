@@ -9,7 +9,7 @@ trait Tier {
     /**
      * @var TierService
      */
-    private TierService $tierService;
+    private ?TierService $tierService;
 
     public function __construct($tierService) {
         $this->tierService = $tierService;
