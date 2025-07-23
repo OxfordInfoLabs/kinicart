@@ -11,6 +11,9 @@ trait Tier {
      */
     private ?TierService $tierService;
 
+    /**
+     * @param TierService $tierService
+     */
     public function __construct($tierService) {
         $this->tierService = $tierService;
     }
