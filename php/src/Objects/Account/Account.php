@@ -20,7 +20,7 @@ class Account extends \Kiniauth\Objects\Account\Account {
      *
      * @var AccountData
      */
-    private $accountData;
+    protected $accountData;
 
 
     /**
