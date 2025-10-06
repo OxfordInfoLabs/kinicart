@@ -27,7 +27,7 @@ class AccountData {
      * @var integer
      * @primaryKey
      */
-    private $accountId;
+    protected $accountId;
 
 
     /**
@@ -38,7 +38,7 @@ class AccountData {
      *
      * @var Tier
      */
-    private $tier;
+    protected $tier;
 
 
     /**
@@ -49,7 +49,7 @@ class AccountData {
      *
      * @var Currency
      */
-    private $currency;
+    protected $currency;
 
 
     /**
@@ -59,7 +59,7 @@ class AccountData {
      * @readOnly
      *
      */
-    private $billingContact;
+    protected $billingContact;
 
 
     /**
@@ -129,7 +129,7 @@ class AccountData {
     /**
      * @return Currency
      */
-    private function getCurrency() {
+    protected function getCurrency() {
         if (!$this->currency) {
             $this->currency = Container::instance()->get(PricingService::class)->getDefaultCurrency();
         }
@@ -139,7 +139,7 @@ class AccountData {
     /**
      * @return Tier
      */
-    private function getTier() {
+    protected function getTier() {
         if (!$this->tier) {
             $this->tier = Container::instance()->get(PricingService::class)->getDefaultTier();
         }
