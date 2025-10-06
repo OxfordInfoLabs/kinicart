@@ -28,6 +28,11 @@ class Tier extends ActiveRecord {
 
 
     /**
+     * @var string
+     */
+    private $description;
+
+    /**
      * @var float
      */
     private $defaultPriceMultiplier;
@@ -69,10 +74,12 @@ class Tier extends ActiveRecord {
      * @param int $upgradeOrder
      * @param boolean $private
      * @param int $id
+     * @param string $description
      */
-    public function __construct($name, $defaultPriceMultiplier, $defaultTier, $upgradeOrder, $private = false, $id = null) {
+    public function __construct($name, $defaultPriceMultiplier, $defaultTier, $upgradeOrder, $private = false, $id = null, $description = null) {
         $this->id = $id;
         $this->name = $name;
+        $this->description = $description;
         $this->defaultPriceMultiplier = $defaultPriceMultiplier;
         $this->defaultTier = $defaultTier;
         $this->upgradeOrder = $upgradeOrder;
@@ -106,6 +113,21 @@ class Tier extends ActiveRecord {
      */
     public function setName($name) {
         $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription() {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     * @return void
+     */
+    public function setDescription($description) {
+        $this->description = $description;
     }
 
     /**

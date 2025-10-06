@@ -6,3 +6,5 @@ webcomponents/dist/
 .phpunit*
 php/test/DB/db.log
 node_modules
+angular/.angular
+angular/dist

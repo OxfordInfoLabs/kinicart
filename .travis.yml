@@ -1,7 +1,7 @@
-dist: focal
+dist: jammy
 language: php
 php:
-- '8.1.12'
+- '8.2'
 before_script: composer clearcache; composer install; composer update;  cd php/test
 script: phpunit .
 after_success:
