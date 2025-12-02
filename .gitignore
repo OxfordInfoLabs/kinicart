@@ -4,7 +4,8 @@ composer.lock
 webcomponents/node_modules/
 webcomponents/dist/
 .phpunit*
-php/test/DB/db.log
+php/test/DB/
 node_modules
 angular/.angular
 angular/dist
+.phpunit.cache
