@@ -127,6 +127,13 @@ class AccountData {
     }
 
     /**
+     * @return bool|null
+     */
+    public function isDefaultTier() {
+        return $this->getTier()?->isDefaultTier();
+    }
+
+    /**
      * @return Currency
      */
     protected function getCurrency() {
